@@ -2,6 +2,7 @@ import {Component, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DialogComponent, PositionDataModel} from "@syncfusion/ej2-angular-popups";
 import {EmitType} from "@syncfusion/ej2-base";
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-login',
@@ -9,14 +10,12 @@ import {EmitType} from "@syncfusion/ej2-base";
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-
   form: FormGroup;
 
   @ViewChild('Dialog')
   public dialogObj: DialogComponent | undefined;
   public width: string = '335px';
   public visible: boolean = false;
-  public multiple: boolean = false;
   public showCloseIcon: Boolean = true;
   public formHeader: string = 'Success';
   public content: string = 'You have successfully registered, Thank you.';
@@ -50,10 +49,12 @@ export class LoginComponent {
     }
   }
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private titleService: Title) {
   }
 
+
   ngOnInit() {
+    this.titleService.setTitle('Login');
     this.textboxValue = '';
     this.form = this.formBuilder.group({
       password: [null, [Validators.required, Validators.minLength(6)]],

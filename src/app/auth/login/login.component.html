@@ -1,5 +1,4 @@
-
-<div class="control-section">
+<div class="control-section flex h-full justify-center flex-col">
   <div class="col-lg-12">
     <div
       class="control_wrapper"
@@ -7,7 +6,7 @@
       style="margin: 25px auto;"
     >
       <form [formGroup]="form" id="reactive">
-        <h4 class="form-title"><strong>Login Form</strong></h4>
+        <h2 class="form-title"><strong>Login Form</strong></h2>
 
         <div class="form-group template">
           <div
@@ -21,6 +20,7 @@
               id="email"
               name="email"
               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
+              placeholder="johndoe@example.com"
               type="text"
             />
             <span class="e-float-line"></span>
@@ -40,6 +40,7 @@
               formControlName="password"
               id="password"
               name="password"
+              placeholder="Password123"
               type="password"
             />
             <span class="e-float-line"></span>
@@ -50,7 +51,7 @@
         </div>
 
 
-        <h6><a routerLink="../register" >Already have an account? Authorize</a></h6>
+        <p><a routerLink="../register">Dont have an account? Register</a></p>
         <div class="form-group template">
           <div class="submitBtn">
             <button
@@ -70,16 +71,14 @@
         [content]="content"
         [header]="formHeader"
         [isModal]="isModal"
+        [position]="position"
         [showCloseIcon]="showCloseIcon"
         [target]="target"
         [visible]="visible"
         [width]="width"
-        [position]="position"
         id="confirmationDialog"
       >
       </ejs-dialog>
-
-
     </div>
   </div>
 </div>

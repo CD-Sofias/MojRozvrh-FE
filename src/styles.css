@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 
 html {
   height: 100%;
@@ -9,14 +13,14 @@ body {
   justify-content: center !important;
   flex-direction: column !important;
   color: #989C9D;
-  background: #090D0E url("assets/img/background.png") no-repeat center center fixed;
+  background: #090D0E url("assets/img/bg.png") no-repeat center center fixed;
   background-size: cover;
   font-family: "Roboto", "Segoe UI", "GeezaPro", "DejaVu Serif", "sans-serif", "-apple-system", "BlinkMacSystemFont";
 }
 
 body::after {
   content: "";
-  background: rgba(9, 13, 14, 0.9);
+  background: rgba(9, 13, 14, 0.4);
   top: 0;
   left: 0;
   bottom: 0;
@@ -32,46 +36,53 @@ body::after {
 
 
 label {
-  color: #44A39D;
+  color: #8339E6;
+  text-transform: uppercase;
 }
 
 input:invalid {
-  border-bottom: 1px solid #66FCF0;
+  border-bottom: 1px solid #8339E6;
 }
 
 
 input {
-  color: #989C9D !important;
+  color: #0C1B2B !important;
 
 }
 
 
 a {
-  color: #44A39D;
+  color: #8339E6;
   transition: all 0.5s ease;
   text-decoration: none;
 }
 
 a:visited {
-  color: #44A39D
+  color: #893AC7
 }
 
 a:hover {
-  color: #64FEF0;
+  color: #7750D4;
   text-decoration: none;
 }
 
 .e-float-input input, .e-float-input textarea, .e-float-input.e-control-wrapper input, .e-float-input.e-control-wrapper textarea {
-  border-bottom-color: #66FCF0 !important;
+  border-bottom-color: #8339E6 !important;
 }
 
 
 p {
-  color: #44A39D;
+  color: #0C1B2B;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  color: #64FEF0;
+h1, h2, h3 {
+  color: #001126;
+  font-size: x-large;
+}
+
+h4, h5, h6 {
+  color: #001126;
+  text-transform: uppercase;
 }
 
 .icon {
@@ -100,11 +111,10 @@ button {
 #control_wrapper {
   max-width: 500px;
   margin: auto;
-  border: 0.5px solid #64FEF0;
   border-radius: 15px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.36);
   padding: 1% 4% 0%;
-  background: #202833;
+  background: #FFFFFF;
 }
 
 .highcontrast #control_wrapper,
@@ -129,9 +139,9 @@ button {
 #reactive .form-group .submit-btn {
   margin: 15px 15px;
   position: relative;
-  background-color: transparent;
-  border: 1px solid #66FCF0;
-  color: #C3C7C8;
+  background-color: #8339E6;
+  border: 1px solid #8339E6;
+  color: #8339E6;
 }
 
 #reactive .form-group .submitBtn .desc {
@@ -151,20 +161,23 @@ button {
 
 #reactive .form-group .submit-btn:disabled {
   background-color: transparent;
-  border: 1px solid #66FCF0;
-  color: #808080;
+  border: 1px solid #8339E6;
+  color: #0C1B2B;
   transition: all 0.5s ease;
 }
 
 #reactive .form-group .submit-btn {
-  background-color: transparent;
-  border: 1px solid #66FCF0;
-  color: #C3C7C8;
+  background-color: #8339E6;
+  border-radius: 10px;
+  color: #FFFFFF;
+  padding: 10px 40px;
   transition: all 0.5s ease;
+  text-transform: none;
+  font-weight: normal;
 }
 
 #reactive .form-group .submit-btn:not(:disabled):hover {
-  color: #64FEF0;
+  background-color: #7750D4;
 }
 
 .bootstrap #reactive .form-group .submit-btn {
@@ -289,4 +302,14 @@ form#reactive {
   position: fixed !important;
 }
 
-
+.header {
+  height: 6rem;
+}
+@media (max-width: 300px) {
+  .e-inherit.header-btn {
+    font-size: 80%;
+  }
+  .flex.items-center {
+    font-size: 60%;
+  }
+}

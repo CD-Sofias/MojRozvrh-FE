@@ -2,8 +2,7 @@ import {Component, ViewChild, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DialogComponent} from '@syncfusion/ej2-angular-popups';
 import {EmitType} from '@syncfusion/ej2-base';
-
-
+import {Title} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-register',
@@ -18,7 +17,6 @@ export class RegisterComponent {
   public dialogObj: DialogComponent | undefined;
   public width: string = '335px';
   public visible: boolean = false;
-  public multiple: boolean = false;
   public showCloseIcon: Boolean = true;
   public formHeader: string = 'Success';
   public content: string = 'You have successfully registered, Thank you.';
@@ -51,10 +49,11 @@ export class RegisterComponent {
     }
   }
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private titleService: Title) {
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Register');
     this.textboxValue = '';
     this.form = this.formBuilder.group({
       firstname: [null, Validators.required],
