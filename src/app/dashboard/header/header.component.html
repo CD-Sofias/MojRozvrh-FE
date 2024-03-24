@@ -1,0 +1,28 @@
+<div class="control-section default-appbar-section">
+  <div class="default-appbar-container">
+    <div class="row">
+      <div class="col-md-12">
+        <ejs-appbar class="bg-purple-500">
+          <img alt="logo" class="h-16 w-16 mr-3" src="assets/img/logo.png">
+          <span class="regular text-3xl"><b>MySchedule</b></span>
+
+          <div class="e-appbar-spacer"></div>
+          <div class="flex gap-5">
+            <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="Schedule" cssClass="e-flat schedule-btn header-btn" ejs-button
+                    iconCss="e-icons e-agenda-date-range"
+                    iconPosition="Left">
+            </button>
+            <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="My schedule" cssClass="e-flat schedule-btn header-btn"
+                    ejs-button iconCss="e-icons e-timeline-work-week"
+                    iconPosition="Left" routerLink="/myschedule" routerLinkActive="active">
+            </button>
+
+            <button [items]='items' class="e-inherit header-btn" content="Profile" ejs-dropdownbutton
+                    iconCss="e-ddb-icons e-profile"></button>
+          </div>
+        </ejs-appbar>
+      </div>
+    </div>
+    <br/>
+  </div>
+</div>
