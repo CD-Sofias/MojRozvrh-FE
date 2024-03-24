@@ -18,6 +18,7 @@ registerLicense(environment.registrationKey);
   imports: [
     RouterOutlet,
     AuthModule,
+    DashboardModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,

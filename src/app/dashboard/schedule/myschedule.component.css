@@ -1,0 +1,191 @@
+.adaptive-rows.e-schedule .e-timeline-view .e-resource-left-td {
+  width: 120px;
+}
+
+.adaptive-rows.e-schedule .e-timeline-view .e-resource-text {
+  padding-left: 20px;
+}
+
+.e-accordion .e-acrdn-item.e-select.e-selected.e-expand-state>.e-acrdn-header, .e-accordion .e-acrdn-item.e-select.e-expand-state>.e-acrdn-header {
+  border-radius: 10px;
+}
+
+.e-accordion .e-acrdn-item.e-select.e-selected.e-expand-state > .e-acrdn-header, .e-accordion .e-acrdn-item.e-select.e-expand-state > .e-acrdn-header {
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.e-accordion .e-acrdn-item.e-select > .e-acrdn-header {
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.e-accordion .e-acrdn-item.e-select>.e-acrdn-header {
+  border-radius: 10px;
+}
+
+.e-accordion .e-acrdn-item:last-child:not(.e-expand-state) .e-acrdn-header:focus {
+  border-radius: 10px;
+}
+
+.adaptive-rows.e-schedule .e-timeline-view .e-block-appointment {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.e-schedule .e-timeline-view .e-appointment, .e-schedule .e-timeline-month-view .e-appointment {
+  height: 9rem;
+}
+
+.e-schedule .e-today {
+  display: none;
+}
+
+
+/* Стили для больших экранов */
+.e-schedule .e-work-cells {
+  width: 200px;
+}
+
+/* Стили для мобильных устройств */
+@media (max-width: 600px) {
+
+  .adaptive-rows.e-schedule .e-timeline-view .e-resource-left-td {
+    width: 90px;
+    padding: 0;
+  }
+
+  .e-schedule .e-timeline-view .e-child-node, .e-schedule .e-timeline-month-view .e-child-node {
+    background: #fff;
+    padding: 0;
+  }
+
+  tr {
+    padding: 0;
+  }
+
+  td {
+    padding: 0;
+  }
+
+}
+td.e-textlabel {
+  display: flex;
+  margin-right: 7rem;
+}
+
+.event-content>div{
+  display: flex;
+  column-gap: 2rem;
+  align-items: baseline;
+}
+
+.event-content>div>div{
+  display: flex;
+  align-items: center;
+}
+.e-quick-popup-wrapper .e-event-popup .e-popup-content {
+  padding: 10px 15px 10px 15px;
+}
+
+.classroom-type{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between
+}
+.template-wrap{
+  padding: 10px 4px;
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+}
+
+
+
+
+.e-schedule .e-timeline-view .e-appointment .e-appointment-details, .e-schedule .e-timeline-month-view .e-appointment .e-appointment-details {
+  padding: 0;
+}
+
+
+
+
+.e-btn, .e-css.e-btn  {
+  background-color: #7750D4;
+  border: 1px solid #8339E6;
+  color: #FFFFFF;
+  transition: all 0.5s ease;
+  border-radius: 10px;
+  text-transform: none;
+  padding: 10px 40px;
+}
+
+
+.e-btn:hover, .e-css.e-btn:hover {
+  background-color: #893AC7;  border-color: rgba(0, 0, 0, 0);
+  box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+  color: #FFFFFF;
+}
+
+.e-btn:focus, .e-css.e-btn:focus {
+  background-color: #7750D4;  border-color: rgba(0, 0, 0, 0);
+  box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+  color: #FFFFFF;
+}
+
+.e-btn:visited, .e-css.e-btn:visited {
+  background-color: #7750D4;  border-color: rgba(0, 0, 0, 0);
+  box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+  color: #FFFFFF;
+}
+
+.e-btn:after, .e-css.e-btn:after {
+  background-color: #7750D4;  border-color: rgba(0, 0, 0, 0);
+  box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+  color: #FFFFFF;
+}
+
+
+.e-schedule .e-timeline-view .e-resource-column-table, .e-schedule .e-timeline-month-view .e-resource-column-table {
+  height: 100%;
+}
+
+.e-schedule .e-timeline-view .e-content-wrap, .e-schedule .e-timeline-view .e-content-table, .e-schedule .e-timeline-month-view .e-content-wrap, .e-schedule .e-timeline-month-view .e-content-table {
+  height: 100%;
+  overflow-y: hidden;
+}
+
+td.e-field.button-customization {
+  width: 5%!important;
+}
+
+td.e-field.button-customization:nth-child(2) {
+  width: 95%!important;
+}
+
+#seperateSearch {
+  margin-right: 3rem;
+}
+
+@media (max-width: 280px) {
+
+  #seperateSearch {
+    margin-right: 3rem;
+  }
+
+  .e-btn, .e-css.e-btn  {
+    padding: 10px 20px;
+  }
+}
+
+
+.e-accordion {
+  overflow-y: hidden;
+}
+
+
