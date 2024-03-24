@@ -1,0 +1,84 @@
+<div class="control-section flex h-full justify-center flex-col">
+  <div class="col-lg-12">
+    <div
+      class="control_wrapper"
+      id="control_wrapper"
+      style="margin: 25px auto;"
+    >
+      <form [formGroup]="form" id="reactive">
+        <h2 class="form-title"><strong>Login Form</strong></h2>
+
+        <div class="form-group template">
+          <div
+            [ngClass]="{ 'e-success': form?.controls.email.valid }"
+            class="e-float-input"
+          >
+            <input
+              (focusout)="focusoutfunction($event)"
+              class="required"
+              formControlName="email"
+              id="email"
+              name="email"
+              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
+              placeholder="johndoe@example.com"
+              type="text"
+            />
+            <span class="e-float-line"></span>
+            <label class="e-float-text" for="email"><p>Email</p></label>
+          </div>
+          <app-field-error-display [displayError]="isFieldValid('email')" errorMsg="* Enter a valid email address">
+          </app-field-error-display>
+        </div>
+
+        <div class="form-group template">
+          <div
+            [ngClass]="{ 'e-success': form?.controls.password.valid }"
+            class="e-float-input"
+          >
+            <input
+              class="required"
+              formControlName="password"
+              id="password"
+              name="password"
+              placeholder="Password123"
+              type="password"
+            />
+            <span class="e-float-line"></span>
+            <label class="e-float-text" for="password"><p>Password</p></label>
+          </div>
+          <app-field-error-display [displayError]="isFieldValid('password')" errorMsg="* Enter a valid password">
+          </app-field-error-display>
+        </div>
+
+
+        <p><a routerLink="../register">Dont have an account? Register</a></p>
+        <div class="form-group template">
+          <div class="submitBtn">
+            <button
+              (click)="Submit()"
+              [disabled]="form?.invalid"
+              class="submit-btn e-btn"
+              id="submit-btn"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      </form>
+      <ejs-dialog
+        #Dialog
+        [animationSettings]="animationSettings"
+        [content]="content"
+        [header]="formHeader"
+        [isModal]="isModal"
+        [position]="position"
+        [showCloseIcon]="showCloseIcon"
+        [target]="target"
+        [visible]="visible"
+        [width]="width"
+        id="confirmationDialog"
+      >
+      </ejs-dialog>
+    </div>
+  </div>
+</div>
