@@ -1,0 +1,316 @@
+<div class="control-section">
+
+  <div class="content-wrapper">
+
+    <div class="control-section accordion-control-section">
+      <div class="e-sample-resize-container m-5 rounded-2xl">
+        <ejs-accordion class="p-3 rounded-2xl">
+          <e-accordionitems>
+            <e-accordionitem>
+              expanded='true'
+              <ng-template #header class="flex items-center">
+                <div class="pl-4 font-bold text-3xl">Search by all event fields</div>
+              </ng-template>
+              <ng-template #content>
+                <div class="property-section property-customization bg-white rounded px-4 pb-4">
+                  <div class="property-panel-section">
+                    <div class="property-panel-content">
+                      <input (keyup)="globalSearch($event)" class="e-input" id="events-search"
+                             placeholder="Teacher name, subject, classroom"
+                             type="text"/>
+                    </div>
+                    <form class="event-search" id="form-search">
+                      <p class="property-panel-header  header-customization w-full mt-14 uppercase text-lg">Search by
+                        specific event fields</p>
+                      <table id="property-specific" style="width: 100%">
+                        <tbody>
+                        <tr class="row">
+                          <td class="property-panel-content" colspan="2">
+                            <input #subject_id class="e-input e-subject" id="subject_id" name="subject_id"
+                                   placeholder="Subject"
+                                   type="text"/>
+                          </td>
+                        </tr>
+                        <tr class="row" style="height: 45px">
+                          <td class="property-panel-content" colspan="2">
+                            <input #classroom_id_search_content class="e-input e-location"
+                                   id="classroom_id_search_content"
+                                   name="classroom_id_search_content" placeholder="Location"
+                                   type="text"/>
+                          </td>
+                        </tr>
+                        <tr class="row" style="height: 45px">
+                          <td colspan="4">
+                            <ejs-dropdownlist #eventTypeSearch [dataSource]='subjects'
+                                              [fields]='{ text: "name", value: "id" }'
+                                              class="e-field" data-name="eventTypeSearch"
+                                              id='eventTypeSearch'
+                                              placeholder='Select type'></ejs-dropdownlist>
+                          </td>
+                        </tr>
+                        <tr class="row" style="height: 45px">
+                          <td class="property-panel-content" colspan="2">
+                            <ejs-datepicker #startTime_search_content [showClearButton]=false class="e-start-time"
+                                            content id='startTime_search_content'
+                                            placeholder="Start Time"></ejs-datepicker>
+                          </td>
+                        </tr>
+                        <tr class="row" style="height: 45px">
+                          <td class="property-panel-content " colspan="2">
+                            <ejs-datepicker #endTime_search_content [showClearButton]=false class="e-end-time"
+                                            id='endTime_search_content'
+                                            placeholder="End Time"></ejs-datepicker>
+                          </td>
+                        </tr>
+
+                        <tr class="row" style="height: 45px">
+                          <td class="e-field button-customization" style="width: 50%;">
+                            <button (click)="searchOnClick()" class="submit-btn e-btn mt-12" content="Search" ejs-button
+                                    id="seperateSearch" type="button"></button>
+                          </td>
+                          <td class="e-field button-customization" style="width: 50%;">
+                            <button (click)='clearOnClick()' class="submit-btn e-btn mt-12 " content="Clear" ejs-button
+                                    id="clear"
+                                    type="button"></button>
+                          </td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </form>
+                  </div>
+                </div>
+              </ng-template>
+            </e-accordionitem>
+          </e-accordionitems>
+        </ejs-accordion>
+      </div>
+    </div>
+
+    <!--    (cellClick)="onCellClick($event)"-->
+    <ejs-schedule #scheduleObj [currentView]="currentView"
+                  [endHour]='endHour' [eventSettings]="eventSettings" [group]="group"
+                  [rowAutoHeight]='rowAutoHeight' [selectedDate]="selectedDate"
+                  [startHour]='startHour' class="rounded-2xl" cssClass='adaptive-rows' height='100vh'
+                  id='schedule' width='100%'>  <!-- [readonly]="true" -->
+      <e-resources>
+        <e-resource [allowMultiple]='allowMultiple' [dataSource]='resourceDataSource' colorField='color'
+                    field='dayOfWeek'
+                    idField='id' name='MeetingRoom' textField='text' title='Day of week'>
+        </e-resource>
+      </e-resources>
+
+      <e-views>
+        <e-view option="TimelineDay"></e-view>
+        <e-view option="TimelineWeek"></e-view>
+
+        <ng-template #quickInfoTemplatesHeader let-data>
+          <div class="quick-info-header">
+            <div [ngStyle]="getHeaderStyles(data)" class="quick-info-header-content">
+
+              <div class="quick-info-title"></div>
+              <div class="duration-text"></div>
+            </div>
+          </div>
+        </ng-template>
+
+        <ng-template #quickInfoTemplatesContent let-data>
+          <ng-container [ngTemplateOutletContext]="{data:data}"
+                        [ngTemplateOutlet]="data.elementType == 'cell' ? cellContent : eventContent"></ng-container>
+        </ng-template>
+        <ng-template #cellContent let-data="data">
+          <div class="quick-info-content">
+            <div class="e-cell-content">
+              <!--              <form class="e-schedule-form" onsubmit="return false;">-->
+              <form class="e-schedule-form e-lib e-formvalidator" id="scheduleEditForm" novalidate>
+                <tr>
+                  <td class="e-textlabel">Subject</td>
+                  <td colspan="4">
+                    <input aria-invalid="true" aria-required="true" class="e-subject e-field e-input"
+                           name="subject_id" placeholder="TZI" type="text" value="{{data.subject_id}}">
+                  </td>
+                </tr>
+                <tr>
+                  <td class="e-textlabel">Class room</td>
+                  <td colspan="4">
+                    <input aria-invalid="true" aria-required="true"
+                           class="e-field e-input" name="classroom_id" placeholder="F134" style="width: 100%" type="text"
+                           value="{{data.classroom_id}}"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="e-textlabel">Teacher</td>
+                  <td colspan="4">
+                    <input aria-invalid="true" aria-required="true" class="e-field e-input"
+                           data-name="teacher_id" id="teacher_id_cell_content" placeholder="Karabas" style="width: 100%"
+                           type="text"
+                           value="{{data.teacher_id}}"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="e-textlabel">Type of lesson</td>
+                  <td colspan="4">
+                    <ejs-dropdownlist [dataSource]='subjects' [fields]='{ text: "name", value: "id" }'
+                                      [value]='data.subject_type'
+                                      class="e-field" data-name="subject_type"
+                                      id='subject_type_cell_content'
+                                      placeholder='Select type'></ejs-dropdownlist>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="e-textlabel">Group</td>
+                  <td colspan="4">
+                    <ejs-dropdownlist [dataSource]='groups' [fields]='{ text: "name", value: "id" }'
+                                      [value]='data.group_id'
+                                      class="e-field" data-name="group_id"
+                                      id='group_id_cell_content'
+                                      placeholder='Select group'></ejs-dropdownlist>
+                  </td>
+
+                </tr>
+              </form>
+            </div>
+
+          </div>
+
+        </ng-template>
+
+        <ng-template #eventContent let-data="data">
+          <div class="quick-info-content p-4 bg-white rounded shadow">
+            <div class="event-content">
+              <div>
+                <h5 class="font-bold mb-2 ">Teacher:</h5>
+                <div class="pr-4">{{ data.teacher_id }}</div>
+                <h5 class="font-bold mt-4 mb-2">Subject:</h5>
+                <div class="pr-4">{{ data.subject_id }}</div>
+              </div>
+              <div>
+                <h5 class="font-bold mb-2">Class room:</h5>
+                <div class="pr-4">{{ data.classroom_id }}</div>
+                <h5 class="font-bold mt-4 mb-2">Type:</h5>
+                <div class="pr-4">{{ getSubjectName(data.subject_type) }}</div>
+              </div>
+              <div class="w-full mt-4">
+                <h5 class="font-bold mb-2">Group:</h5>
+                <div class="pr-4">{{ getGroupName(data.group_id) }}</div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+
+
+        <ng-template #eventSettingsTemplate let-data>
+          <div [ngStyle]="{'background-color': getSubjectColor(data.subject_type)}" class="template-wrap p-4">
+            <div class="mb-2"><h6 class="mb-1">{{ data.teacher_id }}</h6></div>
+            <div class="mb-2"><h5 class="mb-1">{{ data.subject_id }} </h5></div>
+            <div class="classroom-type">
+              <h6 class="mb-1">{{ data.classroom_id }}</h6>
+              <h6>{{ getSubjectName(data.subject_type) }}</h6>
+            </div>
+          </div>
+        </ng-template>
+
+
+        <ng-template #editorTemplate let-data>
+          <table *ngIf="data != undefined" class="custom-event-editor">
+            <tbody>
+            <tr>
+              <td class="e-textlabel">Subject</td>
+              <td colspan="4">
+                <input class="e-subject e-field e-input" name="subject_id" placeholder="TZI"
+                       type="text" value="{{data.subject_id}}">
+              </td>
+            </tr>
+            <tr>
+              <td class="e-textlabel">Class room</td>
+              <td colspan="4">
+                <input aria-invalid="true" aria-required="true" class="e-field e-input"
+                       id="classroom_id" name="classroom_id" placeholder="F134"
+                       style="width: 100%" type="text" value="{{data.classroom_id}}"/>
+              </td>
+
+            </tr>
+
+            <tr>
+              <td class="e-textlabel">Teacher</td>
+              <td colspan="4">
+                <input class="e-field e-input" data-name="teacher_id" id="teacher_id"
+                       placeholder="Karabas" style="width: 100%" type="text"
+                       value="{{data.teacher_id}}"/>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="e-textlabel">Type of lesson</td>
+              <td colspan="4">
+                <ejs-dropdownlist [dataSource]='subjects' [fields]='{ text: "name", value: "id" }'
+                                  [value]='data.subject_type'
+                                  class="e-field" data-name="subject_type"
+                                  id='subject_type'
+                                  placeholder='Select type'></ejs-dropdownlist>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="e-textlabel">Group</td>
+              <td colspan="4">
+                <ejs-dropdownlist [dataSource]='groups' [fields]='{ text: "name", value: "id" }' [value]='data.group_id'
+                                  class="e-field" data-name="group_id"
+                                  id='group_id'
+                                  placeholder='Select group'></ejs-dropdownlist>
+
+              </td>
+            </tr>
+
+            <tr>
+              <td class="e-textlabel">Day of week</td>
+              <td colspan="4">
+                <ejs-dropdownlist [dataSource]='resourceDataSource' [fields]='{ text: "text", value: "id" }'
+                                  [value]='data.dayOfWeek'
+                                  class="e-field" data-name="dayOfWeek"
+                                  id='dayOfWeek'
+                                  placeholder='Выберите комнату'></ejs-dropdownlist>
+              </td>
+            </tr>
+            <tr>
+              <td class="e-textlabel">From</td>
+              <td colspan="4">
+                <ejs-datetimepicker (change)="onDateChange($event)" [showClearButton]="false"
+                                    [value]="startDateParser(data.startTime || data.StartTime)"
+                                    class="e-field"
+                                    data-name="StartTime" format="M/dd/yy h:mm a"
+                                    id="StartTime">
+                </ejs-datetimepicker>
+              </td>
+            </tr>
+            <tr>
+              <td class="e-textlabel">To</td>
+              <td colspan="4">
+                <ejs-datetimepicker (change)="onDateChange($event)" [showClearButton]="false"
+                                    [value]="endDateParser(data.endTime || data.EndTime)"
+                                    class="e-field"
+                                    data-name="EndTime" format="M/dd/yy h:mm a"
+                                    id="EndTime">
+                </ejs-datetimepicker>
+              </td>
+            </tr>
+
+            </tbody>
+            <div *ngIf="errorMessage" class="error-message text-danger"><b><p>{{ errorMessage }}</p></b></div>
+          </table>
+
+
+        </ng-template>
+
+
+      </e-views>
+    </ejs-schedule>
+    <div id="search_schedule"></div>
+
+
+  </div>
+</div>
+
+
+
+
+
