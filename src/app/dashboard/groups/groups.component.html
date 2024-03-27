@@ -1,0 +1,31 @@
+
+  <div class="control-section accordion-control-section">
+    <div class="e-sample-resize-container m-5 rounded-2xl">
+      <ejs-accordion class="p-3 rounded-2xl">
+        <e-accordionitems>
+          <e-accordionitem>
+            expanded='true'
+            <ng-template #header class="flex items-center">
+              <div class="pl-4 font-bold text-3xl">List of groups</div>
+            </ng-template>
+            <ng-template #content>
+              <div class="property-section property-customization bg-white rounded px-4 pb-4">
+                <div class="property-panel-section">
+                  <ejs-grid #grid [dataSource]='data' allowPaging='true'>
+                    <e-columns>
+                      <e-column field='name' headerText='Group name' width='100' textAlign='Left'></e-column>
+                      <e-column field='department.name' headerText='Department' width='100' format="C2" textAlign='Left'></e-column>
+                      <e-column field='quantity' headerText='Quantity' width='70' textAlign='Left'></e-column>
+                    </e-columns>
+                  </ejs-grid>
+
+                </div>
+              </div>
+            </ng-template>
+          </e-accordionitem>
+        </e-accordionitems>
+      </ejs-accordion>
+    </div>
+  </div>
+
+
