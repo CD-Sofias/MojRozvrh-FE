@@ -10,23 +10,22 @@
 
         <div class="form-group template">
           <div
-            [ngClass]="{ 'e-success': form?.controls.email.valid }"
+            [ngClass]="{ 'e-success': form?.controls.username.valid }"
             class="e-float-input"
           >
             <input
               (focusout)="focusoutfunction($event)"
               class="required"
-              formControlName="email"
-              id="email"
-              name="email"
-              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
-              placeholder="johndoe@example.com"
+              formControlName="username"
+              id="username"
+              name="username"
+              placeholder="johndoe"
               type="text"
             />
             <span class="e-float-line"></span>
-            <label class="e-float-text" for="email"><p>Email</p></label>
+            <label class="e-float-text" for="username"><p>User name</p></label>
           </div>
-          <app-field-error-display [displayError]="isFieldValid('email')" errorMsg="* Enter a valid email address">
+          <app-field-error-display [displayError]="isFieldValid('username')" errorMsg="* Enter a valid username">
           </app-field-error-display>
         </div>
 

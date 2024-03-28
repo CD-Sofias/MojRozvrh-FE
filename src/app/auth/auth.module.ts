@@ -9,6 +9,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { AuthRoutingModule } from './auth-routing.module';
 import {FieldErrorDisplayComponent} from "../subcomponent/subcomponent.component";
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import {FieldErrorDisplayComponent} from "../subcomponent/subcomponent.component
     DropDownListModule,
     NumericTextBoxModule,
     AuthRoutingModule,
-    FieldErrorDisplayComponent
+    FieldErrorDisplayComponent,
+    HttpClientModule
   ],
   exports: [
     LoginComponent,

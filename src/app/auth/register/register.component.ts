@@ -5,6 +5,7 @@ import {EmitType} from '@syncfusion/ej2-base';
 import {Title} from "@angular/platform-browser";
 import {environment} from "../../../environments/environment.prod";
 import {HttpClient} from "@angular/common/http";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-register',
@@ -45,21 +46,23 @@ export class RegisterComponent {
   public Submit(): void {
     this.formSubmitAttempt = true;
     if (this.form!.valid) {
-      console.log(this.form.value);
+      this.register(
+        this.form.value.username,
+        this.form.value.password,
+        this.form.value.email,
+      );
       this.dialogObj!.show();
       this.form!.reset();
     }
   }
 
-  constructor(private formBuilder: FormBuilder, private titleService: Title, private http: HttpClient) {
+
+  constructor(private formBuilder: FormBuilder, private titleService: Title, private http: HttpClient, private router: Router) {
     this.titleService.setTitle('Register');
     this.form = this.formBuilder.group({
-      firstname: [null, Validators.required],
-      lastname: [null, Validators.required],
       username: [null, [Validators.required, Validators.minLength(2)]],
       password: [null, [Validators.required, Validators.minLength(6)]],
-      email: [null, [Validators.required, Validators.email]],
-      mobile: [null, [Validators.required, Validators.min(100000000), Validators.max(999999999999)]]
+      email: [null, [Validators.required, Validators.email]]
     });
   }
 
@@ -67,20 +70,22 @@ export class RegisterComponent {
     return !this.form.get(field).valid && (this.form.get(field).dirty || this.form.get(field).touched);
   }
 
-  register(firstName: string, lastName: string, userName: string, password: string, email: string, mobile: number): void {
-    const body = {firstname: firstName, lastname: lastName, username: userName, password: password, email: email, mobile: mobile};
-    this.http.post<any>(environment.backendUrl + '/register', body).subscribe({
+  register(
+    userName: string, password: string, email: string): void {
+    const body = {
+      username: userName, password: password, email: email};
+    console.log(body)
+    this.http.post<any>(environment.backendUrl + '/auth/signup', body, {observe: 'response'}).subscribe({
       next: (response) => {
-        if (response && response.access_token) {
-          localStorage.setItem('access_token', response.access_token);
-        } else {
-          console.error('Registration error');
-        }
+        const accessToken = response.headers.get('Set-Cookie');
+          localStorage.setItem('access_token', accessToken);
+          this.router.navigate(['/dashboard']);
       },
       error: (error) => {
         console.error('Server error', error);
       }
     });
   }
+
 
 }
