@@ -7,44 +7,7 @@
     >
       <form [formGroup]="form" id="reactive">
         <h2 class="form-title"><strong>Registration Form</strong></h2>
-        <div class="form-group template">
-          <div
-            [ngClass]="{ 'e-success': form?.controls['firstname'].valid }"
-            class="e-float-input"
-          >
-            <input
-              class="required"
-              formControlName="firstname"
-              id="firstname"
-              name="firstname"
-              placeholder="John"
-              type="text"
-            />
-            <span class="e-float-line"></span>
-            <label class="e-float-text" for="firstname"><p>First Name</p></label>
-          </div>
-          <app-field-error-display [displayError]="isFieldValid('firstname')" errorMsg="* Enter your first name">
-          </app-field-error-display>
-        </div>
-        <div class="form-group template">
-          <div
-            [ngClass]="{ 'e-success': form?.controls['lastname'].valid }"
-            class="e-float-input"
-          >
-            <input
-              class="required"
-              formControlName="lastname"
-              id="lastname"
-              name="lastname"
-              placeholder="Doe"
-              type="text"
-            />
-            <span class="e-float-line"></span>
-            <label class="e-float-text" for="lastname"><p>Last Name</p></label>
-          </div>
-          <app-field-error-display [displayError]="isFieldValid('lastname')" errorMsg="* Enter your last name">
-          </app-field-error-display>
-        </div>
+
         <div class="form-group template">
           <div
             [ngClass]="{ 'e-success': form?.controls.username.valid }"
@@ -66,6 +29,27 @@
         </div>
         <div class="form-group template">
           <div
+            [ngClass]="{ 'e-success': form?.controls.email.valid }"
+            class="e-float-input"
+          >
+            <input
+              (focusout)="focusoutfunction($event)"
+              class="required"
+              formControlName="username"
+              id="email"
+              name="email"
+              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
+              placeholder="johndoe@example.com"
+              type="text"
+            />
+            <span class="e-float-line"></span>
+            <label class="e-float-text" for="email"><p>Email</p></label>
+          </div>
+          <app-field-error-display [displayError]="isFieldValid('email')" errorMsg="* Enter a valid email address">
+          </app-field-error-display>
+        </div>
+        <div class="form-group template">
+          <div
             [ngClass]="{ 'e-success': form?.controls.password.valid }"
             class="e-float-input"
           >
@@ -83,52 +67,8 @@
           <app-field-error-display [displayError]="isFieldValid('password')" errorMsg="* Enter a valid password">
           </app-field-error-display>
         </div>
-        <div class="form-group template">
-          <div
-            [ngClass]="{ 'e-success': form?.controls.email.valid }"
-            class="e-float-input"
-          >
-            <input
-              (focusout)="focusoutfunction($event)"
-              class="required"
-              formControlName="email"
-              id="email"
-              name="email"
-              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
-              placeholder="johndoe@example.com"
-              type="text"
-            />
-            <span class="e-float-line"></span>
-            <label class="e-float-text" for="email"><p>Email</p></label>
-          </div>
-          <app-field-error-display [displayError]="isFieldValid('email')" errorMsg="* Enter a valid email address">
-          </app-field-error-display>
-        </div>
-
-        <div class="form-group template">
-          <div
-            [ngClass]="{ 'e-success': form?.controls.mobile.valid }"
-            class="e-float-input"
-            id="mobile-no"
-          >
-            <input
-              class="required"
-              formControlName="mobile"
-              id="mobileno"
-              name="mobile"
-              placeholder="1234567890"
-              type="number"
-            />
-            <span class="e-float-line"></span>
-            <label
-              class="e-float-text"
-            ><p>Mobile No</p></label>
-          </div>
 
 
-          <app-field-error-display [displayError]="isFieldValid('mobile')" errorMsg="* Enter a valid mobile number">
-          </app-field-error-display>
-        </div>
         <p><a routerLink="../login">Already have an account? Authorize</a></p>
         <div class="form-group template">
           <div class="submitBtn">
