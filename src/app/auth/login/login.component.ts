@@ -3,6 +3,8 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DialogComponent, PositionDataModel} from "@syncfusion/ej2-angular-popups";
 import {EmitType} from "@syncfusion/ej2-base";
 import { Title } from '@angular/platform-browser';
+import {HttpClient} from "@angular/common/http";
+import {environment} from "../../../environments/environment.prod";
 
 @Component({
   selector: 'app-login',
@@ -40,6 +42,10 @@ export class LoginComponent {
     }
   }
 
+
+  public data: any[];
+
+
   public Submit(): void {
     this.formSubmitAttempt = true;
     if (this.form!.valid) {
@@ -49,13 +55,8 @@ export class LoginComponent {
     }
   }
 
-  constructor(private formBuilder: FormBuilder, private titleService: Title) {
-  }
-
-
-  ngOnInit() {
+  constructor(private formBuilder: FormBuilder, private titleService: Title, private http: HttpClient) {
     this.titleService.setTitle('Login');
-    this.textboxValue = '';
     this.form = this.formBuilder.group({
       password: [null, [Validators.required, Validators.minLength(6)]],
       email: [null, [Validators.required, Validators.email]],
@@ -64,5 +65,21 @@ export class LoginComponent {
 
   public isFieldValid(field: string) {
     return !this.form.get(field).valid && (this.form.get(field).dirty || this.form.get(field).touched);
+  }
+
+  login(userName: string, password: string): void {
+    const body = {user_name: userName, password: password};
+    this.http.post<any>(environment.backendUrl + '/authenticate', body).subscribe({
+      next: (response) => {
+        if (response && response.access_token) {
+          localStorage.setItem('access_token', response.access_token);
+        } else {
+          console.error('Auth error');
+        }
+      },
+      error: (error) => {
+        console.error('Server error', error);
+      }
+    });
   }
 }

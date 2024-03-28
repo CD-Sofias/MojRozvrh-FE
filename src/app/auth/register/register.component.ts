@@ -3,6 +3,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DialogComponent} from '@syncfusion/ej2-angular-popups';
 import {EmitType} from '@syncfusion/ej2-base';
 import {Title} from "@angular/platform-browser";
+import {environment} from "../../../environments/environment.prod";
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'app-register',
@@ -49,12 +51,8 @@ export class RegisterComponent {
     }
   }
 
-  constructor(private formBuilder: FormBuilder, private titleService: Title) {
-  }
-
-  ngOnInit() {
+  constructor(private formBuilder: FormBuilder, private titleService: Title, private http: HttpClient) {
     this.titleService.setTitle('Register');
-    this.textboxValue = '';
     this.form = this.formBuilder.group({
       firstname: [null, Validators.required],
       lastname: [null, Validators.required],
@@ -68,4 +66,21 @@ export class RegisterComponent {
   public isFieldValid(field: string) {
     return !this.form.get(field).valid && (this.form.get(field).dirty || this.form.get(field).touched);
   }
+
+  register(firstName: string, lastName: string, userName: string, password: string, email: string, mobile: number): void {
+    const body = {firstname: firstName, lastname: lastName, username: userName, password: password, email: email, mobile: mobile};
+    this.http.post<any>(environment.backendUrl + '/register', body).subscribe({
+      next: (response) => {
+        if (response && response.access_token) {
+          localStorage.setItem('access_token', response.access_token);
+        } else {
+          console.error('Registration error');
+        }
+      },
+      error: (error) => {
+        console.error('Server error', error);
+      }
+    });
+  }
+
 }
