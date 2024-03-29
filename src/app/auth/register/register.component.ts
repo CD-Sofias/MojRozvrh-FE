@@ -52,15 +52,9 @@ export class RegisterComponent {
         this.form.value.email,
       ).subscribe({
         next: (response) => {
-          if (response.status == 201) {
-            this.router.navigate(['/auth/login']);
-          } else {
-            console.error('Registration failed');
-            this.dialogObj!.show();
-          }
+          this.router.navigate(['/auth/login']);
         },
         error: (error) => {
-          console.error('Server error', error);
           this.dialogObj!.show();
         },
         complete: () => {

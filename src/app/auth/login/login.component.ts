@@ -53,17 +53,11 @@ export class LoginComponent {
         this.form.value.password,
       ).subscribe({
         next: (response) => {
-          if (response.token) {
-            const accessToken = response.token;
-            document.cookie = `access_token=${accessToken}; path=/`;
-            this.router.navigate(['/dashboard']);
-          } else {
-            console.error('Invalid token');
-            this.dialogObj!.show();
-          }
+          const accessToken = response.token;
+          document.cookie = `access_token=${accessToken}; path=/`;
+          this.router.navigate(['/dashboard']);
         },
         error: (error) => {
-          console.error('Server error', error);
           this.dialogObj!.show();
         },
         complete: () => {
@@ -72,6 +66,7 @@ export class LoginComponent {
       });
     }
   }
+
 
 
   constructor(private formBuilder: FormBuilder, private titleService: Title, private http: HttpClient, private router: Router, private authService: AuthService) {
