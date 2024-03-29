@@ -23,7 +23,7 @@ export class AuthService {
       }),
       catchError((error) => {
         console.error('Server error', error);
-        throw new Error('Server error');
+        throw new Error('Email or username is already taken');
       })
     );
   }
@@ -39,7 +39,7 @@ export class AuthService {
       }),
       catchError((error) => {
         console.error('Server error', error);
-        throw new Error('Server error');
+        throw new Error('Invalid password or user name');
       })
     );
   }
