@@ -78,7 +78,7 @@ export class RegisterComponent {
     this.http.post<any>(environment.backendUrl + '/auth/signup', body).subscribe({
       next: (response) => {
         if (response.message === 'User registration was successful') {
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/auth/login']);
         } else {
           console.error('Registration failed');
           this.dialogObj!.show();
