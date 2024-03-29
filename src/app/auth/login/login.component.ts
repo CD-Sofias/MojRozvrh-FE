@@ -58,6 +58,7 @@ export class LoginComponent {
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {
+          this.content = error.message;
           this.dialogObj!.show();
         },
         complete: () => {

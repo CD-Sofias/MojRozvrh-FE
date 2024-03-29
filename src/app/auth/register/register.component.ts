@@ -55,6 +55,7 @@ export class RegisterComponent {
           this.router.navigate(['/auth/login']);
         },
         error: (error) => {
+          this.content = error.message;
           this.dialogObj!.show();
         },
         complete: () => {
