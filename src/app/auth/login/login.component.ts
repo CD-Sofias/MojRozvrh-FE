@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DialogComponent, PositionDataModel} from "@syncfusion/ej2-angular-popups";
 import {EmitType} from "@syncfusion/ej2-base";
 import { Title } from '@angular/platform-browser';
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {AuthService} from "../auth.service";
 
@@ -51,22 +51,28 @@ export class LoginComponent {
       this.authService.login(
         this.form.value.username,
         this.form.value.password,
-      ).then(response => {
-        if (response.token) {
-          const accessToken = response.token;
-          document.cookie = `access_token=${accessToken}; path=/`;
-          this.router.navigate(['/dashboard']);
-        } else {
-          console.error('Invalid token');
+      ).subscribe({
+        next: (response) => {
+          if (response.token) {
+            const accessToken = response.token;
+            document.cookie = `access_token=${accessToken}; path=/`;
+            this.router.navigate(['/dashboard']);
+          } else {
+            console.error('Invalid token');
+            this.dialogObj!.show();
+          }
+        },
+        error: (error) => {
+          console.error('Server error', error);
           this.dialogObj!.show();
+        },
+        complete: () => {
+          this.form!.reset();
         }
-      }).catch((error: HttpErrorResponse) => {
-        console.error('Server error', error);
-        this.dialogObj!.show();
       });
-      this.form!.reset();
     }
   }
+
 
   constructor(private formBuilder: FormBuilder, private titleService: Title, private http: HttpClient, private router: Router, private authService: AuthService) {
     this.titleService.setTitle('Login');

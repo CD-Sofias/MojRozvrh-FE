@@ -1,5 +1,6 @@
-import {Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.prod';
 
 @Injectable({
@@ -8,15 +9,15 @@ import { environment } from '../../environments/environment.prod';
 export class AuthService {
   constructor(private http: HttpClient) { }
 
-  register(userName: string, password: string, email: string): Promise<any> {
+  register(userName: string, password: string, email: string): Observable<any> {
     const body = {username: userName, password: password, email: email};
     return this.http.post<any>(environment.backendUrl + '/auth/signup', body, {
       observe: "response"
-    }).toPromise();
+    });
   }
 
-  login(userName: string, password: string): Promise<any> {
+  login(userName: string, password: string): Observable<any> {
     const body = {username: userName, password: password};
-    return this.http.post<any>(environment.backendUrl + '/auth/login', body).toPromise();
+    return this.http.post<any>(environment.backendUrl + '/auth/login', body);
   }
 }

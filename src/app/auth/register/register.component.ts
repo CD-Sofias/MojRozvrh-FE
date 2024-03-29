@@ -50,20 +50,26 @@ export class RegisterComponent {
         this.form.value.username,
         this.form.value.password,
         this.form.value.email,
-      ).then(response => {
-        if (response.status == 201) {
-          this.router.navigate(['/auth/login']);
-        } else {
-          console.error('Registration failed');
+      ).subscribe({
+        next: (response) => {
+          if (response.status == 201) {
+            this.router.navigate(['/auth/login']);
+          } else {
+            console.error('Registration failed');
+            this.dialogObj!.show();
+          }
+        },
+        error: (error) => {
+          console.error('Server error', error);
           this.dialogObj!.show();
+        },
+        complete: () => {
+          this.form!.reset();
         }
-      }).catch((error) => {
-        console.error('Server error', error);
-        this.dialogObj!.show();
       });
-      this.form!.reset();
     }
   }
+
 
 
 
