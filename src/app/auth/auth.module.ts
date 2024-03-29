@@ -10,7 +10,6 @@ import { RegisterComponent } from './register/register.component';
 import { AuthRoutingModule } from './auth-routing.module';
 import {FieldErrorDisplayComponent} from "../subcomponent/subcomponent.component";
 import {HttpClientModule} from "@angular/common/http";
-import {AuthService} from "./auth.service";
 
 @NgModule({
   declarations: [
@@ -33,8 +32,7 @@ import {AuthService} from "./auth.service";
   exports: [
     LoginComponent,
     RegisterComponent
-  ],
-  providers: [AuthService],
+  ]
 })
 export class AuthModule { }
 

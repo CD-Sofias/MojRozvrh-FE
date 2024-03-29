@@ -3,7 +3,9 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {DialogComponent} from '@syncfusion/ej2-angular-popups';
 import {EmitType} from '@syncfusion/ej2-base';
 import {Title} from "@angular/platform-browser";
-import {AuthService} from "../auth.service";
+import {environment} from "../../../environments/environment.prod";
+import {HttpClient} from "@angular/common/http";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-register',
@@ -44,7 +46,7 @@ export class RegisterComponent {
   public Submit(): void {
     this.formSubmitAttempt = true;
     if (this.form!.valid) {
-      this.authService.register(
+      this.register(
         this.form.value.username,
         this.form.value.password,
         this.form.value.email,
@@ -53,7 +55,8 @@ export class RegisterComponent {
     }
   }
 
-  constructor(private formBuilder: FormBuilder, private titleService: Title, private authService: AuthService) {
+
+  constructor(private formBuilder: FormBuilder, private titleService: Title, private http: HttpClient, private router: Router) {
     this.titleService.setTitle('Register');
     this.form = this.formBuilder.group({
       username: [null, [Validators.required, Validators.minLength(2)]],
@@ -65,4 +68,27 @@ export class RegisterComponent {
   public isFieldValid(field: string) {
     return !this.form.get(field).valid && (this.form.get(field).dirty || this.form.get(field).touched);
   }
+
+  register(
+    userName: string, password: string, email: string): void {
+    const body = {
+      username: userName, password: password, email: email
+    };
+    console.log(body)
+    this.http.post<any>(environment.backendUrl + '/auth/signup', body).subscribe({
+      next: (response) => {
+        if (response.message === 'User registration was successful') {
+          this.router.navigate(['/dashboard']);
+        } else {
+          console.error('Registration failed');
+          this.dialogObj!.show();
+        }
+      },
+      error: (error) => {
+        console.error('Server error', error);
+      }
+    });
+  }
+
+
 }
