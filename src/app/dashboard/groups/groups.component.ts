@@ -1,7 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import {environment} from "../../../environments/environment.prod";
 import {HttpClient} from "@angular/common/http";
-import {L10n, setCulture} from "@syncfusion/ej2-base";
 import {Observable} from "rxjs";
 
 
