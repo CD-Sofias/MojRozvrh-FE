@@ -11,16 +11,38 @@ import {
 } from '@syncfusion/ej2-angular-schedule';
 import {TextBoxComponent,} from '@syncfusion/ej2-angular-inputs';
 import {DatePickerComponent,} from '@syncfusion/ej2-angular-calendars';
-import {AutoCompleteComponent, DropDownListComponent,} from '@syncfusion/ej2-angular-dropdowns';
+import {AutoCompleteComponent, DropDownListComponent, FilteringEventArgs,} from '@syncfusion/ej2-angular-dropdowns';
 
-import {Component, ElementRef, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  Renderer2,
+  SimpleChanges,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 
 import {extend, isNullOrUndefined} from '@syncfusion/ej2-base';
 import {ChangeEventArgs} from '@syncfusion/ej2-calendars';
 
 import {DataManager, Predicate, Query, ReturnOption} from '@syncfusion/ej2-data';
-import {roomData} from "../../../data";
 import {Title} from "@angular/platform-browser";
+import {HttpClient} from "@angular/common/http";
+import {environment} from "../../../environments/environment.prod";
+import {FieldSettingsModel} from "@syncfusion/ej2-navigations";
+
+
+interface ScheduleCell {
+  groupId: string;
+  subjectId: string;
+  teacherId: string;
+  classroomId: string;
+  startTime: string;
+  endTime: string;
+  scheduleId: string;
+}
 
 
 @Component({
@@ -31,7 +53,68 @@ import {Title} from "@angular/platform-browser";
   providers: [TimelineViewsService, ResizeService, DragAndDropService]
 
 })
-export class MyScheduleComponent {
+export class MyScheduleComponent implements OnInit {
+
+  public currentSubjectId: string;
+  public currentSubjectName: string;
+
+  public currentClassroomId: string;
+  public currentClassroomNumber: string;
+
+
+  addClasses() {
+    let selectElement = document.getElementsByClassName('e-ddl-hidden')[0];
+    if (selectElement) {
+      this.renderer.addClass(selectElement, 'e-subject');
+      this.renderer.addClass(selectElement, 'e-field');
+      this.renderer.addClass(selectElement, 'e-input');
+    }
+  }
+
+  public selectedSubject: String;
+  public selectedClassroom: String;
+
+
+  @Input() selectedGroupScheduleCells: ScheduleCell;
+  @Input() selectedGroup: String;
+  @Input() scheduleData: ScheduleCell;
+
+  @ViewChild('sample')
+  public AutoCompleteObj: AutoCompleteComponent;
+
+
+  public data: Record<string, any>[];
+
+  subjects: any[] = [];
+
+  public fields: FieldSettingsModel = {value: 'id', text: 'name'};
+
+  public onChange(args: ScheduleCell): void {
+    let valueEle: HTMLInputElement = document.getElementsByClassName('e-input')[0] as HTMLInputElement;
+    if (this.AutoCompleteObj.value === "null" || this.AutoCompleteObj.value === null || this.AutoCompleteObj.value === "") {
+      valueEle.value = '';
+    }
+  }
+
+
+  ngOnInit() {
+    this.titleService.setTitle('My schedule');
+
+    this.getSubjects();
+    this.getGroups();
+    this.getClassrooms();
+    this.getTeachers();
+  }
+
+  onFiltering(e: FilteringEventArgs, dataSource: string[]) {
+    let query = new Query();
+    query = (e.text !== '') ? query.where('name', 'contains', e.text, true) : query;
+    e.updateData(dataSource, query);
+  }
+
+  public value: string = '';
+
+
   @ViewChild('eventTypeObj')
   public eventTypeObj?: DropDownListComponent;
   @ViewChild('titleObj')
@@ -45,10 +128,6 @@ export class MyScheduleComponent {
   @ViewChild('classroom_id_search_content') locationObj: ElementRef | undefined;
   @ViewChild('startTime_search_content') startTimeObj: DatePickerComponent | undefined;
   @ViewChild('endTime_search_content') endTimeObj: DatePickerComponent | undefined;
-
-  @ViewChild('sample')
-  public AutoCompleteObj!: AutoCompleteComponent;
-
 
   public startDate: Date | undefined;
   public endDate: Date | undefined;
@@ -64,12 +143,9 @@ export class MyScheduleComponent {
 
   public errorMessage: string = '';
 
-  constructor(private titleService: Title) {
+  constructor(private titleService: Title, private http: HttpClient, private renderer: Renderer2) {
   }
 
-  ngOnInit() {
-    this.titleService.setTitle('My schedule');
-  }
 
   onCellClick(args: CellClickEventArgs) {
     let date = new Date(args.startTime);
@@ -112,7 +188,6 @@ export class MyScheduleComponent {
     }
   }
 
-
   public group: GroupModel = {
     enableCompactView: false,
     resources: ['MeetingRoom']
@@ -128,49 +203,341 @@ export class MyScheduleComponent {
   ];
 
 
-  public groups: Record<string, any>[] = [
-    {name: 'nAIVs3', quantity: 10, id: 1},
-    {name: 'nAIVs2', quantity: 20, id: 2},
-  ];
-
-
-  public subjects: Record<string, any>[] = [
-    {name: 'Test', id: 1, color: '#98AFC7'},
-    {name: 'Exam', id: 2, color: '#99C68E'},
-    {name: 'Lecture', id: 3, color: '#C299D6'},
-    {name: 'Practice', id: 4, color: '#3090C7'},
-  ];
-
   getSubjectColor(id: number) {
     const subject = this.subjects.find(subject => subject['id'] === id);
     return subject ? subject['color'] : 'default';
   }
-  // @ts-ignore
-  public data: Record<string, any>[] = extend([], roomData, null, true) as Record<string, any>
 
 
-  public eventSettings: EventSettingsModel = {
+  getSubjects(): void {
+    this.http.get<String[]>(environment.backendUrl + '/subject').subscribe(subjects => {
+      this.subjects = subjects;
+    });
+  }
 
-    dataSource: this.data,
-    fields: {
-      id: 'id',
-      teacherId: {name: 'teacher_id', title: 'Teacher'},
-      subject: {name: 'subject_id', title: 'Subject', validation: {required: true}},
-      location: {
-        name: 'classroom_id', title: 'Classroom', validation: {
-          required: true,
-          regex: [
-            '^[a-zA-Z0-9- ]*$',
-            'Special characters are not allowed in this field',
-          ],
+
+  groups: any[];
+  teachers: any[];
+  classrooms: any[];
+
+  getGroups(): void {
+    this.http.get<String[]>(environment.backendUrl + '/groups').subscribe(groups => {
+      this.groups = groups;
+    });
+  }
+
+  getTeachers(): void {
+    this.http.get<String[]>(environment.backendUrl + '/teacher').subscribe(teachers => {
+      this.teachers = teachers;
+    });
+  }
+
+  getClassrooms(): void {
+    this.http.get<String[]>(environment.backendUrl + '/classroom').subscribe(classrooms => {
+      this.classrooms = classrooms;
+    });
+  }
+
+  getSubjectTypeById(id: string): string {
+    let subject = this.subjects.find(subject => subject.id === id);
+    return subject ? subject.type : id;
+  }
+
+
+  getGroupById(id: string): string {
+    let group = this.groups.find(group => group.id === id);
+    return group ? group.name : id;
+  }
+
+
+  lessonTypes: String[] = ['Lekcia', 'Praktika', 'Laboratornaia'];
+
+
+  getSubjectNameById(id: string): string {
+    let subject = this.subjects.find(subject => subject.id === id);
+    return subject ? subject.name : id;
+  }
+
+
+  getTeacherNameById(id: string): string {
+    let teacher = this.teachers.find(teacher => teacher.id === id);
+    return teacher ? teacher.name : id;
+  }
+
+  getClassroomNameById(id: string): string {
+    let classroom = this.classrooms.find(classroom => classroom.id === id);
+    return classroom ? classroom.name : id;
+  }
+
+
+  onSubjectSelected(event: any): boolean {
+    let selectElement = document.getElementById('my-select-subject').getElementsByClassName('e-ddl-hidden')[0];
+    if (selectElement) {
+      this.renderer.addClass(selectElement, 'e-subject');
+      this.renderer.addClass(selectElement, 'e-field');
+      this.renderer.addClass(selectElement, 'e-input');
+    }
+    console.log(event);
+    this.selectedSubject = event;
+
+    if (event && event.itemData) {
+      let selectedSubject = this.subjects.find(subject => subject.id === event.itemData.id);
+      if (!selectedSubject) {
+        this.currentSubjectId = null;
+        this.currentSubjectName = null;
+        let index = this.data.findIndex(item => item.subject_id === event.itemData.id);
+        if (index !== -1) {
+          this.data[index].subject_id = '';
+        }
+        console.error('Выбранное значение не найдено в списке subjects');
+        return false;
+      } else {
+        this.currentSubjectId = selectedSubject.id;
+        this.currentSubjectName = selectedSubject.name;
+
+        let dataIndex = this.data.findIndex(item => item.subject_id === event.itemData.id);
+        if (dataIndex !== -1) {
+          this.data[dataIndex].subject_id = this.currentSubjectId;
+        }
+
+        return true;
+      }
+    }
+    return false;
+  }
+
+  removeAttributes() {
+    let inputElements = document.getElementsByClassName('e-input');
+    Array.from(inputElements).forEach((inputElement: any) => {
+      this.renderer.removeAttribute(inputElement, 'tabindex');
+      this.renderer.removeAttribute(inputElement, 'aria-label');
+      this.renderer.removeAttribute(inputElement, 'aria-autocomplete');
+      this.renderer.removeAttribute(inputElement, 'aria-expanded');
+      this.renderer.removeAttribute(inputElement, 'aria-readonly');
+      this.renderer.removeAttribute(inputElement, 'autocomplete');
+      this.renderer.removeAttribute(inputElement, 'autocapitalize');
+      this.renderer.removeAttribute(inputElement, 'spellcheck');
+      this.renderer.removeAttribute(inputElement, 'aria-controls');
+      this.renderer.removeAttribute(inputElement, 'aria-describedby');
+    });
+  }
+
+
+  onClassroomSelected(event: any): boolean {
+    let selectElement = document.getElementById('my-select-classroom').getElementsByClassName('e-ddl-hidden')[0];
+    if (selectElement) {
+      this.renderer.addClass(selectElement, 'e-subject');
+      this.renderer.addClass(selectElement, 'e-field');
+      this.renderer.addClass(selectElement, 'e-input');
+    }
+    this.selectedClassroom = event;
+
+    if (event && event.itemData) {
+      let selectedClassroom = this.classrooms.find(classroom => classroom.id === event.itemData.id);
+      if (!selectedClassroom) {
+        this.currentClassroomId = null;
+        this.currentClassroomNumber = null;
+        let index = this.data.findIndex(item => item.classroom_id === event.itemData.id);
+        if (index !== -1) {
+          this.data[index].classroom_id = '';
+        }
+        console.error('Выбранное значение не найдено в списке classrooms');
+        return false;
+      } else {
+        this.currentClassroomId = selectedClassroom.id;
+        this.currentClassroomNumber = selectedClassroom.classroomNumber;
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  currentGroupId: String;
+  currentGroupName: String;
+
+  onGroupSelected(event: any): boolean {
+    let selectElement = document.getElementById('my-select-group').getElementsByClassName('e-ddl-hidden')[0];
+    if (selectElement) {
+      this.renderer.addClass(selectElement, 'e-subject');
+      this.renderer.addClass(selectElement, 'e-field');
+      this.renderer.addClass(selectElement, 'e-input');
+    }
+
+    this.selectedGroup = event;
+    console.log(this.data);
+    if (event && event.itemData) {
+      let selectedGroup = this.groups.find(group => group.id === event.itemData.id);
+      if (!selectedGroup) {
+        this.currentGroupId = null;
+        this.currentGroupName = null;
+        let index = this.data.findIndex(item => item.group_id === event.itemData.id);
+        if (index !== -1) {
+          this.data[index].group_id = '';
+        }
+        console.error('Выбранное значение не найдено в списке groups');
+        return false;
+      } else {
+        this.currentGroupId = selectedGroup.id;
+        this.currentGroupName = selectedGroup.name;
+        return true;
+      }
+    }
+    console.log(this.data);
+    return false;
+  }
+
+
+  selectedTeacher: String;
+  currentTeacherId: String;
+  currentTeacherName: String;
+
+  onTeacherSelected(event: any): boolean {
+    let selectElement = document.getElementById('my-select-teacher').getElementsByClassName('e-ddl-hidden')[0];
+    if (selectElement) {
+      this.renderer.addClass(selectElement, 'e-subject');
+      this.renderer.addClass(selectElement, 'e-field');
+      this.renderer.addClass(selectElement, 'e-input');
+    }
+    this.selectedTeacher = event;
+
+    if (event && event.itemData) {
+      let selectedTeacher = this.teachers.find(teacher => teacher.id === event.itemData.id);
+      let teacherElement = document.getElementById('my-select-teacher');
+      if (!selectedTeacher) {
+        this.currentTeacherId = null;
+        this.currentTeacherName = null;
+        teacherElement.classList.add('e-error');
+        let index = this.data.findIndex(item => item.teacher_id === event.itemData.id);
+        if (index !== -1) {
+          this.data[index].teacher_id = '';
+        }
+        console.error('Выбранное значение не найдено в списке teachers');
+        return false;
+      } else {
+        this.currentTeacherId = selectedTeacher.id;
+        this.currentTeacherName = selectedTeacher.name;
+        teacherElement.classList.remove('e-error');
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  public eventSettings: EventSettingsModel;
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.scheduleData) {
+      this.data = extend([], this.scheduleData, null, true) as Record<string, any>[];
+      this.eventSettings = {
+        dataSource: this.data,
+        fields: {
+          id: 'id',
+          teacherId: {
+            name: 'teacher_id', title: 'Teacher',
+            validation: {
+              required: true,
+            },
+          },
+          subject: {
+            name: 'subject_id',
+            title: 'Subject',
+            validation: {
+              required: true,
+            },
+          },
+
+          location: {
+            name: 'classroom_id', title: 'Classroom', validation: {
+              required: true,
+              regex: [
+                '^[a-zA-Z0-9- ]*$',
+                'Special characters are not allowed in this field',
+              ],
+            },
+          },
+          subject_type: {
+            name: 'subject_type', title: 'Subject type', validation: {
+              required: true,
+            },
+          },
+          startTime: {
+            name: 'StartTime', title: 'From', validation: {
+              required: true,
+            },
+          },
+          endTime: {
+            name: 'EndTime', title: 'To', validation: {
+              required: true,
+            },
+          },
+          isAllDay: {name: 'is_all_day'}
         },
+      };
+    }
+  }
+
+
+  public onActionBegin(args: string[] | any): void {
+    if (args.requestType === 'eventCreate' || args.requestType === 'eventChange') {
+      let data: Record<string, any>;
+
+      if (args.requestType === 'eventCreate') {
+        data = (args.data[0] as Record<string, any>);
+      } else if (args.requestType === 'eventChange') {
+        data = (args.data as Record<string, any>);
+      }
+
+      if (!this.onSubjectSelected({itemData: {id: data.subject_id}})) {
+        args.cancel = true;
+        return;
+      }
+
+      if (!this.onClassroomSelected({itemData: {id: data.classroom_id}})) {
+        args.cancel = true;
+        return;
+      }
+
+      if (!this.onTeacherSelected({itemData: {id: data.teacher_id}})) {
+        args.cancel = true;
+        return;
+      }
+
+      // Проверка доступности слота
+      if (!this.scheduleObj.isSlotAvailable(data)) {
+        args.cancel = true;
+        return;
+      }
+
+      let scheduleCell: ScheduleCell = {
+        groupId: data.group_id,
+        subjectId: data.subject_id,
+        teacherId: data.teacher_id,
+        classroomId: data.classroom_id,
+        startTime: data.StartTime.toISOString(),
+        endTime: data.EndTime.toISOString(),
+        scheduleId: data.id
+      };
+
+      console.log(scheduleCell)
+
+      this.createScheduleCell(scheduleCell);
+    }
+  }
+
+
+  createScheduleCell(scheduleCell: ScheduleCell): void {
+    this.http.post<ScheduleCell>(environment.backendUrl + '/schedule_cell', scheduleCell).subscribe({
+      next: response => {
+        console.log('Response from the server:', response);
       },
-      subject_type: {name: 'subject_type', title: 'Subject type'},
-      startTime: {name: 'StartTime', title: 'From'},
-      endTime: {name: 'EndTime', title: 'To'},
-      isAllDay: {name: 'is_all_day'}
-    },
-  };
+      error: error => {
+        console.error('Error:', error);
+      }
+    });
+  }
+
 
   public getResourceData(data: { [key: string]: Object }): { [key: string]: Object } {
     const resources: ResourcesModel = this.scheduleObj!.getResourceCollections()[0];
@@ -192,14 +559,9 @@ export class MyScheduleComponent {
     return group ? group['name'] : 'Группа не найдена';
   }
 
-  public getSubjectName(subjectId: number): string {
-    const subject = this.subjects.find(s => s['id'] === subjectId);
-    return subject ? subject['name'] : 'Unknown Subject';
-  }
-
-
   public globalSearch(args: KeyboardEvent): void {
     const searchString: string = (args.target as HTMLInputElement).value;
+    console.log(this.scheduleData)
     if (searchString !== '') {
       new DataManager(this.eventSettings.dataSource as Record<string, any>[])
         .executeQuery(
@@ -235,6 +597,7 @@ export class MyScheduleComponent {
   }
 
   private showSearchEvents(type: string, data?: Record<string, any>): void {
+
     if (type === 'show') {
       this.scheduleObj.eventSettings.dataSource = new DataManager({json: Array.isArray(data) ? data : [data]});
     } else {
@@ -323,4 +686,5 @@ export class MyScheduleComponent {
     this.showSearchEvents('show', this.eventSettings.dataSource as Record<string, any>[]);
     this.selectedDate = new Date();
   }
+
 }
