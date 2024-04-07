@@ -1,3 +1,11 @@
 <app-header class="block header"></app-header>
-<app-myschedule></app-myschedule>
+<app-groups></app-groups>
 
+<script>
+  window.onload = function() {
+    const selectElement = document.getElementById('ej2_dropdownlist_194517_hidden');
+    if (selectElement) {
+      selectElement.classList.add('e-subject', 'e-field', 'e-input');
+    }
+  };
+</script>

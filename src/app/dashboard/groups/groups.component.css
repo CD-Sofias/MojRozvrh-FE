@@ -1,0 +1,26 @@
+.e-acrdn-content {
+  padding: 0 !important;
+  border: none;
+  border-radius: 1rem;
+}
+
+.e-grid {
+  border-style: none solid solid;
+  border-width: 0;
+}
+
+tr {
+  cursor: pointer;
+}
+
+.e-grid .e-focused:not(.e-menu-item):not(.e-editedbatchcell) {
+  box-shadow: none;
+}
+
+.e-toolbar .e-toolbar-item .e-tbar-btn .e-tbar-btn-text {
+  font-size: 14px;
+  padding: 0 8px 0 8px;
+}
+
+
+

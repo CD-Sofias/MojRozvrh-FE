@@ -25,7 +25,7 @@ registerLicense(environment.registrationKey);
     TextBoxModule,
     CheckBoxModule,
     DropDownListModule,
-    NumericTextBoxModule
+    NumericTextBoxModule,
   ],
   standalone: true
 })
