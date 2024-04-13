@@ -32,7 +32,7 @@ export class AuthService {
     const body = {username: userName, password: password};
     return this.http.post<any>(environment.backendUrl + '/auth/login', body).pipe(
       map(response => {
-        if (!response.token) {
+        if (!response.accessToken) {
           throw new Error('Invalid token');
         }
         return response;

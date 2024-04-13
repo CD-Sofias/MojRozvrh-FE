@@ -8,6 +8,7 @@
 
 # Node
 /node_modules
+!node_modules/@syncfusion/ej2-schedule/src/schedule/models/fields-model.d.ts
 npm-debug.log
 yarn-error.log
 
