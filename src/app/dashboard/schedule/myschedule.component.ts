@@ -1,7 +1,6 @@
 import {
   CellClickEventArgs,
   DragAndDropService,
-  EventSettingsModel,
   GroupModel,
   ResizeService,
   ResourcesModel,
@@ -12,7 +11,6 @@ import {
 import {TextBoxComponent,} from '@syncfusion/ej2-angular-inputs';
 import {DatePickerComponent,} from '@syncfusion/ej2-angular-calendars';
 import {AutoCompleteComponent, DropDownListComponent, FilteringEventArgs,} from '@syncfusion/ej2-angular-dropdowns';
-
 import {
   Component,
   ElementRef,
@@ -23,17 +21,15 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-
 import {extend, isNullOrUndefined} from '@syncfusion/ej2-base';
 import {ChangeEventArgs} from '@syncfusion/ej2-calendars';
-
 import {DataManager, Predicate, Query, ReturnOption} from '@syncfusion/ej2-data';
 import {Title} from "@angular/platform-browser";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../environments/environment.prod";
 import {FieldSettingsModel} from "@syncfusion/ej2-navigations";
-
-
+import {FieldOptionsModel} from "@syncfusion/ej2-schedule";
+import { EventSettingsModel as OriginalEventSettingsModel } from '@syncfusion/ej2-angular-schedule';
 interface ScheduleCell {
   groupId: string;
   subjectId: string;
@@ -43,8 +39,14 @@ interface ScheduleCell {
   endTime: string;
   scheduleId: string;
 }
-
-
+interface MyEventFields {
+  myNewField?: string;
+  teacherId?: FieldOptionsModel;
+  subject_type?: FieldOptionsModel;
+}
+interface EventSettingsModel extends OriginalEventSettingsModel {
+  fields?: MyEventFields & OriginalEventSettingsModel['fields'];
+}
 @Component({
   selector: 'app-myschedule',
   templateUrl: './myschedule.component.html',
@@ -429,9 +431,8 @@ export class MyScheduleComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.scheduleData) {
-      this.data = extend([], this.scheduleData, null, true) as Record<string, any>[];
       this.eventSettings = {
-        dataSource: this.data,
+        dataSource: extend([], this.scheduleData, null, true) as Record<string, any>[],
         fields: {
           id: 'id',
           teacherId: {
