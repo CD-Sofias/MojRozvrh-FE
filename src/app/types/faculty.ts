@@ -1,7 +1,7 @@
 import {Department} from "./department";
 
 export interface Faculty {
-    id: number;
+    id: string;
     name: string;
     departments?: Department[];
 }
