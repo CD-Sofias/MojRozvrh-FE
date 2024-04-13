@@ -39,6 +39,7 @@ import {DashboardComponent} from "./dashboard.component";
 import {GroupsComponent} from "./groups/groups.component";
 import {GridModule} from "@syncfusion/ej2-angular-grids";
 import {HttpClientModule} from "@angular/common/http";
+import {CookieService} from "ngx-cookie-service";
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import {HttpClientModule} from "@angular/common/http";
     GroupsComponent,
     DashboardComponent
   ],
+  providers: [CookieService],
   imports: [
     CommonModule,
     ReactiveFormsModule,

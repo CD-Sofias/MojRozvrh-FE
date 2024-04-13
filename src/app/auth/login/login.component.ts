@@ -53,8 +53,8 @@ export class LoginComponent {
         this.form.value.password,
       ).subscribe({
         next: (response) => {
-          const accessToken = response.token;
-          document.cookie = `access_token=${accessToken}; path=/`;
+          const accessToken = response.accessToken;
+          document.cookie = `accessToken=${accessToken}; path=/`;
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {
@@ -73,7 +73,7 @@ export class LoginComponent {
   constructor(private formBuilder: FormBuilder, private titleService: Title, private http: HttpClient, private router: Router, private authService: AuthService) {
     this.titleService.setTitle('Login');
     this.form = this.formBuilder.group({
-      password: [null, [Validators.required, Validators.minLength(6)]],
+      password: [null, [Validators.required, Validators.minLength(5)]],
       username: [null, [Validators.required]],
     });
   }
