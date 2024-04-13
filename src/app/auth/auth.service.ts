@@ -32,9 +32,10 @@ export class AuthService {
     const body = {username: userName, password: password};
     return this.http.post<any>(environment.backendUrl + '/auth/login', body).pipe(
       map(response => {
-        if (!response.token) {
+        if (!response.accessToken) {
           throw new Error('Invalid token');
         }
+        this.setAuthToken(response.accessToken);
         return response;
       }),
       catchError((error) => {
@@ -42,5 +43,17 @@ export class AuthService {
         throw new Error('Invalid password or user name');
       })
     );
+  }
+
+  setAuthToken(token: string) {
+    document.cookie = `accessToken=${token}; path=/`;
+  }
+
+  getAuthToken() {
+    return document.cookie.split('=')[1];
+  }
+
+  deleteAuthToken() {
+    document.cookie = `accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
   }
 }
