@@ -25,11 +25,15 @@ import {extend, isNullOrUndefined} from '@syncfusion/ej2-base';
 import {ChangeEventArgs} from '@syncfusion/ej2-calendars';
 import {DataManager, Predicate, Query, ReturnOption} from '@syncfusion/ej2-data';
 import {Title} from "@angular/platform-browser";
-import {HttpClient} from "@angular/common/http";
-import {environment} from "../../../environments/environment.prod";
 import {FieldSettingsModel} from "@syncfusion/ej2-navigations";
 import {FieldOptionsModel} from "@syncfusion/ej2-schedule";
 import { EventSettingsModel as OriginalEventSettingsModel } from '@syncfusion/ej2-angular-schedule';
+import {SubjectService} from "../../services/subject.service";
+import {TeacherService} from "../../services/teacher.service";
+import {ClassroomService} from "../../services/classroom.service";
+import {GroupService} from "../../services/group.service";
+import {ScheduleCellService} from "../../services/schedule-cell.service";
+import {ScheduleCellCreate} from "../../types/scheduleCell";
 interface ScheduleCell {
   groupId: string;
   subjectId: string;
@@ -56,6 +60,17 @@ interface EventSettingsModel extends OriginalEventSettingsModel {
 
 })
 export class MyScheduleComponent implements OnInit {
+
+
+  constructor(private titleService: Title,
+              private renderer: Renderer2,
+              private subjectService: SubjectService,
+              private teacherService: TeacherService,
+              private classroomService: ClassroomService,
+              private groupService: GroupService,
+              private scheduleCellService: ScheduleCellService,
+  ) {
+  }
 
   public currentSubjectId: string;
   public currentSubjectName: string;
@@ -91,6 +106,8 @@ export class MyScheduleComponent implements OnInit {
 
   public fields: FieldSettingsModel = {value: 'id', text: 'name'};
 
+  public ClassroomFields: FieldSettingsModel = {value: 'id', text: 'code'};
+
   public onChange(args: ScheduleCell): void {
     let valueEle: HTMLInputElement = document.getElementsByClassName('e-input')[0] as HTMLInputElement;
     if (this.AutoCompleteObj.value === "null" || this.AutoCompleteObj.value === null || this.AutoCompleteObj.value === "") {
@@ -101,16 +118,56 @@ export class MyScheduleComponent implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('My schedule');
-
-    this.getSubjects();
-    this.getGroups();
-    this.getClassrooms();
-    this.getTeachers();
+    this.loadSubjects();
+    this.loadGroups();
+    this.loadClassrooms();
+    this.loadTeachers()
   }
+
+  loadGroups(): void {
+    this.groupService.getAllGroups().subscribe(groups => {
+      this.groups = groups;
+    });
+  }
+
+  loadClassrooms(): void {
+    this.classroomService.getAllClassrooms().subscribe(classrooms => {
+      this.classrooms = classrooms;
+    });
+  }
+
+  loadSubjects(): void {
+    this.subjectService.getAllSubjects().subscribe(subjects => {
+      this.subjects = subjects.map(subject => {
+        return {
+          id: subject.id,
+          name: subject.name,
+          type: subject.type,
+          color: subject.type === 'Lecture' ? '#ffaa00' : subject.type === 'Practice' ? '#357cd2' : '#7fa900'
+        };
+      })
+
+      this.lessonTypes = [...new Set(subjects.map(subject => subject.type))];
+
+    });
+  }
+
+  loadTeachers(): void {
+    this.teacherService.getAllTeachers().subscribe(teachers => {
+      this.teachers = teachers;
+    });
+  }
+
 
   onFiltering(e: FilteringEventArgs, dataSource: string[]) {
     let query = new Query();
     query = (e.text !== '') ? query.where('name', 'contains', e.text, true) : query;
+    e.updateData(dataSource, query);
+  }
+
+  onFilteringClassrooms(e: FilteringEventArgs, dataSource: string[]) {
+    let query = new Query();
+    query = (e.text !== '') ? query.where('code', 'contains', e.text, true) : query;
     e.updateData(dataSource, query);
   }
 
@@ -144,9 +201,6 @@ export class MyScheduleComponent implements OnInit {
 
 
   public errorMessage: string = '';
-
-  constructor(private titleService: Title, private http: HttpClient, private renderer: Renderer2) {
-  }
 
 
   onCellClick(args: CellClickEventArgs) {
@@ -211,34 +265,10 @@ export class MyScheduleComponent implements OnInit {
   }
 
 
-  getSubjects(): void {
-    this.http.get<String[]>(environment.backendUrl + '/subject').subscribe(subjects => {
-      this.subjects = subjects;
-    });
-  }
-
-
   groups: any[];
   teachers: any[];
   classrooms: any[];
-
-  getGroups(): void {
-    this.http.get<String[]>(environment.backendUrl + '/groups').subscribe(groups => {
-      this.groups = groups;
-    });
-  }
-
-  getTeachers(): void {
-    this.http.get<String[]>(environment.backendUrl + '/teacher').subscribe(teachers => {
-      this.teachers = teachers;
-    });
-  }
-
-  getClassrooms(): void {
-    this.http.get<String[]>(environment.backendUrl + '/classroom').subscribe(classrooms => {
-      this.classrooms = classrooms;
-    });
-  }
+  lessonTypes: string[];
 
   getSubjectTypeById(id: string): string {
     let subject = this.subjects.find(subject => subject.id === id);
@@ -250,9 +280,6 @@ export class MyScheduleComponent implements OnInit {
     let group = this.groups.find(group => group.id === id);
     return group ? group.name : id;
   }
-
-
-  lessonTypes: String[] = ['Lekcia', 'Praktika', 'Laboratornaia'];
 
 
   getSubjectNameById(id: string): string {
@@ -268,7 +295,7 @@ export class MyScheduleComponent implements OnInit {
 
   getClassroomNameById(id: string): string {
     let classroom = this.classrooms.find(classroom => classroom.id === id);
-    return classroom ? classroom.name : id;
+    return classroom ? classroom.code : id;
   }
 
 
@@ -511,33 +538,33 @@ export class MyScheduleComponent implements OnInit {
         return;
       }
 
-      let scheduleCell: ScheduleCell = {
+      let scheduleCell: ScheduleCellCreate = {
         groupId: data.group_id,
         subjectId: data.subject_id,
         teacherId: data.teacher_id,
         classroomId: data.classroom_id,
-        startTime: data.StartTime.toISOString(),
-        endTime: data.EndTime.toISOString(),
+        startTime: new Date(data.StartTime),
+        endTime:  new Date(data.StartTime),
         scheduleId: data.id
       };
 
       console.log(scheduleCell)
 
-      this.createScheduleCell(scheduleCell);
+      this.scheduleCellService.createScheduleCell(scheduleCell);
     }
   }
 
 
-  createScheduleCell(scheduleCell: ScheduleCell): void {
-    this.http.post<ScheduleCell>(environment.backendUrl + '/schedule_cell', scheduleCell).subscribe({
-      next: response => {
-        console.log('Response from the server:', response);
-      },
-      error: error => {
-        console.error('Error:', error);
-      }
-    });
-  }
+  // createScheduleCell(scheduleCell: ScheduleCell): void {
+  //   this.http.post<ScheduleCell>(environment.backendUrl + '/schedule_cell', scheduleCell).subscribe({
+  //     next: response => {
+  //       console.log('Response from the server:', response);
+  //     },
+  //     error: error => {
+  //       console.error('Error:', error);
+  //     }
+  //   });
+  // }
 
 
   public getResourceData(data: { [key: string]: Object }): { [key: string]: Object } {
