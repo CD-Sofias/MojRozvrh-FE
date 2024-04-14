@@ -2,6 +2,7 @@ import {Component, ViewEncapsulation} from '@angular/core';
 import {environment} from "../../../environments/environment.prod";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
+import {GroupService} from "../../services/group.service";
 
 
 @Component({
@@ -16,20 +17,20 @@ export class GroupsComponent {
   public selectedGroupScheduleCells: any[];
   public scheduleData: any[];
 
-  constructor(private http: HttpClient) { }
+
+  constructor(private groupService: GroupService, private http: HttpClient) { }
 
   ngOnInit(): void {
-      this.http.get<any[]>(environment.backendUrl + '/groups').subscribe(data => {
-        this.data = data;
-      });
-    }
+    this.groupService.getAllGroups().subscribe(data => {
+      this.data = data;
+    });
+  }
 
-
-    getGroupById(id: string): void {
-      this.http.get<any>(environment.backendUrl + '/groups/' + id).subscribe(group => {
-        this.selectedGroup = group;
-      });
-    }
+  getGroupById(id: string): void {
+    this.groupService.getGroupById(id).subscribe(group => {
+      this.selectedGroup = group;
+    });
+  }
 
   onRowSelected(args: any): void {
     const groupId = args.data.id;
@@ -55,7 +56,7 @@ export class GroupsComponent {
   }
 
 
-    getScheduleCellsByGroupId(groupId: string): Observable<any> {
-      return this.http.get<any>(environment.backendUrl + '/schedule_cell/group/' + groupId);
-    }
+  getScheduleCellsByGroupId(groupId: string): Observable<any> {
+    return this.http.get<any>(environment.backendUrl + '/schedule_cell/group/' + groupId);
+  }
 }
