@@ -8,17 +8,15 @@
 
           <div class="e-appbar-spacer"></div>
           <div class="flex gap-5">
-            <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="Schedule" cssClass="e-flat schedule-btn header-btn" ejs-button
-                    iconCss="e-icons e-agenda-date-range"
-                    iconPosition="Left">
-            </button>
-            <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="My schedule" cssClass="e-flat schedule-btn header-btn"
-                    ejs-button iconCss="e-icons e-timeline-work-week"
-                    iconPosition="Left" routerLink="/myschedule" routerLinkActive="active">
-            </button>
-
-            <button [items]='items' class="e-inherit header-btn" content="Profile" ejs-dropdownbutton
+            <ng-container *ngFor="let item of scheduleItems">
+              <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="{{item.text}}" cssClass="e-flat schedule-btn header-btn" ejs-button
+                      iconCss="{{item.iconCss}}"
+                      iconPosition="Left" routerLink="/myschedule" routerLinkActive="active">
+              </button>
+            </ng-container>
+            <button (select)="select($event)" [items]='items' class="e-inherit header-btn" content="{{username}}" ejs-dropdownbutton
                     iconCss="e-ddb-icons e-profile"></button>
+
           </div>
         </ejs-appbar>
       </div>
