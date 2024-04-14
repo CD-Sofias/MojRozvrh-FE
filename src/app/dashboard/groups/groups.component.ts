@@ -1,8 +1,7 @@
 import {Component, ViewEncapsulation} from '@angular/core';
-import {environment} from "../../../environments/environment.prod";
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
 import {GroupService} from "../../services/group.service";
+import {ScheduleCell} from "../../types/scheduleCell";
+import {ScheduleCellService} from "../../services/schedule-cell.service";
 
 
 @Component({
@@ -14,11 +13,12 @@ import {GroupService} from "../../services/group.service";
 export class GroupsComponent {
   public data: any[];
   public selectedGroup: any;
-  public selectedGroupScheduleCells: any[];
+  public selectedGroupScheduleCells: ScheduleCell[] ;
   public scheduleData: any[];
 
 
-  constructor(private groupService: GroupService, private http: HttpClient) { }
+  constructor(private groupService: GroupService, private scheduleCellService: ScheduleCellService) {
+  }
 
   ngOnInit(): void {
     this.groupService.getAllGroups().subscribe(data => {
@@ -32,11 +32,12 @@ export class GroupsComponent {
     });
   }
 
+
   onRowSelected(args: any): void {
     const groupId = args.data.id;
     this.getGroupById(groupId);
-    this.getScheduleCellsByGroupId(groupId).subscribe(scheduleCells => {
-      this.selectedGroupScheduleCells = [...scheduleCells];
+    this.scheduleCellService.getScheduleCellsByGroupId(groupId).subscribe(scheduleCells => {
+      this.selectedGroupScheduleCells = Array.isArray(scheduleCells) ? [...scheduleCells] : [scheduleCells];
       this.scheduleData = this.selectedGroupScheduleCells.map(cell => {
         const startTime = new Date(cell.startTime);
         const endTime = new Date(cell.endTime);
@@ -44,19 +45,14 @@ export class GroupsComponent {
           id: cell.id,
           subject_id: cell.subject.name,
           subject_type: cell.subject.type,
-          teacher_id: cell.teacher.name,
+          teacher_id: cell.teacher.id,
           group_id: cell.group.name,
-          classroom_id: cell.classroom.name,
+          classroom_id: cell.classroom.id,
           StartTime: startTime,
           EndTime: endTime,
           dayOfWeek: startTime.getDay(),
         };
       });
     });
-  }
-
-
-  getScheduleCellsByGroupId(groupId: string): Observable<any> {
-    return this.http.get<any>(environment.backendUrl + '/schedule_cell/group/' + groupId);
   }
 }

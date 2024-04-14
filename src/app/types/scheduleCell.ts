@@ -12,3 +12,13 @@ export interface ScheduleCell {
   startTime: Date;
   endTime: Date;
 }
+
+export interface ScheduleCellCreate {
+  groupId: string;
+  subjectId: string;
+  teacherId: string;
+  classroomId: string;
+  scheduleId: string;
+  startTime: Date;
+  endTime: Date;
+}

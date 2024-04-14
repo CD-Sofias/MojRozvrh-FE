@@ -145,10 +145,10 @@
                             <td class="e-textlabel">Class room</td>
                             <td colspan="4">
                               <ejs-autocomplete #sample #classroom='ngModel' (change)="onClassroomSelected($event)"
-                                                (filtering)="onFiltering($event, classrooms)"
+                                                (filtering)="onFilteringClassrooms($event, classrooms)"
                                                 (valueChange)='onClassroomSelected($event)'
                                                 [(ngModel)]="data.classroom_id"
-                                                [dataSource]='classrooms' [fields]='fields'
+                                                [dataSource]='classrooms' [fields]='ClassroomFields'
                                                 allowCustom=false aria-invalid="true" aria-required="true"
                                                 id="my-select-classroom" name="classroom_id"
                                                 placeholder='F134' required
@@ -287,14 +287,15 @@
             <td class="e-textlabel">Class room</td>
             <td colspan="4">
               <ejs-autocomplete #sample #classroom='ngModel' (change)="onClassroomSelected($event)"
-                                (filtering)="onFiltering($event, classrooms)"
+                                (filtering)="onFilteringClassrooms($event, classrooms)"
                                 (valueChange)='onClassroomSelected($event)'
                                 [(ngModel)]="data.classroom_id"
-                                [dataSource]='classrooms' [fields]='fields'
+                                [dataSource]='classrooms' [fields]='ClassroomFields'
                                 allowCustom=false aria-invalid="true" aria-required="true"
                                 id="my-select-classroom" name="classroom_id"
                                 placeholder='F134' required
                                 type="text"></ejs-autocomplete>
+
 
               <div *ngIf="(classroom.invalid && classroom.touched)" class="alert alert-danger">
                 <div *ngIf="classroom.errors.required">
