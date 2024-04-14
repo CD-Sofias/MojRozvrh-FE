@@ -44,10 +44,6 @@ export class AuthService {
       })
     );
   }
-
-  logout(): Observable<any> {
-    return this.http.get<any>(environment.backendUrl + '/logout');
-  }
   setAuthToken(token: string) {
     document.cookie = `accessToken=${token}; path=/`;
   }
