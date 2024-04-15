@@ -1,7 +1,6 @@
-import {RouterModule, Routes} from '@angular/router';
+import {Routes} from '@angular/router';
 import {DashboardComponent} from "./dashboard/dashboard.component";
 import {authGuard} from "./auth/auth.guard";
-import {NgModule} from "@angular/core";
 
 export const routes: Routes = [
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
