@@ -1,0 +1,20 @@
+.active {
+  border-color: rgba(0, 0, 0, 0);
+  box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+  color: #893AC7;
+}
+
+.e-btn.e-inherit:hover, .e-btn.e-inherit:focus, .e-btn.e-inherit:active, .e-btn.e-inherit.e-active, .e-css.e-btn.e-inherit:hover, .e-css.e-btn.e-inherit:focus, .e-css.e-btn.e-inherit:active, .e-css.e-btn.e-inherit.e-active {
+  color: #893AC7;
+  border-radius: 8px;
+}
+
+.e-btn.e-inherit, .e-btn.e-inherit, .e-btn.e-inherit, .e-btn.e-inherit.e-active, .e-css.e-btn.e-inherit, .e-css.e-btn.e-inherit, .e-css.e-btn.e-inherit, .e-css.e-btn.e-inherit.e-active {
+  color: rgba(0, 0, 0, .87);
+  border-radius: 8px;
+}
+
+tbody{
+  cursor: pointer;
+}
+

@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Department} from "../types/department";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -10,25 +11,23 @@ export class DepartmentService {
   url = environment.backendUrl + "/departments";
   constructor(private http: HttpClient) {}
 
-  getDepartments() {
+  getDepartments(): Observable<Department[]> {
     return this.http.get<Department[]>(this.url);
   }
 
-  getDepartmentById(id: string) {
+  getDepartmentById(id: string): Observable<Department> {
     return this.http.get<Department>(`${this.url}/${id}`);
   }
 
-  createDepartment(formData: FormData) {
-    const name = formData.get("name") as string;
-    return this.http.post(this.url, {name});
+  createDepartment(department: Department): Observable<Department> {
+    return this.http.post<Department>(this.url, department);
   }
 
-  updateDepartment(formData: FormData, id: string) {
-    const name = formData.get("name") as string;
-    return this.http.put(`${this.url}/${id}`, {name});
+  updateDepartment(department: Department): Observable<Department> {
+    return this.http.put<Department>(`${this.url}/${department.id}`, department);
   }
 
-  deleteDepartment(id: string) {
+  deleteDepartment(id: string): Observable<Object> {
     return this.http.delete(`${this.url}/${id}`);
   }
 }

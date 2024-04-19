@@ -1,0 +1,31 @@
+<div class="control-section bg-white rounded-2xl my-3">
+  <div>
+    <div class="m-3 ">
+      <div class="row mx-1">
+        <div class="flex gap-5">
+          <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="Teachers"
+                  cssClass="e-flat schedule-btn header-btn" ejs-button
+                  iconCss="e-icons e-agenda-date-range"  routerLink="teachers" routerLinkActive="active"
+                  iconPosition="Left">
+          </button>
+          <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="Faculties"
+                  cssClass="e-flat schedule-btn header-btn"
+                  ejs-button iconCss="e-icons e-timeline-work-week"
+                  iconPosition="Left" routerLink="faculties" routerLinkActive="active">
+          </button>
+          <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="Departments"
+                  cssClass="e-flat schedule-btn header-btn"
+                  ejs-button iconCss="e-icons e-timeline-work-week"
+                  iconPosition="Left" routerLink="departments" routerLinkActive="active">
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="control-section rounded-2xl">
+  <router-outlet></router-outlet>
+</div>
+
+<ejs-toast #toasttype></ejs-toast>
