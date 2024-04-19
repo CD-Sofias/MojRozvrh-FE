@@ -9,14 +9,15 @@ import {GroupsComponent} from "./dashboard/admin/schedule-table-creator/groups/g
 import {ClassroomsComponent} from "./dashboard/admin/schedule-table-creator/classrooms/classrooms.component";
 import {SubjectsComponent} from "./dashboard/admin/schedule-table-creator/subjects/subjects.component";
 import {ScheduleTableCreatorComponent} from "./dashboard/admin/schedule-table-creator/schedule-table-creator.component";
+import {MyScheduleComponent} from "./dashboard/my-schedule/my-schedule.component";
 
 export const routes: Routes = [
-  {path: '', redirectTo: 'auth', pathMatch: 'full'},
+  { path: '', redirectTo: 'auth', pathMatch: 'full' },
   {path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)},
   {
     path: 'dashboard', component: DashboardComponent, canActivate: [authGuard], children: [
-      {
-        path: 'admin-panel', component: ScheduleTableCreatorComponent, children: [
+      {path: 'myschedule', component: MyScheduleComponent},
+      {path: 'admin-panel', component: ScheduleTableCreatorComponent, children: [
           {path: '', redirectTo: 'teachers', pathMatch: 'full'},
           {path: 'teachers', component: TeacherComponent},
           {path: 'faculties', component: FacultyComponent},

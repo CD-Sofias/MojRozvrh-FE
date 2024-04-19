@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {Schedule} from "../types/schedule";
+import {CreateSchedule, Schedule} from "../types/schedule";
 
 @Injectable({
   providedIn: 'root'
@@ -22,11 +22,15 @@ export class ScheduleService {
     return this.http.put<Schedule>(`${this.url}/${schedule.id}`, schedule)
   }
 
-  createSchedule(schedule: Schedule) {
+  createSchedule(schedule: CreateSchedule) {
     return this.http.post<Schedule>(this.url, schedule)
   }
 
   deleteSchedule(id: string) {
     return this.http.delete(`${this.url}/${id}`)
+  }
+
+  getSchedulesByUserId(id: string) {
+    return this.http.get<Schedule[]>(`${this.url}/user/${id}`)
   }
 }

@@ -1,7 +1,8 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
 import {GroupService} from "../../services/group.service";
 import {ScheduleCell} from "../../types/scheduleCell";
 import {ScheduleCellService} from "../../services/schedule-cell.service";
+import {Schedule} from "../../types/schedule";
 
 
 @Component({
@@ -14,8 +15,8 @@ export class GroupsComponent {
   public data: any[];
   public selectedGroup: any;
   public selectedGroupScheduleCells: ScheduleCell[] ;
-  public scheduleData: any[];
-
+  @Input() scheduleData = [];
+  @Output() public selectedDataChanged = new EventEmitter<any>();
 
   constructor(private groupService: GroupService, private scheduleCellService: ScheduleCellService) {
   }
@@ -38,6 +39,9 @@ export class GroupsComponent {
     this.getGroupById(groupId);
     this.scheduleCellService.getScheduleCellsByGroupId(groupId).subscribe(scheduleCells => {
       this.selectedGroupScheduleCells = Array.isArray(scheduleCells) ? [...scheduleCells] : [scheduleCells];
+
+      this.selectedDataChanged.emit(this.scheduleData);
+
       this.scheduleData = this.selectedGroupScheduleCells.map(cell => {
         const startTime = new Date(cell.startTime);
         const endTime = new Date(cell.endTime);
@@ -53,6 +57,8 @@ export class GroupsComponent {
           dayOfWeek: startTime.getDay(),
         };
       });
+
+      this.selectedDataChanged.emit(this.scheduleData);
     });
   }
 }

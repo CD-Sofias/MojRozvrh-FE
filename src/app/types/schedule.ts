@@ -5,3 +5,9 @@ export interface Schedule {
   name: string;
   scheduleCells: ScheduleCell[];
 }
+
+export interface CreateSchedule {
+  name: string;
+  userId: string;
+  scheduleCellIds: string[];
+}

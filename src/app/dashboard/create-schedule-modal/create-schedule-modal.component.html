@@ -1,0 +1,28 @@
+<div class="control-section" style="padding:10px;position:relative;">
+  <div #targetModal class="col-md-8 control-section" id="modalTarget" style="height:350px;">
+    <button #modalButton (click)="modalBtnClick()" ejs-button id='modalbtn'>Open</button>
+    <ejs-dialog #modalDialog (close)="modalDlgClose()" (overlayClick)="overlayClick()" [animationSettings]='animationSettings' [buttons]='buttons'
+                [content]='content' [header]='header' [isModal]='isModal' [target]='target'
+                [visible]='visible'
+                [width]='width' id="modalDialog">
+
+      <ng-template #content>
+        <div class="form-group template">
+          <div [ngClass]="{'e-success': name.valid}" class="e-float-input">
+            <input #name="ngModel" [(ngModel)]="scheduleName" id="name" name="name" required type="text">
+            <span class="e-float-line"></span>
+            <label [ngClass]="{'e-label-top': scheduleName !== '' , 'e-label-bottom':  scheduleName == ''}"
+                   class="e-float-text" for="name">Schedule
+              name</label>
+          </div>
+          <span *ngIf="name.errors && name.errors.required && (name.dirty || name.touched)" class="e-error">
+                        Schedule name is required
+                    </span>
+        </div>
+      </ng-template>
+
+
+    </ejs-dialog>
+  </div>
+
+</div>

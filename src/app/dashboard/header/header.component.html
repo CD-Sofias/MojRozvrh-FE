@@ -11,7 +11,7 @@
             <ng-container *ngFor="let item of scheduleItems">
               <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="{{item.text}}" cssClass="e-flat schedule-btn header-btn" ejs-button
                       iconCss="{{item.iconCss}}"
-                      iconPosition="Left" routerLink="/myschedule" routerLinkActive="active">
+                      iconPosition="Left" routerLink="schedule" routerLinkActive="active">
               </button>
             </ng-container>
             <button (select)="select($event)" [items]='items' class="e-inherit header-btn" content="{{username}}" ejs-dropdownbutton
