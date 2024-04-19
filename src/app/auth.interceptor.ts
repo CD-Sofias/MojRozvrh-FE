@@ -3,6 +3,7 @@ import {inject} from "@angular/core";
 import {AuthService} from "./auth/auth.service";
 import {catchError} from "rxjs/operators";
 import {Router} from "@angular/router";
+import {throwError} from "rxjs";
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
@@ -21,6 +22,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       authService.deleteAuthToken();
       router.navigate(['auth/login']);
     }
-    throw new Error(err.error.message || err.statusText)
+    return next(authReq);
   }))
 };

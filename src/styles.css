@@ -318,6 +318,27 @@ form#reactive {
   padding: 0 1rem;
 }
 
+.e-toolbar .e-toolbar-item .e-tbar-btn.e-active {
+  border-radius: 10px !important;
+  padding: 0 1rem !important;
+  transition: all 0.5s ease;
+}
+
+.e-toolbar .e-toolbar-item .e-tbar-btn:hover, .e-toolbar .e-toolbar-item .e-tbar-btn:focus, .e-toolbar .e-toolbar-item .e-tbar-btn:active {
+  padding: 0 1rem !important;
+  border-radius: 10px !important;
+  transition: all 0.5s ease;
+}
+
+.e-btn.e-inherit[_ngcontent-ng-c1742823034], .e-btn.e-inherit[_ngcontent-ng-c1742823034], .e-btn.e-inherit[_ngcontent-ng-c1742823034], .e-btn.e-inherit.e-active[_ngcontent-ng-c1742823034], .e-css.e-btn.e-inherit[_ngcontent-ng-c1742823034], .e-css.e-btn.e-inherit[_ngcontent-ng-c1742823034], .e-css.e-btn.e-inherit[_ngcontent-ng-c1742823034], .e-css.e-btn.e-inherit.e-active[_ngcontent-ng-c1742823034] {
+  transition: all 0.5s ease;
+}
+
+
+.e-tbar-btn, .e-tbtn-txt, .e-control, .e-btn e-lib {
+  transition: all 0.5s ease;
+}
+
 @media (max-width: 300px) {
   .e-inherit.header-btn {
     font-size: 80%;
