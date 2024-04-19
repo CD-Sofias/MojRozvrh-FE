@@ -42,7 +42,7 @@ export class DepartmentComponent extends ScheduleTableCreatorComponent {
     if (args.requestType === 'save') {
       if (args.action === 'add') {
         this.addDepartment(args.data).subscribe({
-          next: response => {
+          next: () => {
             this.getDepartments();
           },
           error: error => {
@@ -53,7 +53,7 @@ export class DepartmentComponent extends ScheduleTableCreatorComponent {
         });
       } else if (args.action === 'edit') {
         this.editDepartment(args.data).subscribe({
-          next: response => {
+          next: () => {
             this.getDepartments();
           },
           error: error => {
@@ -66,7 +66,7 @@ export class DepartmentComponent extends ScheduleTableCreatorComponent {
     } else if (args.requestType === 'delete') {
       args.cancel = true;
       this.departmentService.deleteDepartment(args.data[0].id).subscribe({
-        next: response => {
+        next: () => {
           this.getDepartments();
         },
         error: error => {

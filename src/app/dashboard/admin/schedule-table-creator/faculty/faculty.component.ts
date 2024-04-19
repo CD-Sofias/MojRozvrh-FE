@@ -52,7 +52,7 @@ export class FacultyComponent extends ScheduleTableCreatorComponent {
     if (args.requestType === 'save') {
       if (args.action === 'add') {
         this.addFaculty(args.data).subscribe({
-          next: response => {
+          next: () => {
             this.getFaculties();
           },
           error: error => {
@@ -63,7 +63,7 @@ export class FacultyComponent extends ScheduleTableCreatorComponent {
         });
       } else if (args.action === 'edit') {
         this.editFaculty(args.data).subscribe({
-          next: response => {
+          next: () => {
             this.getFaculties();
           },
           error: error => {
@@ -76,7 +76,7 @@ export class FacultyComponent extends ScheduleTableCreatorComponent {
     } else if (args.requestType === 'delete') {
       args.cancel = true;
       this.facultyService.deleteFaculty(args.data[0].id).subscribe({
-        next: response => {
+        next: () => {
           this.getFaculties();
         },
         error: error => {

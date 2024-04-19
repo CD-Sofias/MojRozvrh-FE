@@ -1,5 +1,4 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Observable} from "rxjs";
 import {ToastComponent} from "@syncfusion/ej2-angular-notifications";
 
 @Component({

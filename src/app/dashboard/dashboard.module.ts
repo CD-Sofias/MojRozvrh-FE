@@ -39,7 +39,6 @@ import {DashboardComponent} from "./dashboard.component";
 import {GroupsComponent} from "./groups/groups.component";
 import {GridModule} from "@syncfusion/ej2-angular-grids";
 import {HttpClientModule} from "@angular/common/http";
-import {ScheduleTableCreatorComponent} from "./admin/schedule-table-creator/schedule-table-creator.component";
 import {ScheduleTableCreatorModule} from "./admin/schedule-table-creator/schedule-table-creator.module";
 
 @NgModule({
