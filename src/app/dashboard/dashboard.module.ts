@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
-import { MyScheduleComponent } from './schedule/myschedule.component';
+import { ScheduleComponent } from './schedule/schedule.component';
 import {
   AccordionModule,
   AppBarAllModule, AppBarModule,
@@ -39,13 +39,19 @@ import {DashboardComponent} from "./dashboard.component";
 import {GroupsComponent} from "./groups/groups.component";
 import {GridModule} from "@syncfusion/ej2-angular-grids";
 import {HttpClientModule} from "@angular/common/http";
+import {CreateScheduleModalComponent} from "./create-schedule-modal/create-schedule-modal.component";
+import {DialogModule} from "@syncfusion/ej2-angular-popups";
+import {MyScheduleComponent} from "./my-schedule/my-schedule.component";
+import {SearchComponent} from "./search/search.component";
 
 @NgModule({
   declarations: [
     HeaderComponent,
-    MyScheduleComponent,
+    ScheduleComponent,
     GroupsComponent,
-    DashboardComponent
+    DashboardComponent,
+    MyScheduleComponent,
+    CreateScheduleModalComponent
   ],
   imports: [
     CommonModule,
@@ -53,13 +59,15 @@ import {HttpClientModule} from "@angular/common/http";
     RouterModule,
     AppBarAllModule, ButtonAllModule, DropDownButtonAllModule, MenuAllModule, ButtonModule, ToolbarModule,
     FormsModule, ScheduleAllModule, RecurrenceEditorAllModule, NumericTextBoxAllModule, TextBoxAllModule, DatePickerAllModule, TimePickerAllModule, DateTimePickerAllModule, CheckBoxAllModule, ToolbarAllModule, DropDownListAllModule, ContextMenuAllModule, MaskedTextBoxModule, UploaderAllModule, MultiSelectAllModule, TreeViewModule, ButtonAllModule, DropDownButtonAllModule, SwitchAllModule, ToastAllModule, AppBarModule, AutoCompleteModule, AccordionModule,
-    DashboardRoutingModule, DropDownListModule, DatePickerModule, GridModule, AutoCompleteModule, HttpClientModule
+    DashboardRoutingModule, DropDownListModule, DatePickerModule, GridModule, AutoCompleteModule, HttpClientModule, DialogModule, SearchComponent
   ],
   exports: [
     HeaderComponent,
-    MyScheduleComponent,
+    ScheduleComponent,
     GroupsComponent,
-    DashboardComponent
+    DashboardComponent,
+    MyScheduleComponent,
+    CreateScheduleModalComponent
   ]
 })
 export class DashboardModule { }

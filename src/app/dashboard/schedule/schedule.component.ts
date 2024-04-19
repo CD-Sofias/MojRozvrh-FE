@@ -4,7 +4,7 @@ import {
   GroupModel,
   ResizeService,
   ResourcesModel,
-  ScheduleComponent,
+  ScheduleComponent as EJ2ScheduleComponent,
   TimelineViewsService,
   View
 } from '@syncfusion/ej2-angular-schedule';
@@ -33,16 +33,11 @@ import {TeacherService} from "../../services/teacher.service";
 import {ClassroomService} from "../../services/classroom.service";
 import {GroupService} from "../../services/group.service";
 import {ScheduleCellService} from "../../services/schedule-cell.service";
-import {ScheduleCellCreate} from "../../types/scheduleCell";
-interface ScheduleCell {
-  groupId: string;
-  subjectId: string;
-  teacherId: string;
-  classroomId: string;
-  startTime: string;
-  endTime: string;
-  scheduleId: string;
-}
+import {ScheduleCell, ScheduleCellCreate} from "../../types/scheduleCell";
+import {ScheduleService} from "../../services/schedule.service";
+import {UserService} from "../../services/user.service";
+import {Schedule} from "../../types/schedule";
+
 interface MyEventFields {
   myNewField?: string;
   teacherId?: FieldOptionsModel;
@@ -52,14 +47,14 @@ interface EventSettingsModel extends OriginalEventSettingsModel {
   fields?: MyEventFields & OriginalEventSettingsModel['fields'];
 }
 @Component({
-  selector: 'app-myschedule',
-  templateUrl: './myschedule.component.html',
-  styleUrl: './myschedule.component.css',
+  selector: 'app-schedule',
+  templateUrl: './schedule.component.html',
+  styleUrl: './schedule.component.css',
   encapsulation: ViewEncapsulation.None,
   providers: [TimelineViewsService, ResizeService, DragAndDropService]
 
 })
-export class MyScheduleComponent implements OnInit {
+export class ScheduleComponent implements OnInit {
 
 
   constructor(private titleService: Title,
@@ -69,6 +64,8 @@ export class MyScheduleComponent implements OnInit {
               private classroomService: ClassroomService,
               private groupService: GroupService,
               private scheduleCellService: ScheduleCellService,
+              private scheduleService: ScheduleService,
+              private userService: UserService,
   ) {
   }
 
@@ -91,8 +88,8 @@ export class MyScheduleComponent implements OnInit {
   public selectedSubject: String;
   public selectedClassroom: String;
 
+  @Input() selectedGroupScheduleCells: ScheduleCell[];
 
-  @Input() selectedGroupScheduleCells: ScheduleCell;
   @Input() selectedGroup: String;
   @Input() scheduleData: ScheduleCell;
 
@@ -115,13 +112,18 @@ export class MyScheduleComponent implements OnInit {
     }
   }
 
+  userID: string;
 
   ngOnInit() {
     this.titleService.setTitle('My schedule');
     this.loadSubjects();
     this.loadGroups();
     this.loadClassrooms();
-    this.loadTeachers()
+    this.loadTeachers();
+
+    this.userService.getUsersInfo().subscribe(user => {
+      this.userID = user.id;
+    });
   }
 
   loadGroups(): void {
@@ -136,21 +138,7 @@ export class MyScheduleComponent implements OnInit {
     });
   }
 
-  loadSubjects(): void {
-    this.subjectService.getAllSubjects().subscribe(subjects => {
-      this.subjects = subjects.map(subject => {
-        return {
-          id: subject.id,
-          name: subject.name,
-          type: subject.type,
-          color: subject.type === 'Lecture' ? '#ffaa00' : subject.type === 'Practice' ? '#357cd2' : '#7fa900'
-        };
-      })
 
-      this.lessonTypes = [...new Set(subjects.map(subject => subject.type))];
-
-    });
-  }
 
   loadTeachers(): void {
     this.teacherService.getAllTeachers().subscribe(teachers => {
@@ -180,7 +168,7 @@ export class MyScheduleComponent implements OnInit {
   public titleObj?: TextBoxComponent;
   @ViewChild('notesObj')
   public notesObj?: TextBoxComponent;
-  @ViewChild('scheduleObj') public scheduleObj!: ScheduleComponent;
+
 
   @ViewChild('eventTypeSearch') eventTypeSearchObj: any | undefined;
   @ViewChild('subject_id') subjectObj: any | undefined;
@@ -197,7 +185,7 @@ export class MyScheduleComponent implements OnInit {
 
   public selectedDate: Date = new Date();
   public rowAutoHeight = true;
-  public currentView: View = 'TimelineDay';
+  public currentView: View = 'TimelineWeek';
 
 
   public errorMessage: string = '';
@@ -208,6 +196,8 @@ export class MyScheduleComponent implements OnInit {
     this.selectedDay = [date.getDay()];
     this.errorMessage = '';
   }
+
+
 
 
   public startDateParser(data: string): Date {
@@ -306,7 +296,6 @@ export class MyScheduleComponent implements OnInit {
       this.renderer.addClass(selectElement, 'e-field');
       this.renderer.addClass(selectElement, 'e-input');
     }
-    console.log(event);
     this.selectedSubject = event;
 
     if (event && event.itemData) {
@@ -394,7 +383,7 @@ export class MyScheduleComponent implements OnInit {
     }
 
     this.selectedGroup = event;
-    console.log(this.data);
+    // console.log(this.data);
     if (event && event.itemData) {
       let selectedGroup = this.groups.find(group => group.id === event.itemData.id);
       if (!selectedGroup) {
@@ -412,7 +401,6 @@ export class MyScheduleComponent implements OnInit {
         return true;
       }
     }
-    console.log(this.data);
     return false;
   }
 
@@ -587,52 +575,9 @@ export class MyScheduleComponent implements OnInit {
     return group ? group['name'] : 'Группа не найдена';
   }
 
-  public globalSearch(args: KeyboardEvent): void {
-    const searchString: string = (args.target as HTMLInputElement).value;
-    console.log(this.scheduleData)
-    if (searchString !== '') {
-      new DataManager(this.eventSettings.dataSource as Record<string, any>[])
-        .executeQuery(
-          new Query().search(
-            searchString,
-            ['subject_id', 'classroom_id', 'teacher_id'],
-            null!,
-            true,
-            true
-          )
-        )
-        .then((e: ReturnOption) => {
-          const resultArray = Array.isArray(e.result) ? e.result : [e.result];
-          if (resultArray.length > 0) {
-            let earliestTime = resultArray[0]['StartTime'];
-            resultArray.forEach(event => {
-              if (event['StartTime'] < earliestTime) {
-                earliestTime = event['StartTime'];
-              }
-            });
 
-            this.selectedDate = earliestTime;
 
-            this.showSearchEvents('show', resultArray);
-          } else {
-            this.showSearchEvents('hide');
-          }
-        });
-    } else {
-      this.showSearchEvents('show', this.eventSettings.dataSource as Record<string, any>[]);
-      this.selectedDate = new Date();
-    }
-  }
 
-  private showSearchEvents(type: string, data?: Record<string, any>): void {
-
-    if (type === 'show') {
-      this.scheduleObj.eventSettings.dataSource = new DataManager({json: Array.isArray(data) ? data : [data]});
-    } else {
-      this.scheduleObj.eventSettings.dataSource = new DataManager({json: []});
-    }
-    this.scheduleObj.dataBind();
-  }
 
   public getSubjectId(subjectName: string): number {
     const subject = this.subjects.find(s => s['name'] === subjectName);
