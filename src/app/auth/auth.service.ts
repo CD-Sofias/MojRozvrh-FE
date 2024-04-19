@@ -44,6 +44,10 @@ export class AuthService {
       })
     );
   }
+  isAuthenticated(): boolean {
+    const token = this.getAuthToken();
+    return !!token;
+  }
   setAuthToken(token: string) {
     document.cookie = `accessToken=${token}; path=/`;
   }

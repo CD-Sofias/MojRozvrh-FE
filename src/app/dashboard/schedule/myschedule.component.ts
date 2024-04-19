@@ -643,11 +643,16 @@ export class MyScheduleComponent implements OnInit {
   public searchOnClick(): void {
     const searchObj: Record<string, any>[] = [];
     let endDate: Date;
+
+    let dropdownlistObj = (document.getElementById('subject_type_search_content') as any).ej2_instances[0];
+    let subjectTypeValue = dropdownlistObj.value;
+
     const formElements: string[] = [
-      this.subjectObj!.nativeElement.value,
-      this.locationObj!.nativeElement.value,
-      this.eventTypeSearchObj!.itemData ? this.getSubjectId(this.eventTypeSearchObj!.itemData.name) : ''
+      (document.getElementById('subject_id') as HTMLInputElement).value,
+      (document.getElementById('classroom_id_search_content') as HTMLInputElement).value,
+      subjectTypeValue
     ];
+
     const fieldNames: string[] = ['subject_id', 'classroom_id', 'subject_type'];
     formElements.forEach((value: string, index: number) => {
       if (value && value !== '') {
