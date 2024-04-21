@@ -2,7 +2,7 @@ import {Component, ElementRef, inject, Input, ViewChild} from '@angular/core';
 import {DialogComponent} from "@syncfusion/ej2-angular-popups";
 import {ButtonComponent, ButtonModel, CheckBoxComponent} from "@syncfusion/ej2-angular-buttons";
 import {AnimationSettingsModel} from "@syncfusion/ej2-splitbuttons";
-import {detach, isNullOrUndefined} from "@syncfusion/ej2-base";
+import {detach, EmitType, isNullOrUndefined} from "@syncfusion/ej2-base";
 import {ScheduleService} from "../../services/schedule.service";
 import {ScheduleCell} from "../../types/scheduleCell";
 import {Router} from "@angular/router";
@@ -55,7 +55,13 @@ export class CreateScheduleModalComponent {
   public modalDlgOpen = (): void => {
     this.modalButton.element.style.display = 'none';
   }
-
+  public onOpenDialog = (event: any): void => {
+    // Call the show method to open the Dialog
+    this.modalDialog.show();
+  };
+  public onOverlayClick: EmitType<object> = () => {
+    this.modalDialog.hide();
+  }
   public dlgButtonClick = (): void => {
     this.modalDialog.hide();
     console.log(this.scheduleName);
