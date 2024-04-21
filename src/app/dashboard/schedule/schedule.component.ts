@@ -1,9 +1,8 @@
 import {
-  CellClickEventArgs,
+  ActionEventArgs,
   DragAndDropService,
-  GroupModel,
+  EventSettingsModel as OriginalEventSettingsModel,
   ResizeService,
-  ResourcesModel,
   ScheduleComponent as EJ2ScheduleComponent,
   TimelineViewsService,
   View
@@ -11,23 +10,12 @@ import {
 import {TextBoxComponent,} from '@syncfusion/ej2-angular-inputs';
 import {DatePickerComponent,} from '@syncfusion/ej2-angular-calendars';
 import {AutoCompleteComponent, DropDownListComponent, FilteringEventArgs,} from '@syncfusion/ej2-angular-dropdowns';
-import {
-  Component,
-  ElementRef,
-  Input,
-  OnInit,
-  Renderer2,
-  SimpleChanges,
-  ViewChild,
-  ViewEncapsulation
-} from '@angular/core';
-import {extend, isNullOrUndefined} from '@syncfusion/ej2-base';
+import {Component, ElementRef, Input, OnInit, Renderer2, ViewChild, ViewEncapsulation} from '@angular/core';
+import {EmitType, extend, isNullOrUndefined} from '@syncfusion/ej2-base';
 import {ChangeEventArgs} from '@syncfusion/ej2-calendars';
-import {DataManager, Predicate, Query, ReturnOption} from '@syncfusion/ej2-data';
+import {Query} from '@syncfusion/ej2-data';
 import {Title} from "@angular/platform-browser";
-import {FieldSettingsModel} from "@syncfusion/ej2-navigations";
 import {FieldOptionsModel} from "@syncfusion/ej2-schedule";
-import { EventSettingsModel as OriginalEventSettingsModel } from '@syncfusion/ej2-angular-schedule';
 import {SubjectService} from "../../services/subject.service";
 import {TeacherService} from "../../services/teacher.service";
 import {ClassroomService} from "../../services/classroom.service";
@@ -36,16 +24,22 @@ import {ScheduleCellService} from "../../services/schedule-cell.service";
 import {ScheduleCell, ScheduleCellCreate} from "../../types/scheduleCell";
 import {ScheduleService} from "../../services/schedule.service";
 import {UserService} from "../../services/user.service";
-import {Schedule} from "../../types/schedule";
+import {Subject} from "../../types/subject";
+import {Teacher} from "../../types/teacher";
+import {Group} from "../../types/group";
+import {Classroom} from "../../types/classroom";
 
 interface MyEventFields {
   myNewField?: string;
   teacherId?: FieldOptionsModel;
+  group?: FieldOptionsModel;
   subject_type?: FieldOptionsModel;
 }
+
 interface EventSettingsModel extends OriginalEventSettingsModel {
   fields?: MyEventFields & OriginalEventSettingsModel['fields'];
 }
+
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
@@ -73,17 +67,8 @@ export class ScheduleComponent implements OnInit {
   public currentSubjectName: string;
 
   public currentClassroomId: string;
-  public currentClassroomNumber: string;
+  public currentClassroomNumber: number;
 
-
-  addClasses() {
-    let selectElement = document.getElementsByClassName('e-ddl-hidden')[0];
-    if (selectElement) {
-      this.renderer.addClass(selectElement, 'e-subject');
-      this.renderer.addClass(selectElement, 'e-field');
-      this.renderer.addClass(selectElement, 'e-input');
-    }
-  }
 
   public selectedSubject: String;
   public selectedClassroom: String;
@@ -98,11 +83,12 @@ export class ScheduleComponent implements OnInit {
 
   public data: Record<string, any>[];
 
-  subjects: any[] = [];
-  //@ts-ignore
-  public fields: FieldSettingsModel = {value: 'id', text: 'name'};
-  //@ts-ignore
-  public ClassroomFields: FieldSettingsModel = {value: 'id', text: 'code'};
+  subjects: Subject[] = [];
+  teachers: Teacher[] = [];
+  groups: Group[] = [];
+  classrooms: Classroom[] = [];
+  public fields: Object = {value: 'id', text: 'name'};
+  public ClassroomFields: Object = {value: 'id', text: 'code'};
 
   public onChange(args: ScheduleCell): void {
     let valueEle: HTMLInputElement = document.getElementsByClassName('e-input')[0] as HTMLInputElement;
@@ -112,12 +98,21 @@ export class ScheduleComponent implements OnInit {
   }
 
   userID: string;
+  public subjectDataSource: Object[];
+  public subjectFields: Object = {value: 'Id', text: 'Name'};
+  public teacherDataSource: Object[];
+  public teacherFields: Object = {value: 'Id', text: 'Name'};
+  public classroomDataSource: Object[];
+  public classroomFields: Object = {value: 'Id', text: 'Name'};
+  public groupDataSource: Object[];
+  public groupFields: Object = {value: 'Id', text: 'Name'};
 
   ngOnInit() {
     this.titleService.setTitle('My schedule');
     this.loadGroups();
     this.loadClassrooms();
     this.loadTeachers();
+    this.loadSubjects();
 
     this.userService.getUsersInfo().subscribe(user => {
       this.userID = user.id;
@@ -125,34 +120,120 @@ export class ScheduleComponent implements OnInit {
     if (this.scheduleData) {
       this.selectedDate = this.scheduleData[0].startTime
     }
-    console.log(this.scheduleData)
+    this.data = this.scheduleData.map(scheduleCell => {
+      return {
+        id: scheduleCell.id,
+        teacher_id: scheduleCell.teacher.id,
+        subject_id: scheduleCell.subject.id,
+        group_id: scheduleCell.group.id,
+        classroom_id: scheduleCell.classroom.id,
+        subject_type: scheduleCell.subject.type,
+        StartTime: scheduleCell.startTime,
+        EndTime: scheduleCell.endTime,
+      };
+    })
+
+    this.eventSettings = {
+      dataSource: extend([], this.data, null, true) as Record<string, any>[],
+      fields: {
+        id: 'id',
+        teacherId: {
+          name: 'teacher_id', title: 'Teacher',
+          validation: {
+            required: true,
+          },
+        },
+        subject: {
+          name: 'subject_id',
+          title: 'Subject',
+          validation: {
+            required: true,
+          },
+        },
+        group: {
+          name: 'group_id',
+          title: 'Group',
+          validation: {
+            required: true,
+          },
+        },
+        location: {
+          name: 'classroom_id', title: 'Classroom', validation: {
+            required: true,
+            regex: [
+              '^[a-zA-Z0-9- ]*$',
+              'Special characters are not allowed in this field',
+            ],
+          },
+        },
+        subject_type: {
+          name: 'subject_type', title: 'Subject type', validation: {
+            required: true,
+          },
+        },
+        startTime: {
+          name: 'StartTime', title: 'From', validation: {
+            required: true,
+          },
+        },
+        endTime: {
+          name: 'EndTime', title: 'To', validation: {
+            required: true,
+          },
+        },
+        isAllDay: {name: 'is_all_day'}
+      },
+    };
+    console.log(this.eventSettings)
   }
 
   loadGroups(): void {
     this.groupService.getAllGroups().subscribe(groups => {
       this.groups = groups;
+      this.groupDataSource = groups.map(group => {
+        return {Id: group.id, Name: group.name};
+      })
+    });
+
+  }
+
+  loadSubjects(): void {
+    this.subjectService.getAllSubjects().subscribe(subjects => {
+      this.subjects = subjects;
+      this.lessonTypes = [...new Set(subjects.map(subject => subject.type))]
+      this.subjectDataSource = subjects.map(subject => {
+        return {Id: subject.id, Name: subject.name};
+      })
     });
   }
 
   loadClassrooms(): void {
     this.classroomService.getAllClassrooms().subscribe(classrooms => {
       this.classrooms = classrooms;
+      this.classroomDataSource = classrooms.map(classroom => {
+        return {Id: classroom.id, Name: classroom.code};
+      })
     });
   }
-
 
 
   loadTeachers(): void {
     this.teacherService.getAllTeachers().subscribe(teachers => {
       this.teachers = teachers;
+      this.teacherDataSource = teachers.map(teacher => {
+        return {Id: teacher.id, Name: teacher.name};
+      })
     });
+
   }
 
 
-  onFiltering(e: FilteringEventArgs, dataSource: string[]) {
-    let query = new Query();
-    query = (e.text !== '') ? query.where('name', 'contains', e.text, true) : query;
-    e.updateData(dataSource, query);
+  public onFiltering: EmitType<FilteringEventArgs> = (e: FilteringEventArgs) => {
+    let query: Query = new Query();
+    //frame the query based on search string with filter type.
+    query = (e.text !== '') ? query.where('Name', 'startswith', e.text, true) : query;
+    //pass the filter data source, filter query to updateData method.
+    e.updateData(this.data, query);
   }
 
   onFilteringClassrooms(e: FilteringEventArgs, dataSource: string[]) {
@@ -163,7 +244,7 @@ export class ScheduleComponent implements OnInit {
 
   public value: string = '';
 
-
+  public eventSettings: EventSettingsModel;
   @ViewChild('eventTypeObj')
   public eventTypeObj?: DropDownListComponent;
   @ViewChild('titleObj')
@@ -182,25 +263,15 @@ export class ScheduleComponent implements OnInit {
   public endDate: Date | undefined;
 
   public selectedDay!: number[];
-  public startHour: string = '07:00';
+  public startHour: string = '05:00';
   public endHour: string = '20:00';
 
   public selectedDate: Date = new Date();
   public rowAutoHeight = true;
-  public currentView: View = 'TimelineWeek';
+  public currentView: View = 'Week';
 
 
   public errorMessage: string = '';
-
-
-  onCellClick(args: CellClickEventArgs) {
-    let date = new Date(args.startTime);
-    this.selectedDay = [date.getDay()];
-    this.errorMessage = '';
-  }
-
-
-
 
   public startDateParser(data: string): Date {
     if (isNullOrUndefined(this.startDate!) && !isNullOrUndefined(data)) {
@@ -236,62 +307,47 @@ export class ScheduleComponent implements OnInit {
     }
   }
 
-  public group: GroupModel = {
-    enableCompactView: false,
-    resources: ['MeetingRoom']
-  };
 
-  public allowMultiple = true;
-  public resourceDataSource: Record<string, any>[] = [
-    {text: 'Monday', id: 1, color: '#98AFC7'},
-    {text: 'Tuesday', id: 2, color: '#99c68e'},
-    {text: 'Wednesday', id: 3, color: '#C2B280'},
-    {text: 'Thursday', id: 4, color: '#3090C7'},
-    {text: 'Friday', id: 5, color: '#95b9'},
-  ];
-
-
-  getSubjectColor(id: number) {
-    const subject = this.subjects.find(subject => subject['id'] === id);
+  getSubjectColor(id: string) {
+    const subject = this.subjects.find(subject => subject.id === id);
     return subject ? subject['color'] : 'default';
   }
 
 
-  groups: any[];
-  teachers: any[];
-  classrooms: any[];
-  lessonTypes: string[];
+  public lessonTypes: string[];
 
   getSubjectTypeById(id: string): string {
-    let subject = this.subjects.find(subject => subject.id === id);
-    return subject ? subject.type : id;
+    const type = this.lessonTypes.find(type => type === id);
+    return type ? type : id;
   }
 
 
   getGroupById(id: string): string {
-    let group = this.groups.find(group => group.id === id);
+    console.log(id)
+    const group = this.groups.find(group => group.id === id);
     return group ? group.name : id;
   }
 
 
   getSubjectNameById(id: string): string {
-    let subject = this.subjects.find(subject => subject.id === id);
+    const subject = this.subjects.find(subject => subject.id === id);
     return subject ? subject.name : id;
   }
 
 
   getTeacherNameById(id: string): string {
-    let teacher = this.teachers.find(teacher => teacher.id === id);
+    const teacher = this.teachers.find(teacher => teacher.id === id)
     return teacher ? teacher.name : id;
   }
 
   getClassroomNameById(id: string): string {
-    let classroom = this.classrooms.find(classroom => classroom.id === id);
+    const classroom = this.classrooms.find(classroom => classroom.id === id)
     return classroom ? classroom.code : id;
   }
 
 
   onSubjectSelected(event: any): boolean {
+    console.log(event)
     let selectElement = document.getElementById('my-select-subject').getElementsByClassName('e-ddl-hidden')[0];
     if (selectElement) {
       this.renderer.addClass(selectElement, 'e-subject');
@@ -326,22 +382,6 @@ export class ScheduleComponent implements OnInit {
     return false;
   }
 
-  removeAttributes() {
-    let inputElements = document.getElementsByClassName('e-input');
-    Array.from(inputElements).forEach((inputElement: any) => {
-      this.renderer.removeAttribute(inputElement, 'tabindex');
-      this.renderer.removeAttribute(inputElement, 'aria-label');
-      this.renderer.removeAttribute(inputElement, 'aria-autocomplete');
-      this.renderer.removeAttribute(inputElement, 'aria-expanded');
-      this.renderer.removeAttribute(inputElement, 'aria-readonly');
-      this.renderer.removeAttribute(inputElement, 'autocomplete');
-      this.renderer.removeAttribute(inputElement, 'autocapitalize');
-      this.renderer.removeAttribute(inputElement, 'spellcheck');
-      this.renderer.removeAttribute(inputElement, 'aria-controls');
-      this.renderer.removeAttribute(inputElement, 'aria-describedby');
-    });
-  }
-
 
   onClassroomSelected(event: any): boolean {
     let selectElement = document.getElementById('my-select-classroom').getElementsByClassName('e-ddl-hidden')[0];
@@ -365,13 +405,12 @@ export class ScheduleComponent implements OnInit {
         return false;
       } else {
         this.currentClassroomId = selectedClassroom.id;
-        this.currentClassroomNumber = selectedClassroom.classroomNumber;
+        this.currentClassroomNumber = selectedClassroom.number;
         return true;
       }
     }
     return false;
   }
-
 
   currentGroupId: String;
   currentGroupName: String;
@@ -444,217 +483,63 @@ export class ScheduleComponent implements OnInit {
   }
 
 
-  public eventSettings: EventSettingsModel;
-
-  ngOnChanges(changes: SimpleChanges) {
-    console.log(changes.scheduleData)
-    if (changes.scheduleData) {
-      this.eventSettings = {
-        dataSource: extend([], this.scheduleData, null, true) as Record<string, any>[],
-        fields: {
-          id: 'id',
-          teacherId: {
-            name: 'teacher_id', title: 'Teacher',
-            validation: {
-              required: true,
-            },
-          },
-          subject: {
-            name: 'subject_id',
-            title: 'Subject',
-            validation: {
-              required: true,
-            },
-          },
-
-          location: {
-            name: 'classroom_id', title: 'Classroom', validation: {
-              required: true,
-              regex: [
-                '^[a-zA-Z0-9- ]*$',
-                'Special characters are not allowed in this field',
-              ],
-            },
-          },
-          subject_type: {
-            name: 'subject_type', title: 'Subject type', validation: {
-              required: true,
-            },
-          },
-          startTime: {
-            name: 'StartTime', title: 'From', validation: {
-              required: true,
-            },
-          },
-          endTime: {
-            name: 'EndTime', title: 'To', validation: {
-              required: true,
-            },
-          },
-          isAllDay: {name: 'is_all_day'}
-        },
-      };
-    }
-  }
-
-
-  public onActionBegin(args: string[] | any): void {
+  public onActionBegin(args: ActionEventArgs): void {
     if (args.requestType === 'eventCreate' || args.requestType === 'eventChange') {
-      let data: Record<string, any>;
+      const data: Record<string, any> = args.data instanceof Array ? args.data[0] : args.data;
+      console.log(args)
+      console.log(data)
+      /* if (!this.onSubjectSelected({itemData: {id: data.subject_id}})) {
+         args.cancel = true;
+         return;
+       }
 
-      if (args.requestType === 'eventCreate') {
-        data = (args.data[0] as Record<string, any>);
-      } else if (args.requestType === 'eventChange') {
-        data = (args.data as Record<string, any>);
-      }
+       if (!this.onClassroomSelected({itemData: {id: data.classroom_id}})) {
+         args.cancel = true;
+         return;
+       }
 
-      if (!this.onSubjectSelected({itemData: {id: data.subject_id}})) {
-        args.cancel = true;
-        return;
-      }
-
-      if (!this.onClassroomSelected({itemData: {id: data.classroom_id}})) {
-        args.cancel = true;
-        return;
-      }
-
-      if (!this.onTeacherSelected({itemData: {id: data.teacher_id}})) {
-        args.cancel = true;
-        return;
-      }
+       if (!this.onTeacherSelected({itemData: {id: data.teacher_id}})) {
+         args.cancel = true;
+         return;
+       }*/
 
       // Проверка доступности слота
-      if (!this.scheduleObj.isSlotAvailable(data)) {
+      if (!this.scheduleObj.isSlotAvailable(data.StartTime as Date, data.EndTime as Date)) {
+        console.log('Slot is not available')
         args.cancel = true;
-        return;
       }
 
+      console.log(data, 'data')
       let scheduleCell: ScheduleCellCreate = {
         groupId: data.group_id,
         subjectId: data.subject_id,
         teacherId: data.teacher_id,
         classroomId: data.classroom_id,
-        startTime: new Date(data.StartTime),
-        endTime:  new Date(data.StartTime),
+        startTime: data.StartTime,
+        endTime: data.EndTime,
         scheduleId: data.id
       };
 
       console.log(scheduleCell)
 
-      this.scheduleCellService.createScheduleCell(scheduleCell);
+      this.scheduleCellService.createScheduleCell(scheduleCell).subscribe({
+        next: () => {
+          console.log('Schedule cell created');
+        },
+        error: (error) => {
+          console.error('Error creating schedule cell', error);
+          args.cancel = true;
+        }
+      });
     }
   }
 
-
-
-  public getResourceData(data: { [key: string]: Object }): { [key: string]: Object } {
-    const resources: ResourcesModel = this.scheduleObj!.getResourceCollections()[0];
-    return (resources.dataSource as Object[]).filter((resource: Object) =>
-      (resource as { [key: string]: Object; })['Id'] === data['RoomId'])[0] as { [key: string]: Object };
-  }
 
   public getHeaderStyles(data: { [key: string]: Object }): Object {
     if (data['elementType'] === 'cell') {
       return {'align-items': 'center', 'color': '#919191'};
     } else {
-      const resourceData: { [key: string]: Object } = this.getResourceData(data);
-      return {'background': resourceData['Color'], 'color': '#FFFFFF'};
+      return {'background': '#F5F5F5', color: '#919191'};
     }
   }
-
-  public getGroupName(id: number): string {
-    let group = this.groups.find(group => group['id'] === id);
-    return group ? group['name'] : 'Группа не найдена';
-  }
-
-
-
-
-
-  public getSubjectId(subjectName: string): number {
-    const subject = this.subjects.find(s => s['name'] === subjectName);
-    return subject ? subject['id'] : -1;
-  }
-
-
-  public searchOnClick(): void {
-    const searchObj: Record<string, any>[] = [];
-    let endDate: Date;
-
-    let dropdownlistObj = (document.getElementById('subject_type_search_content') as any).ej2_instances[0];
-    let subjectTypeValue = dropdownlistObj.value;
-
-    const formElements: string[] = [
-      (document.getElementById('subject_id') as HTMLInputElement).value,
-      (document.getElementById('classroom_id_search_content') as HTMLInputElement).value,
-      subjectTypeValue
-    ];
-
-    const fieldNames: string[] = ['subject_id', 'classroom_id', 'subject_type'];
-    formElements.forEach((value: string, index: number) => {
-      if (value && value !== '') {
-        searchObj.push({
-          field: fieldNames[index],
-          operator: 'contains',
-          value: value,
-          predicate: 'or',
-          matchcase: 'true'
-        });
-      }
-    });
-    console.log(searchObj)
-    if (this.startTimeObj!.value) {
-      searchObj.push({
-        field: 'StartTime',
-        operator: 'greaterthanorequal',
-        value: this.startTimeObj!.value,
-        predicate: 'and',
-        matchcase: false
-      });
-    }
-    if (this.endTimeObj!.value) {
-      const date: Date = new Date(+this.endTimeObj!.value);
-      endDate = new Date(date.setDate(date.getDate() + 1));
-      searchObj.push({
-        field: 'EndTime',
-        operator: 'lessthanorequal',
-        value: endDate,
-        predicate: 'and',
-        matchcase: false
-      });
-    }
-    if (searchObj.length > 0) {
-      const filter: Record<string, any> = searchObj[0];
-      let predicate: Predicate = new Predicate(filter['field'], filter['operator'], filter['value'], filter['matchcase']);
-      for (let i = 1; i < searchObj.length; i++) {
-        predicate = predicate.and(searchObj[i]['field'], searchObj[i]['operator'], searchObj[i]['value'], searchObj[i]['matchcase']);
-      }
-
-      const result: Record<string, any>[] = new DataManager(this.eventSettings.dataSource as Record<string, any>[]).executeLocal(new Query().where(predicate));
-      if (result.length > 0) {
-        let earliestTime = result[0]['StartTime'];
-        result.forEach(event => {
-          if (event['StartTime'] < earliestTime) {
-            earliestTime = event['StartTime'];
-          }
-        });
-
-        this.selectedDate = earliestTime;
-
-       // this.showSearchEvents('show', result);
-      } else {
-        //this.showSearchEvents('show', []);
-      }
-    } else {
-      //this.showSearchEvents('show', this.eventSettings.dataSource as Record<string, any>[]);
-      this.selectedDate = new Date();
-    }
-  }
-
-  public clearOnClick(): void {
-    (document.getElementById('form-search') as HTMLFormElement).reset();
-    //this.showSearchEvents('show', this.eventSettings.dataSource as Record<string, any>[]);
-    this.selectedDate = new Date();
-  }
-
 }

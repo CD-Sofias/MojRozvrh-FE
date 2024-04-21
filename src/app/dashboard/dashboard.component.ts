@@ -1,6 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit, Output} from '@angular/core';
-import {Subject} from "../types/subject";
-import {SubjectService} from "../services/subject.service";
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Schedule} from "../types/schedule";
 import {ScheduleCell} from "../types/scheduleCell";
 

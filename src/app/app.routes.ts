@@ -2,6 +2,7 @@ import {Routes} from '@angular/router';
 import {DashboardComponent} from "./dashboard/dashboard.component";
 import {authGuard} from "./auth/auth.guard";
 import {MyScheduleComponent} from "./dashboard/my-schedule/my-schedule.component";
+import {MyScheduleDetailComponent} from "./dashboard/my-schedule-detail/my-schedule-detail.component";
 
 export const routes: Routes = [
   {path: '', redirectTo: 'auth', pathMatch: 'full'},
@@ -10,6 +11,9 @@ export const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [authGuard],
-    children: [{path: 'myschedule', component: MyScheduleComponent},]
+    children: [
+      {path: 'my-schedule', component: MyScheduleComponent},
+      {path: 'my-schedule/:id', component: MyScheduleDetailComponent}
+    ]
   },
 ];

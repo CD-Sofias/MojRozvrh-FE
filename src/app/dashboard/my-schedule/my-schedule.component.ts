@@ -13,6 +13,7 @@ export class MyScheduleComponent implements OnInit {
   mySchedules: Observable<Schedule[]>;
 
   ngOnInit() {
+    console.log('MyScheduleComponent')
     this.mySchedules = this.userService.getUsersInfo().pipe(
       mergeMap((user) => this.scheduleService.getSchedulesByUserId(user.id))
     );

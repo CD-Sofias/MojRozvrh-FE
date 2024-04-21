@@ -1,10 +1,15 @@
-<div class="control-section" style="padding:10px;position:relative;">
-  <div #targetModal class="col-md-8 control-section" id="modalTarget" style="height:350px;">
-    <button #modalButton (click)="modalBtnClick()" ejs-button id='modalbtn'>Open</button>
-    <ejs-dialog #modalDialog (close)="modalDlgClose()" (overlayClick)="overlayClick()" [animationSettings]='animationSettings' [buttons]='buttons'
-                [content]='content' [header]='header' [isModal]='isModal' [target]='target'
+<div class="control-section" style="padding:10px;position:relative;height:350px">
+  <div #targetModal class="col-md-8 control-section" id="modalTarget">
+    <button  #modalButton (click)="onOpenDialog($event)" ejs-button id='modalbtn'>Open</button>
+    <ejs-dialog id='dialog-container' #modalDialog (close)="modalDlgClose()" (overlayClick)="onOverlayClick()"
+                [animationSettings]='animationSettings'
+                [buttons]='buttons'
+                [content]='content'
+                [header]='header'
+                [isModal]='isModal'
+                [target]='target'
                 [visible]='visible'
-                [width]='width' id="modalDialog">
+                [width]='width'>
 
       <ng-template #content>
         <div class="form-group template">
@@ -20,8 +25,6 @@
                     </span>
         </div>
       </ng-template>
-
-
     </ejs-dialog>
   </div>
 
