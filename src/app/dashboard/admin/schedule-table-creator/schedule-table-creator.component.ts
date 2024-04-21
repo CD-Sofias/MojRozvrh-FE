@@ -45,7 +45,7 @@ export class ScheduleTableCreatorComponent implements OnInit {
         const dialog = document.querySelector('.e-dlg-header-content');
         if (dialog) {
           console.log(dialog);
-          dialog.querySelector('.e-dlg-header').textContent = `Details of ${args.rowData.name}`;
+          dialog.querySelector('.e-dlg-header').textContent = `Details of ${args.rowData.name || args.rowData.code || args.rowData.street}`;
         }
       }, 0);
     }

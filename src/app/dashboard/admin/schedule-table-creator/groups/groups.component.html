@@ -1,0 +1,34 @@
+<div class="control-section rounded-2xl">
+  <ejs-grid [dataSource]='data' [pageSettings]='pageSettings' [allowSorting]='true' [editSettings]='editSettings' [toolbar]='toolbar' (actionBegin)="actionBegin($event)">
+    <e-columns>
+      <e-column field='name' headerText='Group name' width='120' [validationRules]='customeridrules' allowEditing='true'></e-column>
+      <e-column field='quantity' headerText='Quantity' width='120' [validationRules]='freightrules'></e-column>
+      <e-column field='department.name' headerText='Department' width='120' [validationRules]='customeridrules' allowEditing='true'></e-column>
+    </e-columns>
+    <ng-template #editSettingsTemplate let-data>
+      <div [formGroup]="groupForm">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <ejs-textbox id="name" placeholder="Group name" floatLabelType='Always' [value]='data?.name'></ejs-textbox>
+          </div>
+          <div class="form-group col-md-6">
+            <ejs-numerictextbox id="quantity" placeholder="Quantity" floatLabelType='Always' format='n0' [value]='data?.quantity' [min]='1' [step]='1'></ejs-numerictextbox>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <ejs-dropdownlist id="Department"  data-name="department" [dataSource]='departments' [fields]="{text: 'name', value: 'id' }" (filtering)='onFiltering($event)' [filterBarPlaceholder]="filterPlaceholder"
+                              [popupHeight]='height' [allowFiltering]='true' [placeholder]='watermark' [value]='data?.department?.id'></ejs-dropdownlist>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+
+
+
+
+  </ejs-grid>
+</div>
+
+<ejs-toast #toasttype></ejs-toast>

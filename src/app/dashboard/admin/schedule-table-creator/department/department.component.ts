@@ -1,8 +1,8 @@
 import {ScheduleTableCreatorComponent} from "../schedule-table-creator.component";
-import {DepartmentService} from "../../../../services/department.service";
 import {Department} from "../../../../types/department";
 import {Observable} from "rxjs";
 import {Component} from "@angular/core";
+import {DepartmentService} from "../../../../services/department.service";
 
 @Component({
   selector: 'app-department',

@@ -1,8 +1,8 @@
 import {ScheduleTableCreatorComponent} from "../schedule-table-creator.component";
-import {TeacherService} from "../../../../services/teacher.service";
-import {Teacher} from "../../../../types/teacher";
+import {CreateTeacher, Teacher} from "../../../../types/teacher";
 import {Observable} from "rxjs";
 import {Component} from "@angular/core";
+import {TeacherService} from "../../../../services/teacher.service";
 
 @Component({
   selector: 'app-teacher',
@@ -22,9 +22,9 @@ export class TeacherComponent extends ScheduleTableCreatorComponent {
     });
   }
 
-  addTeacher(teacher: { name: string, surname: string }): Observable<Teacher> {
-    const teacherWithId = {id: '', ...teacher};
-    return this.teacherService.createTeacher(teacherWithId);
+  addTeacher(teacher: CreateTeacher): Observable<Teacher> {
+
+    return this.teacherService.createTeacher(teacher);
   }
 
   editTeacher(teacherData: any): Observable<Teacher> {

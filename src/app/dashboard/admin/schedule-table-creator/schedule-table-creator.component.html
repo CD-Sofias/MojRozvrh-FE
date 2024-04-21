@@ -18,6 +18,26 @@
                   ejs-button iconCss="e-icons e-timeline-work-week"
                   iconPosition="Left" routerLink="departments" routerLinkActive="active">
           </button>
+          <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="Addresses"
+                  cssClass="e-flat schedule-btn header-btn"
+                  ejs-button iconCss="e-icons e-timeline-work-week"
+                  iconPosition="Left" routerLink="addresses" routerLinkActive="active">
+          </button>
+          <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="Groups"
+                  cssClass="e-flat schedule-btn header-btn"
+                  ejs-button iconCss="e-icons e-timeline-work-week"
+                  iconPosition="Left" routerLink="groups" routerLinkActive="active">
+          </button>
+          <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="Classrooms"
+                  cssClass="e-flat schedule-btn header-btn"
+                  ejs-button iconCss="e-icons e-timeline-work-week"
+                  iconPosition="Left" routerLink="classrooms" routerLinkActive="active">
+          </button>
+          <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="Subjects"
+                  cssClass="e-flat schedule-btn header-btn"
+                  ejs-button iconCss="e-icons e-timeline-work-week"
+                  iconPosition="Left" routerLink="subjects" routerLinkActive="active">
+          </button>
         </div>
       </div>
     </div>

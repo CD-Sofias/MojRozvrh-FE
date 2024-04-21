@@ -6,3 +6,9 @@ export interface Group {
   quantity: number;
   department?: Department
 }
+
+export interface CreateGroup {
+  name: string;
+  quantity: number;
+  departmentId: string;
+}

@@ -3,3 +3,8 @@ export interface Teacher {
   name: string;
   surname: string;
 }
+
+export interface CreateTeacher {
+  name: string;
+  surname: string;
+}

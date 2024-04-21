@@ -1,0 +1,10 @@
+<div class="control-section rounded-2xl">
+  <ejs-grid [dataSource]='data' [pageSettings]='pageSettings' [allowSorting]='true' [editSettings]='editSettings' [toolbar]='toolbar' (actionBegin)="actionBegin($event)">
+    <e-columns>
+      <e-column field='street' headerText='Street' width='120' [validationRules]='customeridrules' allowEditing='true'></e-column>
+      <e-column field='streetNumber' headerText='Street number' width='120' [validationRules]='freightrules'></e-column>
+    </e-columns>
+  </ejs-grid>
+</div>
+
+<ejs-toast #toasttype></ejs-toast>
