@@ -21,6 +21,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       authService.deleteAuthToken();
       router.navigate(['auth/login']);
     }
-    throw new Error(err.error.message || err.statusText)
+    return next(authReq);
   }))
 };

@@ -89,9 +89,8 @@ export class ScheduleComponent implements OnInit {
   public selectedClassroom: String;
 
   @Input() selectedGroupScheduleCells: ScheduleCell[];
-
   @Input() selectedGroup: String;
-  @Input() scheduleData: ScheduleCell;
+  @Input() scheduleData: ScheduleCell[];
 
   @ViewChild('sample')
   public AutoCompleteObj: AutoCompleteComponent;
@@ -100,9 +99,9 @@ export class ScheduleComponent implements OnInit {
   public data: Record<string, any>[];
 
   subjects: any[] = [];
-
+  //@ts-ignore
   public fields: FieldSettingsModel = {value: 'id', text: 'name'};
-
+  //@ts-ignore
   public ClassroomFields: FieldSettingsModel = {value: 'id', text: 'code'};
 
   public onChange(args: ScheduleCell): void {
@@ -116,7 +115,6 @@ export class ScheduleComponent implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('My schedule');
-    this.loadSubjects();
     this.loadGroups();
     this.loadClassrooms();
     this.loadTeachers();
@@ -124,6 +122,10 @@ export class ScheduleComponent implements OnInit {
     this.userService.getUsersInfo().subscribe(user => {
       this.userID = user.id;
     });
+    if (this.scheduleData) {
+      this.selectedDate = this.scheduleData[0].startTime
+    }
+    console.log(this.scheduleData)
   }
 
   loadGroups(): void {
@@ -169,7 +171,7 @@ export class ScheduleComponent implements OnInit {
   @ViewChild('notesObj')
   public notesObj?: TextBoxComponent;
 
-
+  @ViewChild('scheduleObj') public scheduleObj!: EJ2ScheduleComponent;
   @ViewChild('eventTypeSearch') eventTypeSearchObj: any | undefined;
   @ViewChild('subject_id') subjectObj: any | undefined;
   @ViewChild('classroom_id_search_content') locationObj: ElementRef | undefined;
@@ -445,6 +447,7 @@ export class ScheduleComponent implements OnInit {
   public eventSettings: EventSettingsModel;
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log(changes.scheduleData)
     if (changes.scheduleData) {
       this.eventSettings = {
         dataSource: extend([], this.scheduleData, null, true) as Record<string, any>[],
@@ -543,17 +546,6 @@ export class ScheduleComponent implements OnInit {
   }
 
 
-  // createScheduleCell(scheduleCell: ScheduleCell): void {
-  //   this.http.post<ScheduleCell>(environment.backendUrl + '/schedule_cell', scheduleCell).subscribe({
-  //     next: response => {
-  //       console.log('Response from the server:', response);
-  //     },
-  //     error: error => {
-  //       console.error('Error:', error);
-  //     }
-  //   });
-  // }
-
 
   public getResourceData(data: { [key: string]: Object }): { [key: string]: Object } {
     const resources: ResourcesModel = this.scheduleObj!.getResourceCollections()[0];
@@ -649,19 +641,19 @@ export class ScheduleComponent implements OnInit {
 
         this.selectedDate = earliestTime;
 
-        this.showSearchEvents('show', result);
+       // this.showSearchEvents('show', result);
       } else {
-        this.showSearchEvents('show', []);
+        //this.showSearchEvents('show', []);
       }
     } else {
-      this.showSearchEvents('show', this.eventSettings.dataSource as Record<string, any>[]);
+      //this.showSearchEvents('show', this.eventSettings.dataSource as Record<string, any>[]);
       this.selectedDate = new Date();
     }
   }
 
   public clearOnClick(): void {
     (document.getElementById('form-search') as HTMLFormElement).reset();
-    this.showSearchEvents('show', this.eventSettings.dataSource as Record<string, any>[]);
+    //this.showSearchEvents('show', this.eventSettings.dataSource as Record<string, any>[]);
     this.selectedDate = new Date();
   }
 

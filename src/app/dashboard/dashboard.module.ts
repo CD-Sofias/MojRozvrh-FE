@@ -43,6 +43,9 @@ import {CreateScheduleModalComponent} from "./create-schedule-modal/create-sched
 import {DialogModule} from "@syncfusion/ej2-angular-popups";
 import {MyScheduleComponent} from "./my-schedule/my-schedule.component";
 import {SearchComponent} from "./search/search.component";
+import {MyScheduleDetailComponent} from "./my-schedule-detail/my-schedule-detail.component";
+import {ExampleScheduleComponent} from "./example-schedule/example-schedule.component";
+import {QuickInfoComponent} from "./example-schedule/quick-info/quick-info.component";
 
 @NgModule({
   declarations: [
@@ -51,7 +54,9 @@ import {SearchComponent} from "./search/search.component";
     GroupsComponent,
     DashboardComponent,
     MyScheduleComponent,
-    CreateScheduleModalComponent
+    CreateScheduleModalComponent,
+    MyScheduleDetailComponent,
+    ExampleScheduleComponent
   ],
   imports: [
     CommonModule,
@@ -59,7 +64,7 @@ import {SearchComponent} from "./search/search.component";
     RouterModule,
     AppBarAllModule, ButtonAllModule, DropDownButtonAllModule, MenuAllModule, ButtonModule, ToolbarModule,
     FormsModule, ScheduleAllModule, RecurrenceEditorAllModule, NumericTextBoxAllModule, TextBoxAllModule, DatePickerAllModule, TimePickerAllModule, DateTimePickerAllModule, CheckBoxAllModule, ToolbarAllModule, DropDownListAllModule, ContextMenuAllModule, MaskedTextBoxModule, UploaderAllModule, MultiSelectAllModule, TreeViewModule, ButtonAllModule, DropDownButtonAllModule, SwitchAllModule, ToastAllModule, AppBarModule, AutoCompleteModule, AccordionModule,
-    DashboardRoutingModule, DropDownListModule, DatePickerModule, GridModule, AutoCompleteModule, HttpClientModule, DialogModule, SearchComponent
+    DashboardRoutingModule, DropDownListModule, DatePickerModule, GridModule, AutoCompleteModule, HttpClientModule, DialogModule, SearchComponent, QuickInfoComponent
   ],
   exports: [
     HeaderComponent,
@@ -67,7 +72,9 @@ import {SearchComponent} from "./search/search.component";
     GroupsComponent,
     DashboardComponent,
     MyScheduleComponent,
-    CreateScheduleModalComponent
+    CreateScheduleModalComponent,
+    MyScheduleDetailComponent,
+    ExampleScheduleComponent
   ]
 })
 export class DashboardModule { }
