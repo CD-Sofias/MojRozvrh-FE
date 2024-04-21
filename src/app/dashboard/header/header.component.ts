@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ItemModel } from '@syncfusion/ej2-angular-splitbuttons';
 import {Router} from "@angular/router";
@@ -11,7 +11,7 @@ import {MenuEventArgs} from "@syncfusion/ej2-navigations";
   styleUrls: ['./header.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
 
   public items: ItemModel[] = [
     {
@@ -28,11 +28,13 @@ export class HeaderComponent {
   public scheduleItems: ItemModel[] = [
     {
       text: 'Schedule',
-      iconCss: 'e-icons e-agenda-date-range'
+      iconCss: 'e-icons e-agenda-date-range',
+      url: '/schedule'
     },
     {
       text: 'My schedule',
       iconCss: 'e-icons e-timeline-work-week',
+      url: 'my-schedule'
     }];
 
   isSmallScreen: boolean;

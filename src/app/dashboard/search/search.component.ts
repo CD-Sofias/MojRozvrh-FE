@@ -1,87 +1,140 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {AccordionAllModule} from "@syncfusion/ej2-angular-navigations";
-import {DropDownListAllModule} from "@syncfusion/ej2-angular-dropdowns";
-import {DatePickerAllModule} from "@syncfusion/ej2-angular-calendars";
+import {DropDownListModule, DropDownListComponent, FilteringEventArgs} from "@syncfusion/ej2-angular-dropdowns";
+import {DatePickerAllModule, DatePickerModule} from "@syncfusion/ej2-angular-calendars";
 import {DataManager, Query, ReturnOption} from "@syncfusion/ej2-data";
 import {Subject} from "../../types/subject";
 import {EventSettingsModel} from "@syncfusion/ej2-schedule";
 import {
   ScheduleComponent as EJ2ScheduleComponent
 } from "@syncfusion/ej2-angular-schedule/src/schedule/schedule.component";
+import {EmitType} from "@syncfusion/ej2-base";
+import {GroupService} from "../../services/group.service";
+import {TeacherService} from "../../services/teacher.service";
+import {Group} from "../../types/group";
+import {Teacher} from "../../types/teacher";
+import {ClassroomService} from "../../services/classroom.service";
+import {Classroom} from "../../types/classroom";
+import {SubjectService} from "../../services/subject.service";
+import {ScheduleCellService} from "../../services/schedule-cell.service";
+import {ScheduleCell} from "../../types/scheduleCell";
 
 @Component({
   selector: 'app-search',
+  templateUrl: './search.component.html',
   standalone: true,
   imports: [
+    DropDownListModule,
     AccordionAllModule,
-    DropDownListAllModule,
-    DatePickerAllModule
+    DatePickerModule
   ],
-  templateUrl: './search.component.html',
   styleUrl: './search.component.css'
 })
 export class SearchComponent implements OnInit {
-  @Input() public subjects: Subject[] = [];
+  constructor(private groupService: GroupService,
+              private teacherService: TeacherService,
+              private classroomService: ClassroomService,
+              private subjectService: SubjectService,
+              private scheduleCellService: ScheduleCellService) {
+  }
+  public groups: Group[] = [];
+  public teachers: Teacher[] = [];
+  public classrooms: Classroom[] = [];
+  public subjects: Subject[] = [];
+  public data: { [key: string]: Object; }[];
+  @Output() dataEvent = new EventEmitter<ScheduleCell[]>();
+  @ViewChild('typeList')
+  public typeObj: DropDownListComponent;
 
-  public lessonTypes: string[] = [];
+  @ViewChild('searchList')
+  public searchObj: DropDownListComponent;
 
-  public eventSettings: EventSettingsModel;
+  public searchData: Object[] = [
+    { Id: 'Type1', Type: 'Groups' },
+    { Id: 'Type2', Type: 'Teachers' },
+    { Id: 'Type3', Type: 'Classrooms' },
+    { Id: 'Type4', Type: 'Subjects' },
+  ];
 
-  public selectedDate: Date = new Date();
-
-  @ViewChild('scheduleObj') public scheduleObj!: EJ2ScheduleComponent;
-
-
+  public fields: Object = { text: 'Type', value: 'Id' };
+  public dataFields: Object = { value: 'Id', text: 'Name' };
+  public searchValue: string;
+  public typeValue: string = 'Type1';
+  public onChange1(args: any): void {
+    if (this.typeValue) {
+      console.log(this.typeValue)
+      this.searchObj.enabled = true;
+      if (this.typeObj.text === 'Groups') {
+        this.data = this.groups.map(group => {
+          return {Id: group.id, Name: group.name};
+        })
+      }
+      if (this.typeObj.text === 'Teachers') {
+        this.data = this.teachers.map(teacher => {
+          return {Id: teacher.id, Name: teacher.name};
+        })
+      }
+      if (this.typeObj.text === 'Classrooms') {
+        this.data = this.classrooms.map(classroom => {
+          return {Id: classroom.id, Name: classroom.code};
+        })
+      }
+      if (this.typeObj.text === 'Subjects') {
+        this.data = this.subjects.map(subject => {
+          return {Id: subject.id, Name: subject.name};
+        })
+      }
+      console.log(this.data)
+      this.searchObj.dataSource = this.data;
+      this.searchObj.dataBind();
+      console.log(this.searchObj)
+    }
+  }
+  public onChange2(args: any): void {
+    let filter = [];
+    if (this.typeObj.text === 'Groups') {
+      filter.push({ columnName: 'group.name', value: this.searchObj.text });
+    }
+    if (this.typeObj.text === 'Teachers') {
+      filter.push({ columnName: 'teacher.name', value: this.searchObj.text });
+    }
+    if (this.typeObj.text === 'Classrooms') {
+      filter.push({ columnName: 'classroom.code', value: this.searchObj.text });
+    }
+    if (this.typeObj.text === 'Subjects') {
+      filter.push({ columnName: 'subject.name', value: this.searchObj.text });
+    }
+    if (filter.length > 0) {
+      this.scheduleCellService.getScheduleCellsByFilter(filter).subscribe(scheduleCells => {
+        this.dataEvent.emit(scheduleCells);
+      });
+    }
+  }
   ngOnInit() {
-    this.lessonTypes = [...new Set(this.subjects.map(subject => subject.type))];
+    this.groupService.getAllGroups().subscribe(groups => {
+      this.groups = groups;
+    })
+    this.teacherService.getAllTeachers().subscribe(teachers => {
+      this.teachers = teachers;
+    })
+    this.classroomService.getAllClassrooms().subscribe(classrooms => {
+      this.classrooms = classrooms;
+    })
+    this.subjectService.getAllSubjects().subscribe(subjects => {
+      this.subjects = subjects;
+    })
   }
 
-
-  private showSearchEvents(type: string, data?: Record<string, any>): void {
-
-    if (type === 'show') {
-      this.scheduleObj.eventSettings.dataSource = new DataManager({json: Array.isArray(data) ? data : [data]});
-    } else {
-      this.scheduleObj.eventSettings.dataSource = new DataManager({json: []});
-    }
-    this.scheduleObj.dataBind();
+  ngAfterViewInit(e: any) {
+    setTimeout(() => {
+      this.onChange1(e);
+    }, 500)
   }
-
-
-  public globalSearch(args: KeyboardEvent): void {
-    const searchString: string = (args.target as HTMLInputElement).value;
-    // console.log(this.scheduleData)
-    if (searchString !== '') {
-      new DataManager(this.eventSettings.dataSource as Record<string, any>[])
-        .executeQuery(
-          new Query().search(
-            searchString,
-            ['subject_id', 'classroom_id', 'teacher_id'],
-            null!,
-            true,
-            true
-          )
-        )
-        .then((e: ReturnOption) => {
-          const resultArray = Array.isArray(e.result) ? e.result : [e.result];
-          if (resultArray.length > 0) {
-            let earliestTime = resultArray[0]['StartTime'];
-            resultArray.forEach(event => {
-              if (event['StartTime'] < earliestTime) {
-                earliestTime = event['StartTime'];
-              }
-            });
-
-            this.selectedDate = earliestTime;
-
-            this.showSearchEvents('show', resultArray);
-          } else {
-            this.showSearchEvents('hide');
-          }
-        });
-    } else {
-      this.showSearchEvents('show', this.eventSettings.dataSource as Record<string, any>[]);
-      this.selectedDate = new Date();
-    }
+  public onFiltering: EmitType<FilteringEventArgs> = (e: FilteringEventArgs) => {
+    let query: Query = new Query();
+    //frame the query based on search string with filter type.
+    query = (e.text !== '') ? query.where('Name', 'startswith', e.text, true) : query;
+    //pass the filter data source, filter query to updateData method.
+    e.updateData(this.data, query);
   }
 }

@@ -1,4 +1,5 @@
 import {Department} from "./department";
+import {Schedule} from "./schedule";
 
 export interface User {
   id: string;
@@ -6,4 +7,5 @@ export interface User {
   email: string;
   role: string;
   department?: Department;
+  schedules: Schedule[];
 }

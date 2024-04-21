@@ -3,6 +3,10 @@ import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {ScheduleCell, ScheduleCellCreate} from "../types/scheduleCell";
 
+interface Filter {
+  columnName: string;
+  value: Object;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -32,5 +36,10 @@ export class ScheduleCellService {
 
   getScheduleCellsByGroupId(groupId: string) {
     return this.http.get<ScheduleCell[]>(`${this.url}/group/${groupId}`)
+  }
+
+  getScheduleCellsByFilter(filter: Filter[]) {
+    const filterString = filter.map(f => `${f.columnName}=${f.value}`).join('&')
+    return this.http.get<ScheduleCell[]>(`${this.url}/filter?${filterString}`)
   }
 }

@@ -38,10 +38,11 @@ import {DashboardComponent} from "./dashboard.component";
 import {GroupsComponent} from "./groups/groups.component";
 import {GridModule} from "@syncfusion/ej2-angular-grids";
 import {HttpClientModule} from "@angular/common/http";
-import {MyScheduleComponent} from "./my-schedule/my-schedule.component";
-import {ScheduleComponent} from "./schedule/schedule.component";
 import {CreateScheduleModalComponent} from "./create-schedule-modal/create-schedule-modal.component";
 import {DialogModule} from "@syncfusion/ej2-angular-popups";
+import {MyScheduleComponent} from "./my-schedule/my-schedule.component";
+import {SearchComponent} from "./search/search.component";
+import {ScheduleComponent} from "./schedule/schedule.component";
 import {ScheduleTableCreatorModule} from "./admin/schedule-table-creator/schedule-table-creator.module";
 
 @NgModule({
@@ -61,7 +62,7 @@ import {ScheduleTableCreatorModule} from "./admin/schedule-table-creator/schedul
     RouterModule,
     AppBarAllModule, ButtonAllModule, DropDownButtonAllModule, MenuAllModule, ButtonModule, ToolbarModule,
     FormsModule, ScheduleAllModule, RecurrenceEditorAllModule, NumericTextBoxAllModule, TextBoxAllModule, DatePickerAllModule, TimePickerAllModule, DateTimePickerAllModule, CheckBoxAllModule, ToolbarAllModule, DropDownListAllModule, ContextMenuAllModule, MaskedTextBoxModule, UploaderAllModule, MultiSelectAllModule, TreeViewModule, ButtonAllModule, DropDownButtonAllModule, SwitchAllModule, ToastAllModule, AppBarModule, AutoCompleteModule, AccordionModule,
-    DashboardRoutingModule, DropDownListModule, DatePickerModule, GridModule, AutoCompleteModule, HttpClientModule, DialogModule, ToastModule
+    DashboardRoutingModule, DropDownListModule, DatePickerModule, GridModule, AutoCompleteModule, HttpClientModule, DialogModule, SearchComponent, ToastModule
   ],
   exports: [
     HeaderComponent,

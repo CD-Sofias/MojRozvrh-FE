@@ -1,0 +1,2 @@
+<app-example-schedule *ngIf="(schedule | async) as schedule; else loading" [schedule]="schedule"></app-example-schedule>
+<ng-template #loading>Loading Data...</ng-template>
