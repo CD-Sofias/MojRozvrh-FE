@@ -1,13 +1,12 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {Observable} from "rxjs";
 import {ScheduleTableCreatorComponent} from "../schedule-table-creator.component";
-import {Group} from "../../../../types/group";
-import {Department} from "../../../../types/department";
+import {CreateGroup, Group} from "../../../../types/group";
 import {GridModule} from "@syncfusion/ej2-angular-grids";
 import {ToastModule} from "@syncfusion/ej2-angular-notifications";
 import {NumericTextBoxModule, TextBoxModule} from "@syncfusion/ej2-angular-inputs";
 import {DropDownListModule, FilteringEventArgs} from "@syncfusion/ej2-angular-dropdowns";
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Query} from "@syncfusion/ej2-data";
 import {GroupService} from "../../../../services/group.service";
 import {DepartmentService} from "../../../../services/department.service";
@@ -21,12 +20,12 @@ import {DepartmentService} from "../../../../services/department.service";
     NumericTextBoxModule,
     DropDownListModule,
     ReactiveFormsModule,
-    TextBoxModule
+    TextBoxModule,
+    FormsModule
   ],
   templateUrl: './groups.component.html',
-  styleUrl: './groups.component.css'
 })
-export class GroupsComponent extends ScheduleTableCreatorComponent{
+export class GroupsComponent extends ScheduleTableCreatorComponent {
   groups: Group[];
 
   groupForm: FormGroup;
@@ -46,14 +45,19 @@ export class GroupsComponent extends ScheduleTableCreatorComponent{
   }
 
 
-
   getDepartments(): void {
     this.departmentService.getDepartments().subscribe(departments => {
-      this.departments = departments.map(department => ({ id: department.id, name: department.name }));
+      this.departments = departments.map(department => ({id: department.id, name: department.name}));
     });
   }
 
 
+onDepartmentChange(event: any) {
+  const selectedDepartmentId = event; // event is the id
+  this.groupForm.patchValue({
+    department: selectedDepartmentId // set the department as the id string
+  });
+}
 
   getGroups(): void {
     this.groupService.getAllGroups().subscribe(groups => {
@@ -62,24 +66,28 @@ export class GroupsComponent extends ScheduleTableCreatorComponent{
     });
   }
 
-  addGroup(group: { name: string, quantity: number, department: Department }): Observable<Group> {
-    const groupToSend = {
-      name: group.name,
-      quantity: group.quantity,
-      departmentId: group.department.id
-    };
-    return this.groupService.createGroup(groupToSend);
-  }
+addGroup(group: { name: string, quantity: number, department: string }): Observable<Group> {
+  const groupToSend: CreateGroup = {
+    name: group.name,
+    quantity: group.quantity,
+    departmentId: this.groupForm.get('department').value
+  };
+  console.log(this.groupForm.get('department'))
+  return this.groupService.createGroup(groupToSend);
+}
 
-  editGroup(groupData: any): Observable<Group> {
-    const groupToSend = {
-      name: groupData.name,
-      quantity: groupData.quantity,
-      departmentId: groupData.department.id
-    };
-    //TODO add id to groupData
-    return this.groupService.updateGroup(groupData.id, groupToSend);
-  }
+editGroup(groupData: any): Observable<Group> {
+  const selectedDepartmentId = this.groupForm.get('department').value;
+  const selectedDepartment = this.departments.find(department => department.id === selectedDepartmentId);
+  console.log(selectedDepartment)
+  const groupToSend: Group = {
+    name: groupData.name,
+    quantity: groupData.quantity,
+    department: selectedDepartment
+  };
+
+  return this.groupService.updateGroup(groupData.id, groupToSend);
+}
 
 
   public ngOnInit(): void {
@@ -87,6 +95,7 @@ export class GroupsComponent extends ScheduleTableCreatorComponent{
     this.getGroups();
     this.getDepartments();
   }
+
   onFiltering(event: FilteringEventArgs): void {
     let query: Query = new Query();
     query = (event.text !== '') ? query.where('name', 'startswith', event.text, true) : query;
@@ -95,9 +104,9 @@ export class GroupsComponent extends ScheduleTableCreatorComponent{
 
   actionBegin(args: { requestType: string, action: string, data: any, rowData: any, cancel?: boolean }): void {
     super.actionBegin(args);
-    console.log(args.requestType);
+    // console.log(args.requestType);
     if (args.requestType === 'save') {
-      console.log(args.action);
+      // console.log(args.action);
 
       if (args.action === 'add') {
         this.addGroup(args.data).subscribe({

@@ -8,6 +8,9 @@ import {ScheduleTableCreatorComponent} from "./schedule-table-creator.component"
 import {ButtonModule} from "@syncfusion/ej2-angular-buttons";
 import {ScheduleTableCreatorRoutingModule} from "./schedule-table-creator-routing.module";
 import {DepartmentComponent} from "./department/department.component";
+import {DropDownListAllModule} from "@syncfusion/ej2-angular-dropdowns";
+import {TextBoxAllModule} from "@syncfusion/ej2-angular-inputs";
+import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -21,7 +24,10 @@ import {DepartmentComponent} from "./department/department.component";
     ScheduleTableCreatorRoutingModule,
     GridAllModule,
     ToastAllModule,
-    ButtonModule
+    ButtonModule,
+    DropDownListAllModule,
+    TextBoxAllModule,
+    ReactiveFormsModule
   ],
   exports: [
     TeacherComponent,

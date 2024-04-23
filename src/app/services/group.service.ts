@@ -17,7 +17,7 @@ export class GroupService {
     return this.http.get<Group>(`${this.url}/${id}`)
   }
 
-  updateGroup(id: string, group: CreateGroup) {
+  updateGroup(id: string, group: Group) {
     return this.http.put<Group>(`${this.url}/${id}`, group)
   }
 

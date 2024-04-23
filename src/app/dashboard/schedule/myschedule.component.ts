@@ -96,6 +96,7 @@ export class MyScheduleComponent implements OnInit {
   @Input() selectedGroup: String;
   @Input() scheduleData: ScheduleCell;
 
+
   @ViewChild('sample')
   public AutoCompleteObj: AutoCompleteComponent;
 
