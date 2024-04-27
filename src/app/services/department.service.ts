@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {Department} from "../types/department";
+import {CreateDepartment, Department} from "../types/department";
 import {Observable} from "rxjs";
 
 @Injectable({
@@ -19,7 +19,7 @@ export class DepartmentService {
     return this.http.get<Department>(`${this.url}/${id}`);
   }
 
-  createDepartment(department: Department): Observable<Department> {
+  createDepartment(department: CreateDepartment): Observable<Department> {
     return this.http.post<Department>(this.url, department);
   }
 

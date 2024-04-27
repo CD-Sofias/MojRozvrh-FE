@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment";
-import {Group} from "../types/group";
+import {CreateGroup, Group} from "../types/group";
 import {HttpClient} from "@angular/common/http";
 
 @Injectable({
@@ -17,11 +17,11 @@ export class GroupService {
     return this.http.get<Group>(`${this.url}/${id}`)
   }
 
-  updateGroup(group: Group) {
-    return this.http.put<Group>(`${this.url}/${group.id}`, group)
+  updateGroup(id: string, group: CreateGroup) {
+    return this.http.put<Group>(`${this.url}/${id}`, group)
   }
 
-  createGroup(group: Group) {
+  createGroup(group: CreateGroup) {
     return this.http.post<Group>(this.url, group)
   }
 

@@ -15,10 +15,15 @@ export class HeaderComponent {
 
   public items: ItemModel[] = [
     {
+      text: 'Admin panel',
+      iconCss: 'e-icons e-edit-3',
+      id: "admin-panel",
+    },
+    {
       text: 'Log Out',
       iconCss: 'e-ddb-icons e-logout',
       id: "logout",
-    }];
+    },];
 
   public scheduleItems: ItemModel[] = [
     {
@@ -55,6 +60,8 @@ export class HeaderComponent {
   public select (args: MenuEventArgs) {
     if (args.item.text === 'Log Out') {
       this.logout();
+    } else if (args.item.text === 'Admin panel') {
+      this.router.navigate(['dashboard/admin-panel']);
     }
   }
 

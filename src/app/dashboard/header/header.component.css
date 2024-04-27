@@ -5,7 +5,7 @@
 }
 
 .header-btn {
-   padding: 10px 20px !important;
+   padding: 10px 19px !important;
 }
 
 .control-section {
@@ -46,7 +46,7 @@
 }
 
 .e-ddb-icons {
-  font-family: 'e-ddb-icons';
+  font-family: 'e-ddb-icons', serif;
   speak: none;
   font-size: 55px;
   font-style: normal;
@@ -56,6 +56,10 @@
   line-height: 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.e-edit-3::before {
+  content: "\e944";
 }
 
 .e-logout::before {

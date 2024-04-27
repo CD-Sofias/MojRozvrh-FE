@@ -1,6 +1,6 @@
 .active {
   border-color: rgba(0, 0, 0, 0);
-  box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12);
   color: #893AC7;
 }
 
@@ -14,7 +14,38 @@
   border-radius: 8px;
 }
 
-tbody{
+tbody {
   cursor: pointer;
 }
+
+.e-profile::before {
+  content: "\e703";
+}
+
+.e-location::before {
+  content: "\e30c";
+}
+
+.e-people::before {
+  content: "\e424";
+}
+
+.e-copy::before {
+  content: "\e70a";
+}
+
+.e-display::before {
+  content: "\e358";
+}
+
+.e-justify::before {
+  content: "\e334";
+}
+
+.increase-indent::before {
+  content: "\e33f";
+}
+
+
+
 

@@ -1,5 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ToastComponent} from "@syncfusion/ej2-angular-notifications";
+import {EditSettingsModel} from "@syncfusion/ej2-angular-grids";
 
 @Component({
   selector: 'app-schedule-table-creator',
@@ -9,6 +10,7 @@ import {ToastComponent} from "@syncfusion/ej2-angular-notifications";
 export class ScheduleTableCreatorComponent implements OnInit {
   @ViewChild('toasttype')
   protected toastObj: ToastComponent;
+
   isSmallScreen: boolean;
   public toasts: { [key: string]: Object }[] = [
     {
@@ -21,7 +23,7 @@ export class ScheduleTableCreatorComponent implements OnInit {
   ];
 
   public data: Object[];
-  public editSettings: Object;
+  public editSettings: EditSettingsModel;
   public toolbar: string[];
   public orderidrules: Object;
   public customeridrules: Object;
@@ -45,7 +47,7 @@ export class ScheduleTableCreatorComponent implements OnInit {
         const dialog = document.querySelector('.e-dlg-header-content');
         if (dialog) {
           console.log(dialog);
-          dialog.querySelector('.e-dlg-header').textContent = `Details of ${args.rowData.name}`;
+          dialog.querySelector('.e-dlg-header').textContent = `Details of ${args.rowData.name || args.rowData.code || args.rowData.street}`;
         }
       }, 0);
     }

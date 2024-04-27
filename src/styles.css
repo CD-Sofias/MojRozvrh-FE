@@ -334,9 +334,23 @@ form#reactive {
   transition: all 0.5s ease;
 }
 
-
 .e-tbar-btn, .e-tbtn-txt, .e-control, .e-btn e-lib {
   transition: all 0.5s ease;
+}
+
+tbody {
+  cursor: pointer;
+}
+
+
+#ClassroomCode {
+  display: none;
+}
+
+label {
+  color: rgba(0, 0, 0, .54);
+  font-weight: normal;
+  font-size: 1.2rem;
 }
 
 @media (max-width: 300px) {

@@ -1,8 +1,8 @@
 import {ScheduleTableCreatorComponent} from "../schedule-table-creator.component";
-import {FacultyService} from "../../../../services/faculty.service";
 import {Faculty} from "../../../../types/faculty";
 import {Observable} from "rxjs";
 import {Component} from "@angular/core";
+import {FacultyService} from "../../../../services/faculty.service";
 
 @Component({
   selector: 'app-faculty',
@@ -35,8 +35,6 @@ export class FacultyComponent extends ScheduleTableCreatorComponent {
     super.ngOnInit();
     this.getFaculties();
   }
-
-
 
   actionBegin(args: { requestType: string, action: string, data: any, rowData: any, cancel?: boolean }): void {
     if (args.requestType === 'beginEdit') {

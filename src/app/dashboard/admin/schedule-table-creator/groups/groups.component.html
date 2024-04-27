@@ -1,0 +1,44 @@
+<div class="control-section rounded-2xl">
+  <ejs-grid (actionBegin)="actionBegin($event)" [allowSorting]='true' [dataSource]='data' [editSettings]='editSettings'
+            [toolbar]='toolbar'>
+    <e-columns>
+      <e-column [validationRules]='customeridrules' allowEditing='true' field='name' headerText='Group name'
+                width='120'></e-column>
+      <e-column [validationRules]='freightrules' field='quantity' headerText='Quantity' width='120'></e-column>
+      <e-column [validationRules]='customeridrules' allowEditing='true' field='department.name' headerText='Department'
+                width='120'></e-column>
+    </e-columns>
+    <ng-template #editSettingsTemplate let-data>
+      <div [formGroup]="groupForm">
+        <div class="form-row">
+          <div class="form-group">
+            <ejs-textbox [value]='data?.name' class="e-field e-defaultcell e-control e-textbox e-lib" data-name="name"
+                         floatLabelType='Always' id="name"
+                         name="name" placeholder="Group name"></ejs-textbox>
+          </div>
+          <div class="form-group">
+            <ejs-numerictextbox [min]='1' [max]='200' [value]='data?.quantity' class="e-field e-defaultcell e-control e-textbox e-lib" data-name="quantity"
+                                floatLabelType='Always' format='n0'
+                                id="quantity"
+                                name="quantity" placeholder="Quantity"></ejs-numerictextbox>
+
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="departmentId">Department Name</label>
+            <ejs-dropdownlist (filtering)='onFiltering($event)' (valueChange)='onDepartmentChange($event)'
+                              [allowFiltering]='true'
+                              [dataSource]='departments' [fields]="{text: 'name', value: 'id' }"
+                              [filterBarPlaceholder]="filterPlaceholder"
+                              [placeholder]='watermark' [popupHeight]='height' [value]='data?.department?.id'
+                              class="e-field e-defaultcell e-control e-textbox e-lib" data-name="departmentId"
+                              id="departmentId"
+                              name="department___name"></ejs-dropdownlist>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ejs-grid>
+</div>
+<ejs-toast #toasttype></ejs-toast>

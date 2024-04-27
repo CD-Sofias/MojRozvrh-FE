@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {Teacher} from "../types/teacher";
+import {CreateTeacher, Teacher} from "../types/teacher";
 import {throwError} from "rxjs";
 import {catchError} from "rxjs/operators";
 
@@ -22,7 +22,7 @@ export class TeacherService {
     return this.http.get<Teacher>(`${this.url}/${id}`)
   }
 
-createTeacher(teacher: Teacher) {
+createTeacher(teacher: CreateTeacher) {
   return this.http.post<Teacher>(this.url, teacher).pipe(
     catchError((error: HttpErrorResponse) => {
       let errorMessage = 'Unknown error!';
