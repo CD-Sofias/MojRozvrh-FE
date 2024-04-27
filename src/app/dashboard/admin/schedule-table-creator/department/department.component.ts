@@ -117,10 +117,8 @@ export class DepartmentComponent extends ScheduleTableCreatorComponent {
 
     if (args.requestType === 'save') {
       if (args.action === 'add') {
-        // Проверяем, существует ли уже отдел с таким именем
         const existingDepartment = this.departments.find(dep => dep.name === args.data.name);
         if (existingDepartment) {
-          // Если отдел существует, показываем тост и прерываем выполнение
           this.toastObj.show({
             title: 'Error',
             content: 'Department with the same name already exists',

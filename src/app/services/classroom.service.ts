@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {Classroom, CreateClassroom} from "../types/classroom";
+import {Classroom, CreateClassroom, EditClassroom} from "../types/classroom";
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class ClassroomService {
     return this.http.get<Classroom>(`${this.url}/${id}`)
   }
 
-  updateClassroom(classroom: Classroom) {
+  updateClassroom(classroom: EditClassroom) {
     return this.http.put<Classroom>(`${this.url}/${classroom.id}`, classroom)
   }
 

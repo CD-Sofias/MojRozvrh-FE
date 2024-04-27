@@ -58,6 +58,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.e-edit-3::before {
+  content: "\e944";
+}
+
 .e-logout::before {
   content: "\e702";
 }

@@ -16,7 +16,7 @@ export const routes: Routes = [
   {
     path: 'dashboard', component: DashboardComponent, canActivate: [authGuard], children: [
       {
-        path: 'schedule-table-creator', component: ScheduleTableCreatorComponent, children: [
+        path: 'admin-panel', component: ScheduleTableCreatorComponent, children: [
           {path: '', redirectTo: 'teachers', pathMatch: 'full'},
           {path: 'teachers', component: TeacherComponent},
           {path: 'faculties', component: FacultyComponent},

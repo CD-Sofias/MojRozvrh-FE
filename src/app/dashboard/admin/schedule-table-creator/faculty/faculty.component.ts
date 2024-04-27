@@ -36,8 +36,6 @@ export class FacultyComponent extends ScheduleTableCreatorComponent {
     this.getFaculties();
   }
 
-
-
   actionBegin(args: { requestType: string, action: string, data: any, rowData: any, cancel?: boolean }): void {
     if (args.requestType === 'beginEdit') {
       setTimeout(() => {
