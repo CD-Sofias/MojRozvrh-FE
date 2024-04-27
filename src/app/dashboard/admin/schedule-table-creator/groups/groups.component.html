@@ -11,12 +11,12 @@
     <ng-template #editSettingsTemplate let-data>
       <div [formGroup]="groupForm">
         <div class="form-row">
-          <div class="form-group col-md-6">
+          <div class="form-group">
             <ejs-textbox [value]='data?.name' class="e-field e-defaultcell e-control e-textbox e-lib" data-name="name"
                          floatLabelType='Always' id="name"
                          name="name" placeholder="Group name"></ejs-textbox>
           </div>
-          <div class="form-group col-md-6">
+          <div class="form-group">
             <ejs-numerictextbox [min]='1' [max]='200' [value]='data?.quantity' class="e-field e-defaultcell e-control e-textbox e-lib" data-name="quantity"
                                 floatLabelType='Always' format='n0'
                                 id="quantity"
@@ -25,7 +25,7 @@
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group col-md-6">
+          <div class="form-group">
             <label for="departmentId">Department Name</label>
             <ejs-dropdownlist (filtering)='onFiltering($event)' (valueChange)='onDepartmentChange($event)'
                               [allowFiltering]='true'

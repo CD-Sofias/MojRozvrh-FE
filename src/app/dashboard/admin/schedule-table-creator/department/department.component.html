@@ -13,7 +13,7 @@
     <ng-template #editSettingsTemplate let-data>
       <div [formGroup]="departmentForm">
         <div class="form-row">
-          <div class="form-group col-md-6">
+          <div class="form-group">
             <ejs-textbox [value]='data?.name' aria-invalid="true" aria-required="true"
                          class="e-field e-defaultcell e-control e-textbox e-lib" data-name="name"
                          floatLabelType='Always' id="name"
@@ -22,7 +22,7 @@
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group col-md-6">
+          <div class="form-group">
             <label for="facultyId">faculty name</label>
             <ejs-dropdownlist (change)='onFacultyChange($event)' (filtering)='onFiltering($event)'
                               (select)="getFacultyName(data.id)" [allowFiltering]='true'
