@@ -2,10 +2,9 @@
   <div class="col-md-8 control-section flex items-center" id="modalTarget">
     <button (click)="onOpenDialog($event)"  ejs-button id='modalbtn'>Open</button>
     <div #container class='root-container'></div>
-    <ejs-dialog id='dialog-container' #modalDialog (open)='dialogOpen()' (overlayClick)="onOverlayClick()" [buttons]='buttons'
+    <ejs-dialog id='dialog-container' #modalDialog (open)='dialogOpen()' (overlayClick)="onOverlayClick()"
                 [height]='height'
                 [content]='content'
-                [animationSettings]='animationSettings'
                 [header]='header'
                 [visible]='visible'
                 [isModal]='isModal'
