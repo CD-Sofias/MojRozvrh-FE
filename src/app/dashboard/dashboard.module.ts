@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
-import { ScheduleComponent } from './schedule/schedule.component';
 import {
   AccordionModule,
   AppBarAllModule, AppBarModule,
@@ -39,16 +38,18 @@ import {DashboardComponent} from "./dashboard.component";
 import {GroupsComponent} from "./groups/groups.component";
 import {GridModule} from "@syncfusion/ej2-angular-grids";
 import {HttpClientModule} from "@angular/common/http";
+import {MyScheduleComponent} from "./my-schedule/my-schedule.component";
 import {CreateScheduleModalComponent} from "./create-schedule-modal/create-schedule-modal.component";
 import {DialogModule} from "@syncfusion/ej2-angular-popups";
-import {MyScheduleComponent} from "./my-schedule/my-schedule.component";
 import {SearchComponent} from "./search/search.component";
 import {ScheduleTableCreatorModule} from "./admin/schedule-table-creator/schedule-table-creator.module";
 import {MyScheduleDetailComponent} from "./my-schedule-detail/my-schedule-detail.component"
+import { ScheduleComponent } from './schedule/schedule.component';
 
 @NgModule({
   declarations: [
     HeaderComponent,
+    MyScheduleComponent,
     ScheduleComponent,
     GroupsComponent,
     DashboardComponent,
@@ -69,6 +70,7 @@ import {MyScheduleDetailComponent} from "./my-schedule-detail/my-schedule-detail
   ],
   exports: [
     HeaderComponent,
+    MyScheduleComponent,
     ScheduleComponent,
     GroupsComponent,
     DashboardComponent,
