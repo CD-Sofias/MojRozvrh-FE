@@ -53,9 +53,8 @@ export class GroupsComponent extends ScheduleTableCreatorComponent {
 
 
   onDepartmentChange(event: any) {
-    const selectedDepartmentId = event;
     this.groupForm.patchValue({
-      department: selectedDepartmentId
+      department: event
     });
   }
 
