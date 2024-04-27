@@ -1,4 +1,4 @@
-<div class="control-section" style="padding:10px;position:relative;">
+<div class="control-section flex items-center" style="padding:10px;position:relative;">
   <div class="col-md-8 control-section flex items-center" id="modalTarget">
     <button (click)="onOpenDialog($event)"  ejs-button id='modalbtn'>Open</button>
     <div #container class='root-container'></div>
@@ -12,13 +12,13 @@
                 [width]='width'>
 
       <ng-template #content>
-        <div class="form-group template flex flex-col" style="height: auto; min-height: 100px;">
-            <input #name="ngModel" [(ngModel)]="scheduleName" id="name" name="name" required type="text">
-            <span class="e-float-line"></span>
-          <button id="sendButton" (click)="dlgButtonClick()" class="e-control e-btn sendButton mt-2 w-fit" data-ripple="true">Send</button>
-          <span *ngIf="name.errors && name.errors.required && (name.dirty || name.touched)" class="e-error">
-                        Schedule name is required
-                    </span>
+        <div class="form-group template flex flex-col h-auto min-h-[100px]">
+          <input #name="ngModel" [(ngModel)]="scheduleName" id="name" name="name" required type="text" class="p-2 border border-gray-300 rounded-md">
+          <span class="e-float-line"></span>
+          <button id="sendButton" (click)="dlgButtonClick()" class="e-control e-btn sendButton mt-2 w-auto px-4 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors duration-200" data-ripple="true">Save</button>
+          <span *ngIf="name.errors && name.errors.required && (name.dirty || name.touched)" class="e-error text-red-500 mt-1">
+      Schedule name is required
+    </span>
         </div>
       </ng-template>
     </ejs-dialog>
