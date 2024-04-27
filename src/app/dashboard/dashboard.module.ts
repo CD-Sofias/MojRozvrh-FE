@@ -74,6 +74,7 @@ import {MyScheduleDetailComponent} from "./my-schedule-detail/my-schedule-detail
     MyScheduleComponent,
     CreateScheduleModalComponent,
     MyScheduleDetailComponent,
+    SearchComponent,
   ]
 })
 export class DashboardModule { }

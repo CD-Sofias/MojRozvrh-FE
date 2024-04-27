@@ -1,15 +1,20 @@
+<app-header></app-header>
+<app-search (dataEvent)="getData($event)"></app-search>
+
 <div class="control-section" xmlns="http://www.w3.org/1999/html">
 
   <div class="content-wrapper">
 
 
-    <app-create-schedule-modal [selectedGroupScheduleCells]="selectedGroupScheduleCells"
+    <app-create-schedule-modal [scheduleData]="scheduleData"
                                [userID]="userID"></app-create-schedule-modal>
+
 
     <ejs-schedule #scheduleObj (actionBegin)="onActionBegin($event)"
                   timezone="Europe/Bratislava"
                   [currentView]="currentView" [endHour]='endHour' [eventSettings]="eventSettings"
                   [rowAutoHeight]='rowAutoHeight'
+                  [showWeekend]="showWeekend"
                   [selectedDate]="selectedDate" [startHour]='startHour' class="rounded-2xl" cssClass='adaptive-rows'
                   height='100vh' id='schedule' width='100%' [readonly]="false">
 
@@ -38,13 +43,6 @@
                 <tr class="flex flex-col">
                   <td class="e-textlabel">Subject</td>
                   <td colspan="4">
-                    <!--<ejs-autocomplete #subject='ngModel'
-                                      (filtering)='onFiltering($event, subjects)'
-                                      [(ngModel)]="data.subject_id" [dataSource]='subjects'
-                                      [fields]='fields' allowCustom=false aria-invalid="true"
-                                      aria-required="true" name="subject_id"
-                                      placeholder='TZI' required
-                                      type="text"></ejs-autocomplete>-->
                     <ejs-dropdownlist #subject='ngModel'
                                       (filtering)='onFiltering($event)'
                                       [(ngModel)]="data.subject_id"
@@ -201,6 +199,7 @@
                 <div class="pr-4">{{ getGroupById(data.group_id) }}</div>
               </div>
             </div>
+            <button ejs-button [isPrimary]="true" class='dlgbtn' #promptButton (click)="promptBtnClick()">Prompt</button>
           </div>
         </ng-template>
 
@@ -215,6 +214,7 @@
             </div>
           </div>
         </ng-template>
+
 
 
         <ng-template #editorTemplate let-data>

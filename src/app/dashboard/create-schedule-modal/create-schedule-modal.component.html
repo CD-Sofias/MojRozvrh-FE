@@ -1,25 +1,21 @@
-<div class="control-section" style="padding:10px;position:relative;height:350px">
-  <div #targetModal class="col-md-8 control-section" id="modalTarget">
-    <button  #modalButton (click)="onOpenDialog($event)" ejs-button id='modalbtn'>Open</button>
-    <ejs-dialog id='dialog-container' #modalDialog (close)="modalDlgClose()" (overlayClick)="onOverlayClick()"
-                [animationSettings]='animationSettings'
-                [buttons]='buttons'
+<div class="control-section" style="padding:10px;position:relative;">
+  <div class="col-md-8 control-section flex items-center" id="modalTarget">
+    <button (click)="onOpenDialog($event)"  ejs-button id='modalbtn'>Open</button>
+    <div #container class='root-container'></div>
+    <ejs-dialog id='dialog-container' #modalDialog (open)='dialogOpen()' (overlayClick)="onOverlayClick()" [buttons]='buttons'
+                [height]='height'
                 [content]='content'
+                [animationSettings]='animationSettings'
                 [header]='header'
-                [isModal]='isModal'
-                [target]='target'
                 [visible]='visible'
+                [isModal]='isModal'
                 [width]='width'>
 
       <ng-template #content>
-        <div class="form-group template">
-          <div [ngClass]="{'e-success': name.valid}" class="e-float-input">
+        <div class="form-group template flex flex-col" style="height: auto; min-height: 100px;">
             <input #name="ngModel" [(ngModel)]="scheduleName" id="name" name="name" required type="text">
             <span class="e-float-line"></span>
-            <label [ngClass]="{'e-label-top': scheduleName !== '' , 'e-label-bottom':  scheduleName == ''}"
-                   class="e-float-text" for="name">Schedule
-              name</label>
-          </div>
+          <button id="sendButton" (click)="dlgButtonClick()" class="e-control e-btn sendButton mt-2 w-fit" data-ripple="true">Send</button>
           <span *ngIf="name.errors && name.errors.required && (name.dirty || name.touched)" class="e-error">
                         Schedule name is required
                     </span>
@@ -27,5 +23,4 @@
       </ng-template>
     </ejs-dialog>
   </div>
-
 </div>
