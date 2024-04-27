@@ -1,4 +1,4 @@
-import {Component, ElementRef, inject, Input, ViewChild} from '@angular/core';
+import {Component, ElementRef, inject, Input, OnInit, ViewChild} from '@angular/core';
 import {DialogComponent} from "@syncfusion/ej2-angular-popups";
 import {ButtonComponent, ButtonModel, CheckBoxComponent} from "@syncfusion/ej2-angular-buttons";
 import {AnimationSettingsModel} from "@syncfusion/ej2-splitbuttons";
@@ -12,18 +12,15 @@ import {Router} from "@angular/router";
   templateUrl: './create-schedule-modal.component.html',
   styleUrl: './create-schedule-modal.component.css'
 })
-export class CreateScheduleModalComponent {
-  @ViewChild('sendButton')
-  public sendButton: ElementRef;
+export class CreateScheduleModalComponent implements OnInit {
+
 
   @ViewChild('modalDialog')
   public modalDialog: DialogComponent;
 
-  @ViewChild('overlay')
-  public overlay: CheckBoxComponent;
+  @ViewChild('footerTemplate')
+  public footerTemplate: ElementRef;
 
-  @ViewChild('modalButton')
-  public modalButton: ButtonComponent;
 
   public target: string = '#modalTarget';
   public width: string = '335px';
@@ -31,34 +28,35 @@ export class CreateScheduleModalComponent {
   public content: string = 'Your current software version is up to date.';
   public isModal: Boolean = true;
   public animationSettings: AnimationSettingsModel = { effect: 'None' };
+  public opened: Boolean = false;
+  public height: string = '200px';
+  public proxy: any = this;
 
-  @Input() selectedGroupScheduleCells: ScheduleCell[];
+  @Input() scheduleData: ScheduleCell[];
   @Input() userID: string;
+  public scheduleName: string = '';
+  @ViewChild('container', { read: ElementRef, static: true }) container: ElementRef | any;
+  public targetElement?: HTMLElement;
 
   constructor(private router: Router, private scheduleService: ScheduleService) { }
 
-  ngAfterViewInit(): void {
-    this.modalButton.element.focus();
+
+  ngOnInit() {
+    this.initilaizeTarget();
   }
 
   public visible: Boolean = false;
 
-  public scheduleName: string = '';
-
   public modalBtnClick = (): void => {
     this.modalDialog.show();
   }
-  public modalDlgClose = (): void => {
-    this.modalButton.element.style.display = '';
-  }
-
-  public modalDlgOpen = (): void => {
-    this.modalButton.element.style.display = 'none';
-  }
   public onOpenDialog = (event: any): void => {
-    // Call the show method to open the Dialog
     this.modalDialog.show();
   };
+
+  public dialogOpen: EmitType<object> = () => {
+    this.modalDialog.show();
+  }
   public onOverlayClick: EmitType<object> = () => {
     this.modalDialog.hide();
   }
@@ -67,24 +65,33 @@ export class CreateScheduleModalComponent {
     console.log(this.scheduleName);
 
     this.scheduleService.createSchedule({
-      name: 'MySchedule',
+      name: this.scheduleName,
       userId: this.userID,
-      scheduleCellIds: this.selectedGroupScheduleCells.map(scheduleCell => scheduleCell.id)
+      scheduleCellIds: this.scheduleData.map(scheduleCell => scheduleCell.id)
     }).subscribe({
       next: response => {
         console.log(response);
-        this.router.navigate(['/myschedule']);
+        this.router.navigate(['/my-schedule', response.id]);
       },
       error: error => {}
     });
-    console.log(this.selectedGroupScheduleCells)
+    console.log(this.scheduleData)
   }
-  public overlayClick = (): void => {
-    if (this.overlay.checked) {
-      this.modalDialog.hide();
-    }
+  public initilaizeTarget: EmitType<object> = () => {
+    this.targetElement = this.container.nativeElement.parentElement;
   }
+
+
 
   public buttons: { [key: string]: ButtonModel }[] = [{ click: this.dlgButtonClick.bind(this), buttonModel: { content: 'Send', isPrimary: true } }];
 
+  onSaveDialog() {
+    this.modalDialog.hide();
+
+  }
+
+
+  onCloseDialog($event: MouseEvent) {
+    this.modalDialog.hide();
+  }
 }

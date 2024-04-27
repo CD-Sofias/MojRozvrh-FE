@@ -1,30 +1,13 @@
-<div class="control-section accordion-control-section">
-  <div class="e-sample-resize-container my-5 rounded-2xl">
-    <div class="control-section">
-      <div class="col-lg-9 content-wrapper" style="height: 350px">
-        <div style="margin: 0 auto; width:250px; padding-top: 40px;">
-    <ejs-dropdownlist
-      id="types"
-      #typeList
-      [dataSource]="searchData"
-      (change)="onChange1($event)"
-      [(value)]="typeValue"
-      [fields]="fields"
-      popupHeight='auto'
-    ></ejs-dropdownlist>
-          <ejs-dropdownlist
-            #searchList
-            id='search'
-            [dataSource]='data'
-            (change)="onChange2($event)"
-            [(value)]="searchValue"
-            [fields]='dataFields'
-            (filtering)='onFiltering($event)'
-            popupHeight='auto'
-            [enabled]='false'
-            [allowFiltering]='true'></ejs-dropdownlist>
-        </div>
-        </div>
-        </div>
+<div class="flex flex-col items-center justify-center py-4">
+  <div class="p-5 bg-white rounded-xl shadow-md">
+    <div class="flex flex-col items-center space-y-5">
+      <ejs-dropdownlist id="types" #typeList [dataSource]="searchData" (change)="onChange1($event)" [(value)]="typeValue"
+                        [fields]="fields" popupHeight='auto' class="w-64"></ejs-dropdownlist>
+      <ejs-dropdownlist #searchList id='search' [dataSource]='data' (change)="onChange2($event)" [(value)]="searchValue"
+                        [fields]='dataFields' (filtering)='onFiltering($event)' popupHeight='auto' [enabled]='false'
+                        [allowFiltering]='true' class="w-64"></ejs-dropdownlist>
+    </div>
   </div>
 </div>
+
+

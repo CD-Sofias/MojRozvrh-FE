@@ -1,2 +1,76 @@
-<app-example-schedule *ngIf="(schedule | async) as schedule; else loading" [schedule]="schedule"></app-example-schedule>
-<ng-template #loading>Loading Data...</ng-template>
+<div class="control-section" xmlns="http://www.w3.org/1999/html">
+
+  <div class="content-wrapper">
+
+    <ejs-schedule #scheduleObj
+                  timezone="Europe/Bratislava"
+                  [currentView]="currentView" [endHour]='endHour' [eventSettings]="eventSettings"
+                  [rowAutoHeight]='rowAutoHeight'
+                  [selectedDate]="selectedDate" [startHour]='startHour' [showWeekend]="showWeekend" class="rounded-2xl" cssClass='adaptive-rows'
+                  height='100vh' id='schedule' width='100%' [readonly]="true">
+
+      <e-views>
+        <e-view option="Day"></e-view>
+        <e-view option="Week"></e-view>
+
+        <ng-template #quickInfoTemplatesHeader let-data>
+          <div class="quick-info-header">
+            <div [ngStyle]="getHeaderStyles(data)" class="quick-info-header-content">
+
+              <div class="quick-info-title">{{ data.subject.name }} ({{ data.subject.type}})</div>
+              <div class="duration-text">{{getHeaderDetails(data)}}</div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #quickInfoTemplatesContent let-data>
+          <ng-container [ngTemplateOutletContext]="{data:data}"
+                        [ngTemplateOutlet]="eventContent"></ng-container>
+        </ng-template>
+
+        <ng-template #eventSettingsTemplate let-data>
+          <div [ngStyle]="{'background-color': getSubjectColor(data.subject_type)}" class="template-wrap p-4">
+            <div class="mb-2"><h6 class="mb-1">{{ data.teacher.name }}</h6></div>
+            <div class="mb-2"><h5 class="mb-1">{{ data.subject.name }}</h5></div>
+            <div class="classroom-type">
+              <h6 class="mb-1">{{ data.classroom.number }}</h6>
+              <h6>{{ data.subject.type }}</h6>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #eventContent let-data="data">
+          <div class="quick-info-content">
+            <div class="event-content">
+              <div class="meeting-subject-wrap">
+                <label>Teacher</label>:
+                <span>{{data.teacher.name}}</span>
+              </div>
+              <div class="meeting-subject-wrap">
+                <label>Classroom</label>:
+                <span>{{data.classroom.number}}</span>
+              </div>
+              <div class="meeting-subject-wrap">
+                <label>Group</label>:
+                <span>{{data.group.name}}</span>
+              </div>
+            </div>
+            <button ejs-button class="btn btn-sm mt-2" cssClass="e-danger" (click)="deleteScheduleCell(data.id)">Delete</button>
+          </div>
+        </ng-template>
+
+
+
+
+      </e-views>
+    </ejs-schedule>
+
+  </div>
+</div>
+
+
+
+
+
+
+
+
+

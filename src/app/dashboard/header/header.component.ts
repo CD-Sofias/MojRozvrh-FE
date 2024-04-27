@@ -29,7 +29,7 @@ export class HeaderComponent implements OnInit {
     {
       text: 'My schedule',
       iconCss: 'e-icons e-timeline-work-week',
-      url: 'my-schedule'
+      url: '/my-schedule'
     }];
 
   isSmallScreen: boolean;

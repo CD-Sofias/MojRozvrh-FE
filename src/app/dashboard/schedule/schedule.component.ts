@@ -10,7 +10,16 @@ import {
 import {TextBoxComponent,} from '@syncfusion/ej2-angular-inputs';
 import {DatePickerComponent,} from '@syncfusion/ej2-angular-calendars';
 import {AutoCompleteComponent, DropDownListComponent, FilteringEventArgs,} from '@syncfusion/ej2-angular-dropdowns';
-import {Component, ElementRef, Input, OnInit, Renderer2, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  Renderer2,
+  SimpleChanges,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import {EmitType, extend, isNullOrUndefined} from '@syncfusion/ej2-base';
 import {ChangeEventArgs} from '@syncfusion/ej2-calendars';
 import {Query} from '@syncfusion/ej2-data';
@@ -22,12 +31,13 @@ import {ClassroomService} from "../../services/classroom.service";
 import {GroupService} from "../../services/group.service";
 import {ScheduleCellService} from "../../services/schedule-cell.service";
 import {ScheduleCell, ScheduleCellCreate} from "../../types/scheduleCell";
-import {ScheduleService} from "../../services/schedule.service";
 import {UserService} from "../../services/user.service";
 import {Subject} from "../../types/subject";
 import {Teacher} from "../../types/teacher";
 import {Group} from "../../types/group";
 import {Classroom} from "../../types/classroom";
+import {ScheduleService} from "../../services/schedule.service";
+import {DialogUtility} from "@syncfusion/ej2-popups";
 
 interface MyEventFields {
   myNewField?: string;
@@ -58,24 +68,15 @@ export class ScheduleComponent implements OnInit {
               private classroomService: ClassroomService,
               private groupService: GroupService,
               private scheduleCellService: ScheduleCellService,
-              private scheduleService: ScheduleService,
               private userService: UserService,
+              private scheduleService: ScheduleService
   ) {
   }
 
-  public currentSubjectId: string;
-  public currentSubjectName: string;
+  public dialogObj;
 
-  public currentClassroomId: string;
-  public currentClassroomNumber: number;
+  public scheduleData: ScheduleCell[];
 
-
-  public selectedSubject: String;
-  public selectedClassroom: String;
-
-  @Input() selectedGroupScheduleCells: ScheduleCell[];
-  @Input() selectedGroup: String;
-  @Input() scheduleData: ScheduleCell[];
 
   @ViewChild('sample')
   public AutoCompleteObj: AutoCompleteComponent;
@@ -88,7 +89,6 @@ export class ScheduleComponent implements OnInit {
   groups: Group[] = [];
   classrooms: Classroom[] = [];
   public fields: Object = {value: 'id', text: 'name'};
-  public ClassroomFields: Object = {value: 'id', text: 'code'};
 
   public onChange(args: ScheduleCell): void {
     let valueEle: HTMLInputElement = document.getElementsByClassName('e-input')[0] as HTMLInputElement;
@@ -117,21 +117,21 @@ export class ScheduleComponent implements OnInit {
     this.userService.getUsersInfo().subscribe(user => {
       this.userID = user.id;
     });
+
     if (this.scheduleData) {
-      this.selectedDate = this.scheduleData[0].startTime
+      this.data = this.scheduleData.map(scheduleCell => {
+        return {
+          id: scheduleCell.id,
+          teacher_id: scheduleCell.teacher.id,
+          subject_id: scheduleCell.subject.id,
+          group_id: scheduleCell.group.id,
+          classroom_id: scheduleCell.classroom.id,
+          subject_type: scheduleCell.subject.type,
+          StartTime: scheduleCell.startTime,
+          EndTime: scheduleCell.endTime,
+        };
+      })
     }
-    this.data = this.scheduleData.map(scheduleCell => {
-      return {
-        id: scheduleCell.id,
-        teacher_id: scheduleCell.teacher.id,
-        subject_id: scheduleCell.subject.id,
-        group_id: scheduleCell.group.id,
-        classroom_id: scheduleCell.classroom.id,
-        subject_type: scheduleCell.subject.type,
-        StartTime: scheduleCell.startTime,
-        EndTime: scheduleCell.endTime,
-      };
-    })
 
     this.eventSettings = {
       dataSource: extend([], this.data, null, true) as Record<string, any>[],
@@ -184,8 +184,53 @@ export class ScheduleComponent implements OnInit {
         isAllDay: {name: 'is_all_day'}
       },
     };
+    console.log(this.data);
+    console.log(this.eventSettings)
+
+
+
+  }
+
+  ngOnChanges(changes: SimpleChanges){
+    if (changes.scheduleData) {
+      this.data = this.scheduleData.map(scheduleCell => {
+        return {
+          id: scheduleCell.id,
+          teacher_id: scheduleCell.teacher.id,
+          subject_id: scheduleCell.subject.id,
+          group_id: scheduleCell.group.id,
+          classroom_id: scheduleCell.classroom.id,
+          subject_type: scheduleCell.subject.type,
+          StartTime: scheduleCell.startTime,
+          EndTime: scheduleCell.endTime,
+        };
+      })
+    }
+  }
+
+
+  getData(data: ScheduleCell[]): void {
+    this.scheduleData = data;
+    this.eventSettings = {
+      ...this.eventSettings,
+      dataSource: data.map(scheduleCell => {
+        return {
+          id: scheduleCell.id,
+          teacher_id: scheduleCell.teacher.id,
+          subject_id: scheduleCell.subject.id,
+          group_id: scheduleCell.group.id,
+          classroom_id: scheduleCell.classroom.id,
+          subject_type: scheduleCell.subject.type,
+          StartTime: scheduleCell.startTime,
+          EndTime: scheduleCell.endTime,
+        };
+      })
+    };
+    this.scheduleObj.refresh();
     console.log(this.eventSettings)
   }
+
+
 
   loadGroups(): void {
     this.groupService.getAllGroups().subscribe(groups => {
@@ -323,7 +368,6 @@ export class ScheduleComponent implements OnInit {
 
 
   getGroupById(id: string): string {
-    console.log(id)
     const group = this.groups.find(group => group.id === id);
     return group ? group.name : id;
   }
@@ -346,141 +390,10 @@ export class ScheduleComponent implements OnInit {
   }
 
 
-  onSubjectSelected(event: any): boolean {
-    console.log(event)
-    let selectElement = document.getElementById('my-select-subject').getElementsByClassName('e-ddl-hidden')[0];
-    if (selectElement) {
-      this.renderer.addClass(selectElement, 'e-subject');
-      this.renderer.addClass(selectElement, 'e-field');
-      this.renderer.addClass(selectElement, 'e-input');
-    }
-    this.selectedSubject = event;
 
-    if (event && event.itemData) {
-      let selectedSubject = this.subjects.find(subject => subject.id === event.itemData.id);
-      if (!selectedSubject) {
-        this.currentSubjectId = null;
-        this.currentSubjectName = null;
-        let index = this.data.findIndex(item => item.subject_id === event.itemData.id);
-        if (index !== -1) {
-          this.data[index].subject_id = '';
-        }
-        console.error('Выбранное значение не найдено в списке subjects');
-        return false;
-      } else {
-        this.currentSubjectId = selectedSubject.id;
-        this.currentSubjectName = selectedSubject.name;
-
-        let dataIndex = this.data.findIndex(item => item.subject_id === event.itemData.id);
-        if (dataIndex !== -1) {
-          this.data[dataIndex].subject_id = this.currentSubjectId;
-        }
-
-        return true;
-      }
-    }
-    return false;
-  }
+  public showWeekend: boolean = false;
 
 
-  onClassroomSelected(event: any): boolean {
-    let selectElement = document.getElementById('my-select-classroom').getElementsByClassName('e-ddl-hidden')[0];
-    if (selectElement) {
-      this.renderer.addClass(selectElement, 'e-subject');
-      this.renderer.addClass(selectElement, 'e-field');
-      this.renderer.addClass(selectElement, 'e-input');
-    }
-    this.selectedClassroom = event;
-
-    if (event && event.itemData) {
-      let selectedClassroom = this.classrooms.find(classroom => classroom.id === event.itemData.id);
-      if (!selectedClassroom) {
-        this.currentClassroomId = null;
-        this.currentClassroomNumber = null;
-        let index = this.data.findIndex(item => item.classroom_id === event.itemData.id);
-        if (index !== -1) {
-          this.data[index].classroom_id = '';
-        }
-        console.error('Выбранное значение не найдено в списке classrooms');
-        return false;
-      } else {
-        this.currentClassroomId = selectedClassroom.id;
-        this.currentClassroomNumber = selectedClassroom.number;
-        return true;
-      }
-    }
-    return false;
-  }
-
-  currentGroupId: String;
-  currentGroupName: String;
-
-  onGroupSelected(event: any): boolean {
-    let selectElement = document.getElementById('my-select-group').getElementsByClassName('e-ddl-hidden')[0];
-    if (selectElement) {
-      this.renderer.addClass(selectElement, 'e-subject');
-      this.renderer.addClass(selectElement, 'e-field');
-      this.renderer.addClass(selectElement, 'e-input');
-    }
-
-    this.selectedGroup = event;
-    // console.log(this.data);
-    if (event && event.itemData) {
-      let selectedGroup = this.groups.find(group => group.id === event.itemData.id);
-      if (!selectedGroup) {
-        this.currentGroupId = null;
-        this.currentGroupName = null;
-        let index = this.data.findIndex(item => item.group_id === event.itemData.id);
-        if (index !== -1) {
-          this.data[index].group_id = '';
-        }
-        console.error('Выбранное значение не найдено в списке groups');
-        return false;
-      } else {
-        this.currentGroupId = selectedGroup.id;
-        this.currentGroupName = selectedGroup.name;
-        return true;
-      }
-    }
-    return false;
-  }
-
-
-  selectedTeacher: String;
-  currentTeacherId: String;
-  currentTeacherName: String;
-
-  onTeacherSelected(event: any): boolean {
-    let selectElement = document.getElementById('my-select-teacher').getElementsByClassName('e-ddl-hidden')[0];
-    if (selectElement) {
-      this.renderer.addClass(selectElement, 'e-subject');
-      this.renderer.addClass(selectElement, 'e-field');
-      this.renderer.addClass(selectElement, 'e-input');
-    }
-    this.selectedTeacher = event;
-
-    if (event && event.itemData) {
-      let selectedTeacher = this.teachers.find(teacher => teacher.id === event.itemData.id);
-      let teacherElement = document.getElementById('my-select-teacher');
-      if (!selectedTeacher) {
-        this.currentTeacherId = null;
-        this.currentTeacherName = null;
-        teacherElement.classList.add('e-error');
-        let index = this.data.findIndex(item => item.teacher_id === event.itemData.id);
-        if (index !== -1) {
-          this.data[index].teacher_id = '';
-        }
-        console.error('Выбранное значение не найдено в списке teachers');
-        return false;
-      } else {
-        this.currentTeacherId = selectedTeacher.id;
-        this.currentTeacherName = selectedTeacher.name;
-        teacherElement.classList.remove('e-error');
-        return true;
-      }
-    }
-    return false;
-  }
 
 
   public onActionBegin(args: ActionEventArgs): void {
@@ -488,22 +401,7 @@ export class ScheduleComponent implements OnInit {
       const data: Record<string, any> = args.data instanceof Array ? args.data[0] : args.data;
       console.log(args)
       console.log(data)
-      /* if (!this.onSubjectSelected({itemData: {id: data.subject_id}})) {
-         args.cancel = true;
-         return;
-       }
 
-       if (!this.onClassroomSelected({itemData: {id: data.classroom_id}})) {
-         args.cancel = true;
-         return;
-       }
-
-       if (!this.onTeacherSelected({itemData: {id: data.teacher_id}})) {
-         args.cancel = true;
-         return;
-       }*/
-
-      // Проверка доступности слота
       if (!this.scheduleObj.isSlotAvailable(data.StartTime as Date, data.EndTime as Date)) {
         console.log('Slot is not available')
         args.cancel = true;
@@ -542,4 +440,24 @@ export class ScheduleComponent implements OnInit {
       return {'background': '#F5F5F5', color: '#919191'};
     }
   }
+
+  public promptBtnClick = (): void => {
+    this.dialogObj = DialogUtility.confirm({
+      title: 'Save to your schedule',
+      content: 'Select your schedule: <ejs-dropdownlist id="eventTypeSearch" #eventTypeSearchObj [dataSource]="eventTypeData" [fields]="eventTypeFields" [placeholder]="eventTypeWatermark" [index]="0" [change]="onChange($event)" [filtering]="onFiltering" [value]="value" [popupHeight]="popupHeight" [popupWidth]="popupWidth"></ejs-dropdownlist>',
+      okButton: { click:this.promptOkAction.bind(this)},
+      cancelButton: { click:this.promptCancelAction.bind(this)},
+      position: { X: 'center', Y: 'center' },
+      closeOnEscape: true
+    });
+  };
+
+  private promptOkAction(): void {
+    let value:string ;
+    value = (document.getElementById("inputEle")as any).value;
+  }
+  private promptCancelAction(): void {
+    this.dialogObj.hide();
+  }
+
 }
