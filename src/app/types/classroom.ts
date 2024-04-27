@@ -1,9 +1,7 @@
-import {Address} from "./address";
-
 export interface Classroom {
   id: string;
   type: string;
-  addressId: string; // changed from address
+  addressId: string;
   number: number;
   capacity: number;
   code: string;
