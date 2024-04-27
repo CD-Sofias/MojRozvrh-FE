@@ -55,7 +55,7 @@ export class LoginComponent {
         next: (response) => {
           const accessToken = response.accessToken;
           document.cookie = `accessToken=${accessToken}; path=/`;
-          this.router.navigate(['/my-schedule']);
+          this.router.navigate(['/dashboard/my-schedule']);
         },
         error: (error) => {
           this.content = error.message;
