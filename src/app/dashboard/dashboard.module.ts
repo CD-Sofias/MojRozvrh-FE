@@ -44,7 +44,6 @@ import {DialogModule} from "@syncfusion/ej2-angular-popups";
 import {MyScheduleComponent} from "./my-schedule/my-schedule.component";
 import {SearchComponent} from "./search/search.component";
 import {MyScheduleDetailComponent} from "./my-schedule-detail/my-schedule-detail.component";
-import {ScheduleDialogComponent} from "./schedule/schedule-dialog/schedule-dialog.component";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {MatDialogActions, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
 import {MatButton} from "@angular/material/button";
@@ -59,9 +58,6 @@ import {MatButton} from "@angular/material/button";
     CreateScheduleModalComponent,
     MyScheduleDetailComponent,
     SearchComponent,
-    ScheduleDialogComponent,
-
-
   ],
   imports: [
     CommonModule,
@@ -80,7 +76,6 @@ import {MatButton} from "@angular/material/button";
     CreateScheduleModalComponent,
     MyScheduleDetailComponent,
     SearchComponent,
-    ScheduleDialogComponent
   ]
 })
 export class DashboardModule { }
