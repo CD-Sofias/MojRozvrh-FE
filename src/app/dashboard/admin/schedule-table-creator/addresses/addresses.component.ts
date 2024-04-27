@@ -1,6 +1,4 @@
-import { Component } from '@angular/core';
-import {GridModule} from "@syncfusion/ej2-angular-grids";
-import {ToastModule} from "@syncfusion/ej2-angular-notifications";
+import {Component} from '@angular/core';
 import {Observable} from "rxjs";
 import {ScheduleTableCreatorComponent} from "../schedule-table-creator.component";
 import {Address} from "../../../../types/address";
@@ -8,15 +6,9 @@ import {AddressService} from "../../../../services/address.service";
 
 @Component({
   selector: 'app-addresses',
-  standalone: true,
-    imports: [
-        GridModule,
-        ToastModule
-    ],
   templateUrl: './addresses.component.html',
-  styleUrl: './addresses.component.css'
 })
-export class AddressesComponent extends ScheduleTableCreatorComponent{
+export class AddressesComponent extends ScheduleTableCreatorComponent {
   addresses: Address[];
 
   constructor(private addressService: AddressService) {

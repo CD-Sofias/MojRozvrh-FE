@@ -2,40 +2,40 @@
   <div>
     <div class="m-3 ">
       <div class="row mx-1">
-        <div class="flex gap-5">
+        <div class="flex gap-5 flex-wrap">
           <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="Teachers"
                   cssClass="e-flat schedule-btn header-btn" ejs-button
-                  iconCss="e-icons e-agenda-date-range"  routerLink="teachers" routerLinkActive="active"
-                  iconPosition="Left">
+                  iconCss="e-icons e-people" iconPosition="Left" routerLink="teachers"
+                  routerLinkActive="active">
           </button>
           <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="Faculties"
                   cssClass="e-flat schedule-btn header-btn"
-                  ejs-button iconCss="e-icons e-timeline-work-week"
+                  ejs-button iconCss="e-icons e-increase-indent"
                   iconPosition="Left" routerLink="faculties" routerLinkActive="active">
           </button>
           <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="Departments"
                   cssClass="e-flat schedule-btn header-btn"
-                  ejs-button iconCss="e-icons e-timeline-work-week"
+                  ejs-button iconCss="e-icons e-justify"
                   iconPosition="Left" routerLink="departments" routerLinkActive="active">
           </button>
           <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="Addresses"
                   cssClass="e-flat schedule-btn header-btn"
-                  ejs-button iconCss="e-icons e-timeline-work-week"
+                  ejs-button iconCss="e-icons e-location"
                   iconPosition="Left" routerLink="addresses" routerLinkActive="active">
           </button>
           <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="Groups"
                   cssClass="e-flat schedule-btn header-btn"
-                  ejs-button iconCss="e-icons e-timeline-work-week"
+                  ejs-button iconCss="e-icons e-people"
                   iconPosition="Left" routerLink="groups" routerLinkActive="active">
           </button>
           <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="Classrooms"
                   cssClass="e-flat schedule-btn header-btn"
-                  ejs-button iconCss="e-icons e-timeline-work-week"
+                  ejs-button iconCss="e-icons e-display"
                   iconPosition="Left" routerLink="classrooms" routerLinkActive="active">
           </button>
           <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="Subjects"
                   cssClass="e-flat schedule-btn header-btn"
-                  ejs-button iconCss="e-icons e-timeline-work-week"
+                  ejs-button iconCss="e-icons e-copy"
                   iconPosition="Left" routerLink="subjects" routerLinkActive="active">
           </button>
         </div>

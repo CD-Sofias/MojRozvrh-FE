@@ -1,6 +1,6 @@
 <div class="control-section rounded-2xl">
   <ejs-grid (actionBegin)="actionBegin($event)" [allowSorting]='true' [dataSource]='data' [editSettings]='editSettings'
-            [pageSettings]='pageSettings' [toolbar]='toolbar'>
+            [toolbar]='toolbar'>
     <e-columns>
       <e-column [validationRules]='customeridrules' allowEditing='true' field='name' headerText='Group name'
                 width='120'></e-column>
@@ -8,61 +8,37 @@
       <e-column [validationRules]='customeridrules' allowEditing='true' field='department.name' headerText='Department'
                 width='120'></e-column>
     </e-columns>
-        <ng-template #editSettingsTemplate let-data>
-          <div [formGroup]="groupForm">
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <ejs-textbox [value]='data?.name' name="name" class="e-field e-defaultcell e-control e-textbox e-lib" data-name="name" floatLabelType='Always'
-                             id="name" placeholder="Group name"></ejs-textbox>
-
-                <!--            <ejs-textbox [value]='data?.name' aria-invalid="true" aria-required="true" class="e-field e-defaultcell e-control e-textbox e-lib" data-name="name"-->
-                <!--                         floatLabelType='Always' id="name"-->
-                <!--                         name="name"-->
-                <!--                         placeholder="Department name"></ejs-textbox>-->
-
-              </div>
-              <div class="form-group col-md-6">
-                <!--            <ejs-numerictextbox [min]='1' [step]='1' [value]='data?.quantity' floatLabelType='Always'-->
-                <!--                                format='n0' id="quantity" placeholder="Quantity"></ejs-numerictextbox>-->
-
-                <ejs-textbox [value]='data?.quantity' name="quantity" class="e-field e-defaultcell e-control e-textbox e-lib" data-name="quantity" floatLabelType='Always'
-                             id="quantity" placeholder="Group name"></ejs-textbox>
-
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group col-md-6">
-<ejs-dropdownlist (valueChange)='onDepartmentChange($event)' [allowFiltering]='true' [dataSource]='departments'
-                  [fields]="{text: 'name', value: 'id' }" [filterBarPlaceholder]="filterPlaceholder" (filtering)='onFiltering($event)'
-                  [placeholder]='watermark' [popupHeight]='height' name="department___name"
-                  [value]='data?.department?.id' class="e-field e-defaultcell e-control e-textbox e-lib" data-name="departmentId"
-                  id="departmentId"></ejs-dropdownlist>
-              </div>
-            </div>
+    <ng-template #editSettingsTemplate let-data>
+      <div [formGroup]="groupForm">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <ejs-textbox [value]='data?.name' class="e-field e-defaultcell e-control e-textbox e-lib" data-name="name"
+                         floatLabelType='Always' id="name"
+                         name="name" placeholder="Group name"></ejs-textbox>
           </div>
-        </ng-template>
+          <div class="form-group col-md-6">
+            <ejs-numerictextbox [min]='1' [step]='1' [value]='data?.quantity' class="e-field e-defaultcell e-control e-textbox e-lib" data-name="quantity"
+                                floatLabelType='Always' format='n0'
+                                id="quantity"
+                                name="quantity" placeholder="Group name"></ejs-numerictextbox>
 
-
-      </ejs-grid>
-    </div>
-
-
-<!--    не раб-->
-<!--    <input aria-labelledby="label_textbox_1" class="e-field e-defaultcell e-control e-textbox e-lib" data-name="name"-->
-<!--           floatlabeltype="Always" id="textbox_1" name="textbox_1" ng-reflect-float-label-type="Always"-->
-<!--           ng-reflect-placeholder="Group name" ng-reflect-value="3nAIVS" role="textbox" type="text" value="3nAIVS">-->
-
-<!--    раб-->
-
-<!--    <input aria-labelledby="label_grid_1729725017_1name" class="e-field e-defaultcell e-control e-textbox e-lib"-->
-<!--           e-mappinguid="grid-column0"-->
-<!--           id="grid_1729725017_1name" name="name" role="textbox" style="text-align:undefined"-->
-<!--           type="text" value="1nAIVS">-->
-
-
-<!--    <input aria-invalid="true" aria-labelledby="label_textbox_1" aria-required="true" class="e-field e-defaultcell e-control e-textbox e-lib" data-name="name"-->
-<!--           floatlabeltype="Always" id="textbox_1"-->
-<!--           name="name" ng-reflect-float-label-type="Always" ng-reflect-placeholder="Department name"-->
-<!--           ng-reflect-value="Katedra chemickej technológie" role="textbox" type="text" value="Katedra chemickej technológie">-->
-
-    <ejs-toast #toasttype></ejs-toast>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="departmentId">Department Name</label>
+            <ejs-dropdownlist (filtering)='onFiltering($event)' (valueChange)='onDepartmentChange($event)'
+                              [allowFiltering]='true'
+                              [dataSource]='departments' [fields]="{text: 'name', value: 'id' }"
+                              [filterBarPlaceholder]="filterPlaceholder"
+                              [placeholder]='watermark' [popupHeight]='height' [value]='data?.department?.id'
+                              class="e-field e-defaultcell e-control e-textbox e-lib" data-name="departmentId"
+                              id="departmentId"
+                              name="department___name"></ejs-dropdownlist>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ejs-grid>
+</div>
+<ejs-toast #toasttype></ejs-toast>

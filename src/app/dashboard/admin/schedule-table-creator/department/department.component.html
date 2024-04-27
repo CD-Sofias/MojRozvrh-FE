@@ -1,6 +1,6 @@
 <div class="control-section rounded-2xl">
   <ejs-grid (actionBegin)="actionBegin($event)" [allowSorting]='true' [dataSource]='data' [editSettings]='editSettings'
-            [pageSettings]='pageSettings' [toolbar]='toolbar'>
+            [toolbar]='toolbar'>
     <e-columns>
       <e-column [validationRules]='customeridrules' allowEditing='true' field='name' headerText='Department Name'
                 width='120'></e-column>
@@ -11,11 +11,11 @@
       </e-column>
     </e-columns>
     <ng-template #editSettingsTemplate let-data>
-      <!--      <form class="e-schedule-form e-lib e-formvalidator" id="scheduleEditForm" novalidate>-->
       <div [formGroup]="departmentForm">
         <div class="form-row">
           <div class="form-group col-md-6">
-            <ejs-textbox [value]='data?.name' aria-invalid="true" aria-required="true" class="e-field e-defaultcell e-control e-textbox e-lib" data-name="name"
+            <ejs-textbox [value]='data?.name' aria-invalid="true" aria-required="true"
+                         class="e-field e-defaultcell e-control e-textbox e-lib" data-name="name"
                          floatLabelType='Always' id="name"
                          name="name"
                          placeholder="Department name"></ejs-textbox>
@@ -23,21 +23,19 @@
         </div>
         <div class="form-row">
           <div class="form-group col-md-6">
+            <label for="facultyId">faculty name</label>
             <ejs-dropdownlist (change)='onFacultyChange($event)' (filtering)='onFiltering($event)'
                               (select)="getFacultyName(data.id)" [allowFiltering]='true'
                               [dataSource]='facultyDataSource'
                               [fields]="{text: 'name', value: 'id'}" [filterBarPlaceholder]="filterPlaceholder"
                               [placeholder]='watermark' [popupHeight]='height' [value]='getFacultyId(data.id)'
                               aria-invalid="true" aria-required="true" class="e-field"
-                              name="facultyId"></ejs-dropdownlist>
+                              id="facultyId" name="facultyId"></ejs-dropdownlist>
 
 
-            <!--              <ejs-dropdownlist id="Department"  name="department.name"  data-name="department" [dataSource]='departments' [fields]="{text: 'name', value: 'id' }" (filtering)='onFiltering($event)' [filterBarPlaceholder]="filterPlaceholder"-->
-            <!--                                [popupHeight]='height' [allowFiltering]='true' [placeholder]='watermark' [value]='data?.department?.id'></ejs-dropdownlist>-->
           </div>
         </div>
       </div>
-      <!--      </form>-->
     </ng-template>
   </ejs-grid>
 </div>

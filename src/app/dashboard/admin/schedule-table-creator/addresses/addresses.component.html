@@ -1,8 +1,16 @@
 <div class="control-section rounded-2xl">
-  <ejs-grid [dataSource]='data' [pageSettings]='pageSettings' [allowSorting]='true' [editSettings]='editSettings' [toolbar]='toolbar' (actionBegin)="actionBegin($event)">
+  <ejs-grid (actionBegin)="actionBegin($event)" [allowSorting]='true' [dataSource]='data' [editSettings]='editSettings'
+             [toolbar]='toolbar'>
     <e-columns>
-      <e-column field='street' headerText='Street' width='120' [validationRules]='customeridrules' allowEditing='true'></e-column>
-      <e-column field='streetNumber' headerText='Street number' width='120' [validationRules]='freightrules'></e-column>
+      <e-column [validationRules]='customeridrules' allowEditing='true' field='street' headerText='Street'
+                width='120'></e-column>
+      <e-column [validationRules]='freightrules' field='streetNumber' headerText='Street number' width='120'>
+        <ng-template #editTemplate let-data>
+          <label for="streetNumber">Street number</label>
+          <ejs-numerictextbox [min]='1' [step]='1' [value]='data?.streetNumber' format='n0'
+                              name="streetNumber" id="streetNumber"></ejs-numerictextbox>
+        </ng-template>
+      </e-column>
     </e-columns>
   </ejs-grid>
 </div>

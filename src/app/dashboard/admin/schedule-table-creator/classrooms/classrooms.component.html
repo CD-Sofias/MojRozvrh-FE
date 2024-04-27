@@ -1,11 +1,51 @@
 <div class="control-section rounded-2xl">
-  <ejs-grid [dataSource]='data' [pageSettings]='pageSettings' [allowSorting]='true' [editSettings]='editSettings' [toolbar]='toolbar' (actionBegin)="actionBegin($event)">
+  <ejs-grid (actionBegin)="actionBegin($event)" [allowSorting]='true' [dataSource]='data' [editSettings]='editSettings'
+            [toolbar]='toolbar'>
     <e-columns>
-      <e-column field='code' headerText='Code' width='120' [validationRules]='customeridrules' allowEditing='true'></e-column>
-      <e-column field='address.street' headerText='Address' width='120' [validationRules]='customeridrules' allowEditing='true'></e-column>
-      <e-column field='address.streetNumber' headerText='Street number' width='120' [validationRules]='customeridrules' allowEditing='true'></e-column>
-      <e-column field='type' headerText='Lesson type' width='120' [validationRules]='customeridrules' allowEditing='true'></e-column>
-      <e-column field='capacity' headerText='Capacity' width='120' [validationRules]='freightrules'></e-column>
+      <e-column [validationRules]='customeridrules' allowEditing='true' field='type' headerText='Lesson type'
+                width='120'>
+        <ng-template #editTemplate let-data>
+          <label for="type">Lesson Type</label>
+          <ejs-dropdownlist (change)="onTypeChange($event)" [(value)]='data.type' [dataSource]='types' id="type"
+                            name="type" placeholder="Select Lesson Type"></ejs-dropdownlist>
+        </ng-template>
+      </e-column>
+
+      <e-column [validationRules]='freightrules' field='capacity' headerText='Capacity' width='120'>
+        <ng-template #editTemplate let-data>
+          <label for="capacity">Capacity</label>
+          <ejs-numerictextbox [min]='1' [step]='1' [value]='data?.capacity' format='n0' id="capacity"
+                              name="capacity" placeholder="Enter Capacity"></ejs-numerictextbox>
+        </ng-template>
+      </e-column>
+
+      <e-column [validationRules]='customeridrules' allowEditing='true' field='address.street' headerText='Street'
+                width='120'>
+        <ng-template #editTemplate let-data>
+          <label for="addressId">Street</label>
+          <ejs-dropdownlist (change)='onAddressChange($event)' (filtering)='onFiltering($event)'
+                            [allowFiltering]='true' [dataSource]='addresses'
+                            [fields]="{text: 'street', value: 'id'}" [filterBarPlaceholder]="filterPlaceholder"
+                            [placeholder]='watermark'
+                            [popupHeight]='height' [value]='getStreetId(data?.address?.id)' aria-invalid="true"
+                            aria-required="true" class="e-field" id="addressId"
+                            name="address___street"></ejs-dropdownlist>
+        </ng-template>
+
+        <ng-template #template let-data>
+          {{ getStreetName(data.address.id) }}
+        </ng-template>
+      </e-column>
+
+      <e-column [validationRules]='customeridrules' allowEditing='true' field='number' headerText='Classroom Number'
+                width='120'>
+        <ng-template #editTemplate let-data>
+          <label for="number">Classroom Number</label>
+          <ejs-numerictextbox [min]='1' [step]='1' [value]='data?.number' format='n0' id="number"
+                              name="number" placeholder="Enter Classroom Number"></ejs-numerictextbox>
+        </ng-template>
+      </e-column>
+
     </e-columns>
   </ejs-grid>
 </div>

@@ -1,12 +1,10 @@
 import {Department} from "./department";
 
 export interface Group {
+  id: string;
   name: string;
   quantity: number;
-  department?: {
-    id: string;
-    name: string;
-  };
+  department: Department;
 }
 
 export interface CreateGroup {

@@ -3,8 +3,15 @@ import {Address} from "./address";
 export interface Classroom {
   id: string;
   type: string;
-  capacity: number;
+  addressId: string; // changed from address
   number: number;
-  address: Address;
+  capacity: number;
   code: string;
+}
+
+export interface CreateClassroom {
+  capacity: number;
+  type: string;
+  number: number;
+  addressId: string;
 }

@@ -29,4 +29,8 @@ export class SubjectService {
   deleteSubject(id: string) {
     return this.http.delete(`${this.url}/${id}`)
   }
+
+  getTypes() {
+    return this.http.get<string[]>(`${this.url}/types`);
+  }
 }

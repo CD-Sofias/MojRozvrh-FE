@@ -8,17 +8,25 @@ import {AddressesComponent} from "./dashboard/admin/schedule-table-creator/addre
 import {GroupsComponent} from "./dashboard/admin/schedule-table-creator/groups/groups.component";
 import {ClassroomsComponent} from "./dashboard/admin/schedule-table-creator/classrooms/classrooms.component";
 import {SubjectsComponent} from "./dashboard/admin/schedule-table-creator/subjects/subjects.component";
+import {ScheduleTableCreatorComponent} from "./dashboard/admin/schedule-table-creator/schedule-table-creator.component";
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'auth', pathMatch: 'full' },
+  {path: '', redirectTo: 'auth', pathMatch: 'full'},
   {path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)},
-  {path: 'dashboard', component: DashboardComponent, canActivate: [authGuard], children: [
-      { path: 'teachers', component: TeacherComponent },
-      { path: 'faculties', component: FacultyComponent },
-      { path: 'departments', component: DepartmentComponent },
-      { path: 'addresses', component: AddressesComponent },
-      { path: 'groups', component: GroupsComponent },
-      { path: 'classrooms', component: ClassroomsComponent },
-      { path: 'subjects', component: SubjectsComponent },
-    ]},
+  {
+    path: 'dashboard', component: DashboardComponent, canActivate: [authGuard], children: [
+      {
+        path: 'schedule-table-creator', component: ScheduleTableCreatorComponent, children: [
+          {path: '', redirectTo: 'teachers', pathMatch: 'full'},
+          {path: 'teachers', component: TeacherComponent},
+          {path: 'faculties', component: FacultyComponent},
+          {path: 'departments', component: DepartmentComponent},
+          {path: 'addresses', component: AddressesComponent},
+          {path: 'groups', component: GroupsComponent},
+          {path: 'classrooms', component: ClassroomsComponent},
+          {path: 'subjects', component: SubjectsComponent},
+        ]
+      },
+    ]
+  },
 ];

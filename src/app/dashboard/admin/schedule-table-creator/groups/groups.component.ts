@@ -52,12 +52,12 @@ export class GroupsComponent extends ScheduleTableCreatorComponent {
   }
 
 
-onDepartmentChange(event: any) {
-  const selectedDepartmentId = event; // event is the id
-  this.groupForm.patchValue({
-    department: selectedDepartmentId // set the department as the id string
-  });
-}
+  onDepartmentChange(event: any) {
+    const selectedDepartmentId = event;
+    this.groupForm.patchValue({
+      department: selectedDepartmentId
+    });
+  }
 
   getGroups(): void {
     this.groupService.getAllGroups().subscribe(groups => {
@@ -66,28 +66,28 @@ onDepartmentChange(event: any) {
     });
   }
 
-addGroup(group: { name: string, quantity: number, department: string }): Observable<Group> {
-  const groupToSend: CreateGroup = {
-    name: group.name,
-    quantity: group.quantity,
-    departmentId: this.groupForm.get('department').value
-  };
-  console.log(this.groupForm.get('department'))
-  return this.groupService.createGroup(groupToSend);
-}
+  addGroup(group: { name: string, quantity: number, department: string }): Observable<Group> {
+    const groupToSend: CreateGroup = {
+      name: group.name,
+      quantity: group.quantity,
+      departmentId: this.groupForm.get('department').value
+    };
+    console.log(this.groupForm.get('department'))
+    return this.groupService.createGroup(groupToSend);
+  }
 
-editGroup(groupData: any): Observable<Group> {
-  const selectedDepartmentId = this.groupForm.get('department').value;
-  const selectedDepartment = this.departments.find(department => department.id === selectedDepartmentId);
-  console.log(selectedDepartment)
-  const groupToSend: Group = {
-    name: groupData.name,
-    quantity: groupData.quantity,
-    department: selectedDepartment
-  };
+  editGroup(groupData: any): Observable<Group> {
+    const selectedDepartmentId = this.groupForm.get('department').value;
+    const selectedDepartment = this.departments.find(department => department.id === selectedDepartmentId);
+    console.log(selectedDepartment.id)
+    const groupToSend: CreateGroup = {
+      name: groupData.name,
+      quantity: groupData.quantity,
+      departmentId: selectedDepartment.id
+    };
 
-  return this.groupService.updateGroup(groupData.id, groupToSend);
-}
+    return this.groupService.updateGroup(groupData.id, groupToSend);
+  }
 
 
   public ngOnInit(): void {
@@ -104,9 +104,7 @@ editGroup(groupData: any): Observable<Group> {
 
   actionBegin(args: { requestType: string, action: string, data: any, rowData: any, cancel?: boolean }): void {
     super.actionBegin(args);
-    // console.log(args.requestType);
     if (args.requestType === 'save') {
-      // console.log(args.action);
 
       if (args.action === 'add') {
         this.addGroup(args.data).subscribe({
@@ -120,7 +118,6 @@ editGroup(groupData: any): Observable<Group> {
           }
         });
       } else if (args.action === 'edit') {
-        // newData.id = args.data.id;
         this.editGroup(args.data).subscribe({
           next: () => {
             this.getGroups();

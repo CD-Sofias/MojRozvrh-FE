@@ -9,8 +9,8 @@ import {ClassroomsComponent} from "./classrooms/classrooms.component";
 import {SubjectsComponent} from "./subjects/subjects.component";
 
 const routes: Routes = [
-  { path: '', redirectTo: 'teachers', pathMatch: 'full' },
   { path: 'teachers', component: TeacherComponent },
+  { path: '', redirectTo: 'teachers', pathMatch: 'full' },
   { path: 'faculties', component: FacultyComponent },
   { path: 'departments', component: DepartmentComponent },
   { path: 'addresses', component: AddressesComponent },

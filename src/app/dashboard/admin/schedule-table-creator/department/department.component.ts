@@ -30,6 +30,7 @@ export class DepartmentComponent extends ScheduleTableCreatorComponent {
   public watermark: string = 'Select a faculty';
   public filterPlaceholder: string = 'Search';
 
+
   onFiltering(event: FilteringEventArgs): void {
     let query: Query = new Query();
     query = (event.text !== '') ? query.where('name', 'startswith', event.text, true) : query;
@@ -50,16 +51,17 @@ export class DepartmentComponent extends ScheduleTableCreatorComponent {
   }
 
   getFacultyName(departmentId: string): string {
-    console.log(departmentId)
     const faculty = this.facultyDataSource.find(faculty =>
-      faculty.departments.some(department => department.id === departmentId)
+      faculty.departments.some((department: { id: string; }) => department.id === departmentId)
     );
     return faculty ? faculty.name : 'Unknown';
   }
 
   getFacultyId(departmentId: string): string {
     const faculty = this.facultyDataSource.find(faculty =>
-      Array.isArray(faculty.departments) && faculty.departments.some(department => department.id === departmentId)
+        Array.isArray(faculty.departments) && faculty.departments.some((department: {
+          id: string;
+        }) => department.id === departmentId)
     );
     return faculty ? faculty.id : null;
   }

@@ -1,8 +1,16 @@
 <div class="control-section rounded-2xl">
-  <ejs-grid [dataSource]='data' [pageSettings]='pageSettings' [allowSorting]='true' [editSettings]='editSettings' [toolbar]='toolbar' (actionBegin)="actionBegin($event)">
+  <ejs-grid (actionBegin)="actionBegin($event)" [allowSorting]='true' [dataSource]='data' [editSettings]='editSettings'
+            [toolbar]='toolbar'>
     <e-columns>
-      <e-column field='name' headerText='Name' width='120' [validationRules]='customeridrules' allowEditing='true'></e-column>
-      <e-column field='type' headerText='Type' width='120' [validationRules]='customeridrules' allowEditing='true'></e-column>
+      <e-column [validationRules]='customeridrules' allowEditing='true' field='name' headerText='Name'
+                width='120'></e-column>
+      <e-column [validationRules]='customeridrules' allowEditing='true' field='type' headerText='Type' width='120'>
+        <ng-template #editTemplate let-data>
+          <label for="type">Type</label>
+          <ejs-dropdownlist (change)="onTypeChange($event)" [(value)]='data.type' [dataSource]='types' id="type"
+                            name="type"></ejs-dropdownlist>
+        </ng-template>
+      </e-column>
     </e-columns>
   </ejs-grid>
 
