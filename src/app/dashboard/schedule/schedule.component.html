@@ -11,12 +11,12 @@
 
 
     <ejs-schedule #scheduleObj (actionBegin)="onActionBegin($event)"
-                  timezone="Europe/Bratislava"
-                  [currentView]="currentView" [endHour]='endHour' [eventSettings]="eventSettings"
+                  [currentView]="currentView"
+                  [endHour]='endHour' [eventSettings]="eventSettings" [readonly]="false"
                   [rowAutoHeight]='rowAutoHeight'
-                  [showWeekend]="showWeekend"
-                  [selectedDate]="selectedDate" [startHour]='startHour' class="rounded-2xl" cssClass='adaptive-rows'
-                  height='100vh' id='schedule' width='100%' [readonly]="false">
+                  [selectedDate]="selectedDate"
+                  [showWeekend]="showWeekend" [startHour]='startHour' class="rounded-2xl" cssClass='adaptive-rows'
+                  height='100vh' id='schedule' timezone="Europe/Bratislava" width='100%'>
 
       <e-views>
         <e-view option="Day"></e-view>
@@ -25,13 +25,11 @@
         <ng-template #quickInfoTemplatesHeader let-data>
           <div class="quick-info-header">
             <div [ngStyle]="getHeaderStyles(data)" class="quick-info-header-content">
-
               <div class="quick-info-title"></div>
               <div class="duration-text"></div>
             </div>
           </div>
         </ng-template>
-
 
 
         <ng-template #quickInfoTemplatesContent let-data>
@@ -48,12 +46,12 @@
                     <ejs-dropdownlist #subject='ngModel'
                                       (filtering)='onFiltering($event)'
                                       [(ngModel)]="data.subject_id"
+                                      [allowFiltering]='true'
                                       [dataSource]='subjectDataSource'
                                       [fields]='subjectFields'
-                                      [allowFiltering]='true'
-                                      class="e-field"
-                                      data-name="subject_id"
-                                      aria-invalid="true" aria-required="true"
+                                      aria-invalid="true"
+                                      aria-required="true"
+                                      class="e-field" data-name="subject_id"
                                       id="my-select-subject" name="subject_id"
                                       placeholder='TZI' required
                                       type="text"></ejs-dropdownlist>
@@ -82,15 +80,15 @@
                     <ejs-dropdownlist #classroom='ngModel'
                                       (filtering)='onFiltering($event)'
                                       [(ngModel)]="data.classroom_id"
+                                      [allowFiltering]='true'
                                       [dataSource]='classroomDataSource'
                                       [fields]='classroomFields'
-                                      [allowFiltering]='true'
-                                      class="e-field"
-                                      data-name="classroom_id"
-                                      aria-invalid="true" aria-required="true"
+                                      aria-invalid="true"
+                                      aria-required="true"
+                                      class="e-field" data-name="classroom_id"
                                       id="my-select-classroom" name="classroom_id"
                                       placeholder='F134' required
-                                      ></ejs-dropdownlist>
+                    ></ejs-dropdownlist>
                     <div *ngIf="(classroom.invalid && classroom.touched)" class="alert alert-danger">
                       <div *ngIf="classroom.errors.required">
                         Classroom is required.
@@ -104,32 +102,32 @@
                   <td class="e-textlabel">Teacher</td>
                   <td colspan="4">
 
-                     <!--<ejs-autocomplete #sample #teacher='ngModel' (change)="onTeacherSelected($event)"
-                                       (filtering)='onFiltering($event, teachers)'
-                                       (valueChange)='onTeacherSelected($event)'
-                                       [(ngModel)]="data.teacher_id"
-                                       [dataSource]='teachers' [fields]='fields'
-                                       allowCustom=false aria-invalid="true" aria-required="true"
-                                       id="my-select-teacher" name="teacher_id"
-                                       placeholder='Karabas' required
-                                       type="text"></ejs-autocomplete>-->
+                    <!--<ejs-autocomplete #sample #teacher='ngModel' (change)="onTeacherSelected($event)"
+                                      (filtering)='onFiltering($event, teachers)'
+                                      (valueChange)='onTeacherSelected($event)'
+                                      [(ngModel)]="data.teacher_id"
+                                      [dataSource]='teachers' [fields]='fields'
+                                      allowCustom=false aria-invalid="true" aria-required="true"
+                                      id="my-select-teacher" name="teacher_id"
+                                      placeholder='Karabas' required
+                                      type="text"></ejs-autocomplete>-->
                     <ejs-dropdownlist #teacher='ngModel'
                                       (filtering)='onFiltering($event)'
                                       [(ngModel)]="data.teacher_id"
+                                      [allowFiltering]='true'
                                       [dataSource]='teacherDataSource'
                                       [fields]='teacherFields'
-                                      [allowFiltering]='true'
-                                      class="e-field"
-                                      data-name="teacher_id"
-                                      aria-invalid="true" aria-required="true"
+                                      aria-invalid="true"
+                                      aria-required="true"
+                                      class="e-field" data-name="teacher_id"
                                       id="my-select-teacher" name="teacher_id"
                                       placeholder='Karabaš' required
                     ></ejs-dropdownlist>
-                     <div *ngIf="(teacher.invalid && teacher.touched)" class="alert alert-danger">
-                       <div *ngIf="teacher.errors.required">
-                         Teacher is required.
-                       </div>
-                     </div>
+                    <div *ngIf="(teacher.invalid && teacher.touched)" class="alert alert-danger">
+                      <div *ngIf="teacher.errors.required">
+                        Teacher is required.
+                      </div>
+                    </div>
 
                   </td>
                 </tr>
@@ -139,8 +137,8 @@
                     <ejs-dropdownlist [dataSource]='lessonTypes'
                                       [value]='data.subject_type'
                                       class="e-field" data-name="subject_type"
-                                      id='subject_type' text="Lekcia"
-                                      placeholder='Select type'></ejs-dropdownlist>
+                                      id='subject_type' placeholder='Select type'
+                                      text="Lekcia"></ejs-dropdownlist>
                   </td>
                 </tr>
                 <tr class="flex flex-col">
@@ -159,19 +157,19 @@
                     <ejs-dropdownlist #group='ngModel'
                                       (filtering)='onFiltering($event)'
                                       [(ngModel)]="data.group_id"
+                                      [allowFiltering]='true'
                                       [dataSource]='groupDataSource'
                                       [fields]='groupFields'
-                                      [allowFiltering]='true'
-                                      class="e-field"
-                                      aria-invalid="true" aria-required="true"
+                                      aria-invalid="true"
+                                      aria-required="true" class="e-field"
                                       id="my-select-group" name="group_id"
                                       placeholder='Select group' required
                     ></ejs-dropdownlist>
-               <div *ngIf="(group.invalid && group.touched)" class="alert alert-danger">
-                 <div *ngIf="group.errors.required">
-                   Group is required.
-                 </div>
-               </div>
+                    <div *ngIf="(group.invalid && group.touched)" class="alert alert-danger">
+                      <div *ngIf="group.errors.required">
+                        Group is required.
+                      </div>
+                    </div>
                   </td>
                 </tr>
               </form>
@@ -201,7 +199,17 @@
                 <div class="pr-4">{{ getGroupById(data.group_id) }}</div>
               </div>
             </div>
-            <button ejs-button [isPrimary]="true" class='dlgbtn' #promptButton (click)="promptBtnClick()">Prompt</button>
+          </div>
+        </ng-template>
+        <ng-template #quickInfoTemplatesFooter let-data>
+          <ng-container [ngTemplateOutlet]="eventFooter"
+                        [ngTemplateOutletContext]="{data:data}"></ng-container>
+        </ng-template>
+        <ng-template #eventFooter let-data="data">
+          <div class="e-event-footer">
+            <button #promptButton (click)="promptBtnClick()" [isPrimary]="true" class='dlgbtn' ejs-button>
+              Add to my schedule
+            </button>
           </div>
         </ng-template>
 
@@ -216,7 +224,6 @@
             </div>
           </div>
         </ng-template>
-
 
 
         <ng-template #editorTemplate let-data>
@@ -240,12 +247,12 @@
               <ejs-dropdownlist #subject='ngModel'
                                 (filtering)='onFiltering($event)'
                                 [(ngModel)]="data.subject_id"
+                                [allowFiltering]='true'
                                 [dataSource]='subjectDataSource'
                                 [fields]='subjectFields'
-                                [allowFiltering]='true'
-                                class="e-field"
-                                data-name="subject_id"
-                                aria-invalid="true" aria-required="true"
+                                aria-invalid="true"
+                                aria-required="true"
+                                class="e-field" data-name="subject_id"
                                 id="my-select-subject" name="subject_id"
                                 placeholder='TZI' required
                                 type="text"></ejs-dropdownlist>
@@ -279,12 +286,12 @@
                 <ejs-dropdownlist #classroom='ngModel'
                                   (filtering)='onFiltering($event)'
                                   [(ngModel)]="data.classroom_id"
+                                  [allowFiltering]='true'
                                   [dataSource]='classroomDataSource'
                                   [fields]='classroomFields'
-                                  [allowFiltering]='true'
-                                  class="e-field"
-                                  data-name="classroom_id"
-                                  aria-invalid="true" aria-required="true"
+                                  aria-invalid="true"
+                                  aria-required="true"
+                                  class="e-field" data-name="classroom_id"
                                   id="my-select-classroom" name="classroom_id"
                                   placeholder='F134' required
                 ></ejs-dropdownlist>
@@ -317,12 +324,12 @@
                 <ejs-dropdownlist #teacher='ngModel'
                                   (filtering)='onFiltering($event)'
                                   [(ngModel)]="data.teacher_id"
+                                  [allowFiltering]='true'
                                   [dataSource]='teacherDataSource'
                                   [fields]='teacherFields'
-                                  [allowFiltering]='true'
-                                  class="e-field"
-                                  data-name="teacher_id"
-                                  aria-invalid="true" aria-required="true"
+                                  aria-invalid="true"
+                                  aria-required="true"
+                                  class="e-field" data-name="teacher_id"
                                   id="my-select-teacher" name="teacher_id"
                                   placeholder='Karabaš' required
                 ></ejs-dropdownlist>
@@ -341,36 +348,36 @@
                                   [value]='data.subject_type'
                                   class="e-field" data-name="subject_type"
                                   id='subject_type'
-                                  text="Lekcia"
-                                  placeholder='Select type'></ejs-dropdownlist>
+                                  placeholder='Select type'
+                                  text="Lekcia"></ejs-dropdownlist>
               </td>
             </tr>
             <tr class="flex flex-col">
               <td class="e-textlabel">Group</td>
               <td colspan="4">
 
-<!--                <ejs-autocomplete #sample #value='ngModel'-->
-<!--                             (filtering)='onFiltering($event, groups)'-->
-<!--                                    [(ngModel)]="data.group_id"-->
-<!--                                   [dataSource]='groups' [fields]='{ text: "name", value: "id" }'-->
-<!--                                   allowCustom=false aria-invalid="true" aria-required="true"-->
-<!--                                   id="my-select-group" name="group_id"-->
-<!--                                   placeholder='Select group' required-->
-<!--                                   type="text"></ejs-autocomplete>-->
-<!--                 <div *ngIf="(value.invalid && value.touched)" class="alert alert-danger">-->
-<!--                   <div *ngIf="value.errors.required">-->
-<!--                     Group is required.-->
-<!--                   </div>-->
-<!--                 </div>-->
+                <!--                <ejs-autocomplete #sample #value='ngModel'-->
+                <!--                             (filtering)='onFiltering($event, groups)'-->
+                <!--                                    [(ngModel)]="data.group_id"-->
+                <!--                                   [dataSource]='groups' [fields]='{ text: "name", value: "id" }'-->
+                <!--                                   allowCustom=false aria-invalid="true" aria-required="true"-->
+                <!--                                   id="my-select-group" name="group_id"-->
+                <!--                                   placeholder='Select group' required-->
+                <!--                                   type="text"></ejs-autocomplete>-->
+                <!--                 <div *ngIf="(value.invalid && value.touched)" class="alert alert-danger">-->
+                <!--                   <div *ngIf="value.errors.required">-->
+                <!--                     Group is required.-->
+                <!--                   </div>-->
+                <!--                 </div>-->
                 <ejs-dropdownlist #group='ngModel'
                                   (filtering)='onFiltering($event)'
                                   [(ngModel)]="data.group_id"
+                                  [allowFiltering]='true'
                                   [dataSource]='groupDataSource'
                                   [fields]='groupFields'
-                                  [allowFiltering]='true'
-                                  class="e-field"
-                                  data-name="group_id"
-                                  aria-invalid="true" aria-required="true"
+                                  aria-invalid="true"
+                                  aria-required="true"
+                                  class="e-field" data-name="group_id"
                                   id="my-select-group" name="group_id"
                                   placeholder='Select group' required
                 ></ejs-dropdownlist>
@@ -379,8 +386,6 @@
                     Group is required.
                   </div>
                 </div>
-
-
               </td>
 
             </tr>
@@ -414,10 +419,6 @@
 
       </e-views>
     </ejs-schedule>
-
-    <div id="search_schedule"></div>
-
-
   </div>
 </div>
 

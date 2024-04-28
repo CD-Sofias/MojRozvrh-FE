@@ -1,14 +1,6 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {AccordionAllModule} from "@syncfusion/ej2-angular-navigations";
-import {DropDownListModule, DropDownListComponent, FilteringEventArgs} from "@syncfusion/ej2-angular-dropdowns";
-import {DatePickerAllModule, DatePickerComponent, DatePickerModule} from "@syncfusion/ej2-angular-calendars";
-import {DataManager, Predicate, Query, ReturnOption} from "@syncfusion/ej2-data";
+import {AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {DropDownListComponent} from "@syncfusion/ej2-angular-dropdowns";
 import {Subject} from "../../types/subject";
-import {EventSettingsModel} from "@syncfusion/ej2-schedule";
-import {
-  ScheduleComponent as EJ2ScheduleComponent
-} from "@syncfusion/ej2-angular-schedule/src/schedule/schedule.component";
-import {EmitType} from "@syncfusion/ej2-base";
 import {GroupService} from "../../services/group.service";
 import {TeacherService} from "../../services/teacher.service";
 import {Group} from "../../types/group";
@@ -18,10 +10,6 @@ import {Classroom} from "../../types/classroom";
 import {SubjectService} from "../../services/subject.service";
 import {ScheduleCellService} from "../../services/schedule-cell.service";
 import {ScheduleCell} from "../../types/scheduleCell";
-import {DashboardModule} from "../dashboard.module";
-import {View} from "@syncfusion/ej2-angular-schedule";
-import {ScheduleComponent} from "../schedule/schedule.component";
-import {group} from "@angular/animations";
 import {forkJoin} from "rxjs";
 
 @Component({
@@ -29,25 +17,8 @@ import {forkJoin} from "rxjs";
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
 })
-export class SearchComponent implements OnInit {
-  constructor(private groupService: GroupService,
-              private teacherService: TeacherService,
-              private classroomService: ClassroomService,
-              private subjectService: SubjectService,
-              private scheduleCellService: ScheduleCellService) {
-  }
-  @Input() scheduleData: ScheduleCell;
-  @ViewChild('scheduleObj') public scheduleObj!: ScheduleComponent;
-  @ViewChild('subject_id') public subjectId!: DropDownListComponent;
-  @ViewChild('classroom_id_search_content') public classroomIdSearchContent!: DropDownListComponent;
-  @ViewChild('startTime_search_content') public startTimeObj!: DatePickerComponent;
-  @ViewChild('endTime_search_content') public endTimeObj!: DatePickerComponent;
-  @ViewChild('eventTypeSearch') public eventTypeSearch!: DropDownListComponent;
-
+export class SearchComponent implements OnInit, AfterViewInit {
   public lessonTypes: string[];
-
-  @ViewChild('teacher_id') public teacherId!: DropDownListComponent;
-
   public groups: Group[] = [];
   public teachers: Teacher[] = [];
   public classrooms: Classroom[] = [];
@@ -56,29 +27,29 @@ export class SearchComponent implements OnInit {
   @Output() dataEvent = new EventEmitter<ScheduleCell[]>();
   @ViewChild('typeList')
   public typeObj: DropDownListComponent;
-
-
   @ViewChild('searchList')
   public searchObj: DropDownListComponent;
-
   public searchData: Object[] = [
-    { Id: 'Type1', Type: 'Groups' },
-    { Id: 'Type2', Type: 'Teachers' },
-    { Id: 'Type3', Type: 'Classrooms' },
-    { Id: 'Type4', Type: 'Subjects' },
-    { Id: 'Type5', Type: 'Lesson Types' },
+    {Id: 'Type1', Type: 'Groups'},
+    {Id: 'Type2', Type: 'Teachers'},
+    {Id: 'Type3', Type: 'Classrooms'},
+    {Id: 'Type4', Type: 'Subjects'},
+    {Id: 'Type5', Type: 'Lesson Types'},
   ];
-
-
-
-  public fields: Object = { text: 'Type', value: 'Id' };
-  public dataFields: Object = { value: 'Id', text: 'Name' };
+  public fields: object = {text: 'Type', value: 'Id'};
+  public dataFields: object = {value: 'Id', text: 'Name'};
   public searchValue: string;
-  public typeValue: string = 'Type1';
-  public onChange1(args: any): void {
+  public typeValue: string
+
+  constructor(private groupService: GroupService,
+              private teacherService: TeacherService,
+              private classroomService: ClassroomService,
+              private subjectService: SubjectService,
+              private scheduleCellService: ScheduleCellService) {
+  }
+
+  public onChange1(): void {
     if (this.typeValue) {
-      console.log(this.typeValue)
-      this.searchObj.enabled = true;
       if (this.typeObj.text === 'Groups') {
         this.data = this.groups.map(group => {
           return {Id: group.id, Name: group.name};
@@ -109,32 +80,28 @@ export class SearchComponent implements OnInit {
         })
         this.searchValue = this.lessonTypes.length > 0 ? this.lessonTypes[0] : '';
       }
-
-        console.log(this.data)
-      this.searchObj.dataSource = this.data;
-      this.searchObj.dataBind();
-      console.log(this.searchObj)
+      this.searchObj.enabled = true;
     }
+
   }
 
-  public onChange2(args: any): void {
+  public onChange2(): void {
     let filter = [];
-    this.dataEvent.emit([]);
 
     if (this.typeObj.text === 'Groups') {
-      filter.push({ columnName: 'group.name', value: this.searchObj.text });
+      filter.push({columnName: 'group.name', value: this.searchObj.text});
     }
     if (this.typeObj.text === 'Teachers') {
-      filter.push({ columnName: 'teacher.name', value: this.searchObj.text });
+      filter.push({columnName: 'teacher.name', value: this.searchObj.text});
     }
     if (this.typeObj.text === 'Classrooms') {
-      filter.push({ columnName: 'classroom.id', value: this.searchObj.value });
+      filter.push({columnName: 'classroom.id', value: this.searchObj.value});
     }
     if (this.typeObj.text === 'Subjects') {
-      filter.push({ columnName: 'subject.name', value: this.searchObj.text });
+      filter.push({columnName: 'subject.name', value: this.searchObj.text});
     }
     if (this.typeObj.text === 'Lesson Types') {
-      filter.push({ columnName: 'subject.type', value: this.searchObj.text });
+      filter.push({columnName: 'subject.type', value: this.searchObj.text});
     }
     if (filter.length > 0) {
       this.scheduleCellService.getScheduleCellsByFilter(filter).subscribe(scheduleCells => {
@@ -153,23 +120,20 @@ export class SearchComponent implements OnInit {
       teachers: this.teacherService.getAllTeachers(),
       classrooms: this.classroomService.getAllClassrooms(),
       subjects: this.subjectService.getAllSubjects()
-    }).subscribe(({ groups, teachers, classrooms, subjects }) => {
+    }).subscribe(({groups, teachers, classrooms, subjects}) => {
       this.groups = groups;
       this.teachers = teachers;
       this.classrooms = classrooms;
       this.subjects = subjects;
       this.loadLessonTypes();
+      this.typeValue = 'Type1';
     });
   }
-  ngAfterViewInit(e: any) {
+
+  ngAfterViewInit() {
     setTimeout(() => {
-      this.onChange1(e);
-    }, 500)
-  }
-  public onFiltering: EmitType<FilteringEventArgs> = (e: FilteringEventArgs) => {
-    let query: Query = new Query();
-    query = (e.text !== '') ? query.where('Name', 'startswith', e.text, true) : query;
-    e.updateData(this.data, query);
+      this.onChange1();
+    })
   }
 
 }

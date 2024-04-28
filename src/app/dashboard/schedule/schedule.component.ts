@@ -117,8 +117,6 @@ export class ScheduleComponent implements OnInit {
     this.loadClassrooms();
     this.loadTeachers();
     this.loadSubjects();
-
-    this.scheduleObj.quickInfoOnSelectionEnd = false;
     this.userService.getUsersInfo().subscribe(user => {
       this.userID = user.id;
     });
@@ -215,25 +213,19 @@ export class ScheduleComponent implements OnInit {
 
 
   getData(data: ScheduleCell[]): void {
-    this.scheduleData = data;
-    this.eventSettings = {
-      ...this.eventSettings,
-      dataSource: data.map(scheduleCell => {
-        return {
-          id: scheduleCell.id,
-          teacher_id: scheduleCell.teacher.id,
-          subject_id: scheduleCell.subject.id,
-          group_id: scheduleCell.group.id,
-          classroom_id: scheduleCell.classroom.id,
-          subject_type: scheduleCell.subject.type,
-          StartTime: scheduleCell.startTime,
-          EndTime: scheduleCell.endTime,
-          RecurrenceRule: 'FREQ=WEEKLY'
-        };
-      })
-    };
-    this.scheduleObj.refresh();
-    console.log(this.eventSettings)
+    this.scheduleObj.eventSettings.dataSource = data.map(scheduleCell => {
+      return {
+        id: scheduleCell.id,
+        teacher_id: scheduleCell.teacher.id,
+        subject_id: scheduleCell.subject.id,
+        group_id: scheduleCell.group.id,
+        classroom_id: scheduleCell.classroom.id,
+        subject_type: scheduleCell.subject.type,
+        StartTime: scheduleCell.startTime,
+        EndTime: scheduleCell.endTime,
+        RecurrenceRule: 'FREQ=WEEKLY'
+      };
+    })
   }
 
 
@@ -449,7 +441,6 @@ export class ScheduleComponent implements OnInit {
   }
 
 
-
   public getHeaderStyles(data: { [key: string]: Object }): Object {
     if (data['elementType'] === 'cell') {
       return {'align-items': 'center', 'color': '#919191'};
@@ -477,16 +468,14 @@ export class ScheduleComponent implements OnInit {
     this.dialogObj.hide();
   }
   deleteScheduleCell(id: string): void {
-    this.scheduleCellService.deleteScheduleCell(id).subscribe(
-      response => {
-        // Обработка успешного удаления
-        console.log('Cell deleted successfully');
+    this.scheduleCellService.deleteScheduleCell(id).subscribe({
+      next: () => {
+        console.log('Schedule cell deleted');
+        this.scheduleObj.closeQuickInfoPopup();
       },
-      error => {
-        // Обработка ошибки удаления
-        console.error('Error deleting cell', error);
+      error: (error) => {
+        console.error('Error deleting schedule cell', error);
       }
-    );
+    })
   }
-
 }

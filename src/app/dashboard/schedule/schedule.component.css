@@ -194,5 +194,28 @@ td.e-field.button-customization:nth-child(2) {
   display: none;
 }
 
+.material .e-quick-popup-wrapper .e-popup-footer,
+.material3 .e-quick-popup-wrapper .e-popup-footer,
+.material3-dark .e-quick-popup-wrapper .e-popup-footer {
+  display: block !important;
+  padding: 0px 18px 8px 22px !important;
+}
 
+.highcontrast .quick-info-header,
+.tailwind-dark .quick-info-header,
+.bootstrap-dark .quick-info-header,
+.fluent-dark .quick-info-header,
+.bootstrap5-dark .quick-info-header,
+.fabric-dark .quick-info-header,
+.material3-dark .quick-info-header {
+  background-color: transparent;
+}
 
+.e-quick-popup-wrapper .e-event-popup .e-popup-footer {
+  display: block;
+}
+
+.e-quick-popup-wrapper .e-cell-popup .e-popup-footer button:first-child,
+.e-quick-popup-wrapper .e-event-popup .e-popup-footer button:first-child {
+  margin-right: 5px;
+}

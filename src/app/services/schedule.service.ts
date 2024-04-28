@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {CreateSchedule, Schedule} from "../types/schedule";
-import {ej} from "@syncfusion/ej2-schedule/dist/global";
-import schedule = ej.schedule;
 
 @Injectable({
   providedIn: 'root'
@@ -34,11 +32,15 @@ export class ScheduleService {
 
   deleteScheduleCell(id: string, scheduleId: string){
     return this.http.delete(`${this.url}/${id}/schedule_cell`, {
-      body: {scheduleId}
+      body: {scheduleCellId: scheduleId}
     })
   }
 
   getSchedulesByUserId(id: string) {
     return this.http.get<Schedule[]>(`${this.url}/user/${id}`)
+  }
+
+  addScheduleCell(scheduleId: string, scheduleCellId: string) {
+    return this.http.put(`${this.url}/${scheduleId}/schedule_cell`, {scheduleCellId})
   }
 }
