@@ -1,7 +1,7 @@
 import {
   ActionEventArgs,
   DragAndDropService,
-  EventSettingsModel as OriginalEventSettingsModel,
+  EventSettingsModel as OriginalEventSettingsModel, PopupOpenEventArgs,
   ResizeService,
   ScheduleComponent as EJ2ScheduleComponent,
   TimelineViewsService,
@@ -107,6 +107,10 @@ export class ScheduleComponent implements OnInit {
   public groupDataSource: Object[];
   public groupFields: Object = {value: 'Id', text: 'Name'};
 
+
+
+  @ViewChild('scheduleObj') public scheduleObj!: EJ2ScheduleComponent;
+
   ngOnInit() {
     this.titleService.setTitle('My schedule');
     this.loadGroups();
@@ -114,6 +118,7 @@ export class ScheduleComponent implements OnInit {
     this.loadTeachers();
     this.loadSubjects();
 
+    this.scheduleObj.quickInfoOnSelectionEnd = false;
     this.userService.getUsersInfo().subscribe(user => {
       this.userID = user.id;
     });
@@ -223,6 +228,7 @@ export class ScheduleComponent implements OnInit {
           subject_type: scheduleCell.subject.type,
           StartTime: scheduleCell.startTime,
           EndTime: scheduleCell.endTime,
+          RecurrenceRule: 'FREQ=WEEKLY'
         };
       })
     };
@@ -286,6 +292,11 @@ export class ScheduleComponent implements OnInit {
     query = (e.text !== '') ? query.where('code', 'contains', e.text, true) : query;
     e.updateData(dataSource, query);
   }
+  public onPopupOpen(args: PopupOpenEventArgs): void {
+    if (args.type === 'RecurrenceAlert') {
+      args.cancel = true;
+    }
+  }
 
   public value: string = '';
 
@@ -297,7 +308,7 @@ export class ScheduleComponent implements OnInit {
   @ViewChild('notesObj')
   public notesObj?: TextBoxComponent;
 
-  @ViewChild('scheduleObj') public scheduleObj!: EJ2ScheduleComponent;
+
   @ViewChild('eventTypeSearch') eventTypeSearchObj: any | undefined;
   @ViewChild('subject_id') subjectObj: any | undefined;
   @ViewChild('classroom_id_search_content') locationObj: ElementRef | undefined;
@@ -397,9 +408,10 @@ export class ScheduleComponent implements OnInit {
 
 
   public onActionBegin(args: ActionEventArgs): void {
+    console.log(args)
     if (args.requestType === 'eventCreate' || args.requestType === 'eventChange') {
       const data: Record<string, any> = args.data instanceof Array ? args.data[0] : args.data;
-      console.log(args)
+
       console.log(data)
 
       if (!this.scheduleObj.isSlotAvailable(data.StartTime as Date, data.EndTime as Date)) {
@@ -418,7 +430,7 @@ export class ScheduleComponent implements OnInit {
         scheduleId: data.id
       };
 
-      console.log(scheduleCell)
+      console.log(args.requestType)
 
       this.scheduleCellService.createScheduleCell(scheduleCell).subscribe({
         next: () => {
@@ -430,7 +442,12 @@ export class ScheduleComponent implements OnInit {
         }
       });
     }
+    if (args.requestType === 'eventRemove') {
+      args.cancel = true;
+      this.deleteScheduleCell(args.data[0].id);
+    }
   }
+
 
 
   public getHeaderStyles(data: { [key: string]: Object }): Object {
@@ -458,6 +475,18 @@ export class ScheduleComponent implements OnInit {
   }
   private promptCancelAction(): void {
     this.dialogObj.hide();
+  }
+  deleteScheduleCell(id: string): void {
+    this.scheduleCellService.deleteScheduleCell(id).subscribe(
+      response => {
+        // Обработка успешного удаления
+        console.log('Cell deleted successfully');
+      },
+      error => {
+        // Обработка ошибки удаления
+        console.error('Error deleting cell', error);
+      }
+    );
   }
 
 }

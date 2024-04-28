@@ -22,6 +22,7 @@ import {DashboardModule} from "../dashboard.module";
 import {View} from "@syncfusion/ej2-angular-schedule";
 import {ScheduleComponent} from "../schedule/schedule.component";
 import {group} from "@angular/animations";
+import {forkJoin} from "rxjs";
 
 @Component({
   selector: 'app-search',
@@ -88,21 +89,25 @@ export class SearchComponent implements OnInit {
         this.data = this.teachers.map(teacher => {
           return {Id: teacher.id, Name: teacher.name};
         })
+        this.searchValue = this.teachers.length > 0 ? this.teachers[0].id : '';
       }
       if (this.typeObj.text === 'Classrooms') {
         this.data = this.classrooms.map(classroom => {
           return {Id: classroom.id, Name: classroom.code};
         })
+        this.searchValue = this.classrooms.length > 0 ? this.classrooms[0].id : '';
       }
       if (this.typeObj.text === 'Subjects') {
         this.data = this.subjects.map(subject => {
           return {Id: subject.id, Name: subject.name};
         })
+        this.searchValue = this.subjects.length > 0 ? this.subjects[0].id : '';
       }
       if (this.typeObj.text === 'Lesson Types') {
         this.data = this.lessonTypes.map(type => {
           return {Id: type, Name: type};
         })
+        this.searchValue = this.lessonTypes.length > 0 ? this.lessonTypes[0] : '';
       }
 
         console.log(this.data)
@@ -143,19 +148,18 @@ export class SearchComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.groupService.getAllGroups().subscribe(groups => {
+    forkJoin({
+      groups: this.groupService.getAllGroups(),
+      teachers: this.teacherService.getAllTeachers(),
+      classrooms: this.classroomService.getAllClassrooms(),
+      subjects: this.subjectService.getAllSubjects()
+    }).subscribe(({ groups, teachers, classrooms, subjects }) => {
       this.groups = groups;
-    })
-    this.teacherService.getAllTeachers().subscribe(teachers => {
       this.teachers = teachers;
-    })
-    this.classroomService.getAllClassrooms().subscribe(classrooms => {
       this.classrooms = classrooms;
-    })
-    this.subjectService.getAllSubjects().subscribe(subjects => {
       this.subjects = subjects;
       this.loadLessonTypes();
-    })
+    });
   }
   ngAfterViewInit(e: any) {
     setTimeout(() => {
