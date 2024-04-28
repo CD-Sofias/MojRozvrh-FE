@@ -13,22 +13,24 @@ import {MyScheduleComponent} from "./dashboard/my-schedule/my-schedule.component
 import {MyScheduleDetailComponent} from "./dashboard/my-schedule-detail/my-schedule-detail.component";
 import {MyScheduleWrapperComponent} from "./dashboard/my-schedule-wrapper/my-schedule-wrapper.component";
 import {myScheduleResolver} from "./my-schedule.resolver";
-import {ScheduleComponent} from "@syncfusion/ej2-angular-schedule";
+import {ScheduleComponent} from "./dashboard/schedule/schedule.component";
 
 export const routes: Routes = [
   {path: '', redirectTo: 'auth', pathMatch: 'full'},
   {path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)},
-  {path: 'schedule', canActivate: [authGuard], component: ScheduleComponent},
+  {path: 'schedule', canActivate: [authGuard], component: ScheduleComponent
+  },
+  {
+    path: 'my-schedule',
+    canActivate: [authGuard],
+    component: MyScheduleWrapperComponent,
+    children: [
+      {path: '', component: MyScheduleComponent},
+      {path: ':id', resolve: {schedule: myScheduleResolver}, component: MyScheduleDetailComponent},
+    ]
+  },
   {path: 'dashboard', component: DashboardComponent, canActivate: [authGuard], children: [
-      {
-        path: 'my-schedule',
-        canActivate: [authGuard],
-        component: MyScheduleWrapperComponent,
-        children: [
-          {path: '', component: MyScheduleComponent},
-          {path: ':id', resolve: {schedule: myScheduleResolver}, component: MyScheduleDetailComponent},
-        ]
-      },
+
       {path: 'admin-panel', component: ScheduleTableCreatorComponent, children: [
           {path: '', redirectTo: 'teachers', pathMatch: 'full'},
           {path: 'teachers', component: TeacherComponent},
