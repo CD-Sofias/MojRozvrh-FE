@@ -14,6 +14,7 @@ import {MyScheduleDetailComponent} from "./dashboard/my-schedule-detail/my-sched
 import {MyScheduleWrapperComponent} from "./dashboard/my-schedule-wrapper/my-schedule-wrapper.component";
 import {myScheduleResolver} from "./my-schedule.resolver";
 import {ScheduleComponent} from "./dashboard/schedule/schedule.component";
+import {ScheduleCellComponent} from "./dashboard/admin/schedule-table-creator/schedule-cell/schedule-cell.component";
 
 export const routes: Routes = [
   {path: '', redirectTo: 'schedule', pathMatch: 'full'},
@@ -40,6 +41,7 @@ export const routes: Routes = [
       {path: 'groups', component: GroupsComponent},
       {path: 'classrooms', component: ClassroomsComponent},
       {path: 'subjects', component: SubjectsComponent},
+      {path: 'schedule-cell', component: ScheduleCellComponent},
     ]
   },
   {

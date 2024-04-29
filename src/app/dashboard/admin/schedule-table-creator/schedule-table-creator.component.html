@@ -39,6 +39,11 @@
                   ejs-button iconCss="e-icons e-copy"
                   iconPosition="Left" routerLink="subjects" routerLinkActive="active">
           </button>
+          <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="Schedule cell"
+                  cssClass="e-flat schedule-btn header-btn"
+                  ejs-button iconCss="e-icons e-copy"
+                  iconPosition="Left" routerLink="schedule-cell" routerLinkActive="active">
+          </button>
         </div>
       </div>
     </div>

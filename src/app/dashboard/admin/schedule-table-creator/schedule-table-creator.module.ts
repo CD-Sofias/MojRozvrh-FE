@@ -10,11 +10,14 @@ import {ScheduleTableCreatorRoutingModule} from "./schedule-table-creator-routin
 import {DepartmentComponent} from "./department/department.component";
 import {DropDownListAllModule} from "@syncfusion/ej2-angular-dropdowns";
 import {NumericTextBoxAllModule, TextBoxAllModule} from "@syncfusion/ej2-angular-inputs";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {AddressesComponent} from "./addresses/addresses.component";
 import {ClassroomsComponent} from "./classrooms/classrooms.component";
 import {SubjectsComponent} from "./subjects/subjects.component";
 import {DashboardModule} from "../../dashboard.module";
+import {ScheduleCellComponent} from "./schedule-cell/schedule-cell.component";
+import {DateTimePickerModule} from "@syncfusion/ej2-angular-calendars";
+import {ScheduleModule} from "@syncfusion/ej2-angular-schedule";
 
 @NgModule({
   declarations: [
@@ -24,7 +27,8 @@ import {DashboardModule} from "../../dashboard.module";
     ScheduleTableCreatorComponent,
     AddressesComponent,
     ClassroomsComponent,
-    SubjectsComponent
+    SubjectsComponent,
+    ScheduleCellComponent
   ],
   imports: [
     CommonModule,
@@ -37,15 +41,11 @@ import {DashboardModule} from "../../dashboard.module";
     ReactiveFormsModule,
     NumericTextBoxAllModule,
     DashboardModule,
+    DateTimePickerModule,
+    FormsModule,
+    ScheduleModule,
   ],
   exports: [
-    TeacherComponent,
-    ClassroomsComponent,
-    FacultyComponent,
-    DepartmentComponent,
-    ScheduleTableCreatorComponent,
-    AddressesComponent,
-    SubjectsComponent
   ]
 })
 export class ScheduleTableCreatorModule {
