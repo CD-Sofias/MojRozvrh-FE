@@ -1,4 +1,4 @@
-import {Component, ElementRef, inject, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, inject, Input, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {DialogComponent} from "@syncfusion/ej2-angular-popups";
 import {ButtonComponent, ButtonModel, CheckBoxComponent} from "@syncfusion/ej2-angular-buttons";
 import {AnimationSettingsModel} from "@syncfusion/ej2-splitbuttons";
@@ -40,7 +40,11 @@ export class CreateScheduleModalComponent implements OnInit {
 
   constructor(private router: Router, private scheduleService: ScheduleService) { }
 
-
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.scheduleData && changes.scheduleData.currentValue) {
+      console.log('scheduleData is now defined:', this.scheduleData);
+    }
+  }
   ngOnInit() {
     this.initilaizeTarget();
   }
@@ -60,10 +64,13 @@ export class CreateScheduleModalComponent implements OnInit {
   public onOverlayClick: EmitType<object> = () => {
     this.modalDialog.hide();
   }
-  public dlgButtonClick = (): void => {
-    this.modalDialog.hide();
-    console.log(this.scheduleName);
 
+public dlgButtonClick = (): void => {
+  this.modalDialog.hide();
+  console.log(this.scheduleName);
+  console.log(this.scheduleData);
+
+  if (this.scheduleData) {
     this.scheduleService.createSchedule({
       name: this.scheduleName,
       userId: this.userID,
@@ -76,10 +83,14 @@ export class CreateScheduleModalComponent implements OnInit {
       error: error => {}
     });
     console.log(this.scheduleData)
+  } else {
+    console.error('scheduleData is undefined');
   }
+}
   public initilaizeTarget: EmitType<object> = () => {
     this.targetElement = this.container.nativeElement.parentElement;
   }
+
 
 
 

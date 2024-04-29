@@ -213,19 +213,23 @@ export class ScheduleComponent implements OnInit {
 
 
   getData(data: ScheduleCell[]): void {
-    this.scheduleObj.eventSettings.dataSource = data.map(scheduleCell => {
-      return {
-        id: scheduleCell.id,
-        teacher_id: scheduleCell.teacher.id,
-        subject_id: scheduleCell.subject.id,
-        group_id: scheduleCell.group.id,
-        classroom_id: scheduleCell.classroom.id,
-        subject_type: scheduleCell.subject.type,
-        StartTime: scheduleCell.startTime,
-        EndTime: scheduleCell.endTime,
-        RecurrenceRule: 'FREQ=WEEKLY'
-      };
-    })
+    this.scheduleData = data;
+    this.eventSettings = {
+      ...this.eventSettings,
+      dataSource: data.map(scheduleCell => {
+        return {
+          id: scheduleCell.id,
+          teacher_id: scheduleCell.teacher.id,
+          subject_id: scheduleCell.subject.id,
+          group_id: scheduleCell.group.id,
+          classroom_id: scheduleCell.classroom.id,
+          subject_type: scheduleCell.subject.type,
+          StartTime: scheduleCell.startTime,
+          EndTime: scheduleCell.endTime,
+          RecurrenceRule: 'FREQ=WEEKLY'
+        };
+      })
+    };
   }
 
 
