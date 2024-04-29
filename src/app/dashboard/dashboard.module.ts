@@ -61,7 +61,6 @@ import { ScheduleComponent } from './schedule/schedule.component';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    ScheduleTableCreatorModule,
     ReactiveFormsModule,
     RouterModule,
     AppBarAllModule, ButtonAllModule, DropDownButtonAllModule, MenuAllModule, ButtonModule, ToolbarModule,

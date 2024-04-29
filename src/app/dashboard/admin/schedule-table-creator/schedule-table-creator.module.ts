@@ -14,6 +14,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {AddressesComponent} from "./addresses/addresses.component";
 import {ClassroomsComponent} from "./classrooms/classrooms.component";
 import {SubjectsComponent} from "./subjects/subjects.component";
+import {DashboardModule} from "../../dashboard.module";
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import {SubjectsComponent} from "./subjects/subjects.component";
     DropDownListAllModule,
     TextBoxAllModule,
     ReactiveFormsModule,
-    NumericTextBoxAllModule
+    NumericTextBoxAllModule,
+    DashboardModule,
   ],
   exports: [
     TeacherComponent,

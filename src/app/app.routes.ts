@@ -16,9 +16,10 @@ import {myScheduleResolver} from "./my-schedule.resolver";
 import {ScheduleComponent} from "./dashboard/schedule/schedule.component";
 
 export const routes: Routes = [
-  {path: '', redirectTo: 'auth', pathMatch: 'full'},
+  {path: '', redirectTo: 'schedule', pathMatch: 'full'},
   {path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)},
-  {path: 'schedule', canActivate: [authGuard], component: ScheduleComponent
+  {
+    path: 'schedule', component: ScheduleComponent
   },
   {
     path: 'my-schedule',
@@ -29,19 +30,19 @@ export const routes: Routes = [
       {path: ':id', resolve: {schedule: myScheduleResolver}, component: MyScheduleDetailComponent},
     ]
   },
-  {path: 'dashboard', component: DashboardComponent, canActivate: [authGuard], children: [
-
-      {path: 'admin-panel', component: ScheduleTableCreatorComponent, children: [
-          {path: '', redirectTo: 'teachers', pathMatch: 'full'},
-          {path: 'teachers', component: TeacherComponent},
-          {path: 'faculties', component: FacultyComponent},
-          {path: 'departments', component: DepartmentComponent},
-          {path: 'addresses', component: AddressesComponent},
-          {path: 'groups', component: GroupsComponent},
-          {path: 'classrooms', component: ClassroomsComponent},
-          {path: 'subjects', component: SubjectsComponent},
-        ]
-      },
+  {
+    path: 'admin-panel', component: ScheduleTableCreatorComponent, children: [
+      {path: '', redirectTo: 'teachers', pathMatch: 'full'},
+      {path: 'teachers', component: TeacherComponent},
+      {path: 'faculties', component: FacultyComponent},
+      {path: 'departments', component: DepartmentComponent},
+      {path: 'addresses', component: AddressesComponent},
+      {path: 'groups', component: GroupsComponent},
+      {path: 'classrooms', component: ClassroomsComponent},
+      {path: 'subjects', component: SubjectsComponent},
     ]
+  },
+  {
+    path: 'dashboard', component: DashboardComponent, canActivate: [authGuard], children: []
   },
 ];
