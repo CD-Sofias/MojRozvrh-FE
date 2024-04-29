@@ -27,7 +27,7 @@
         <div class="form-row">
           <div class="form-group">
             <label for="departmentId">Department Name</label>
-            <ejs-dropdownlist (filtering)='onFiltering($event)' (valueChange)='onDepartmentChange($event)'
+            <ejs-dropdownlist (valueChange)='onDepartmentChange($event)'
                               [allowFiltering]='true'
                               [dataSource]='departments' [fields]="{text: 'name', value: 'id' }"
                               [filterBarPlaceholder]="filterPlaceholder"

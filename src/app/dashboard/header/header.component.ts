@@ -15,6 +15,7 @@ import {AuthService} from "../../auth/auth.service";
 export class HeaderComponent implements OnInit {
 
   public items: ItemModel[] = [
+
     {
       text: 'Admin panel',
       iconCss: 'e-icons e-edit-3',
@@ -40,6 +41,7 @@ export class HeaderComponent implements OnInit {
 
   isSmallScreen: boolean;
   username: string;
+  role: string;
 
   constructor(private breakpointObserver: BreakpointObserver,
               private userService: UserService, private authService: AuthService, private router: Router) {
@@ -59,6 +61,7 @@ export class HeaderComponent implements OnInit {
     if (this.authService.isAuthenticated()) {
       this.userService.getUsersInfo().subscribe(user => {
         this.username = user.username;
+        this.role = user.role;
       });
     }
   }

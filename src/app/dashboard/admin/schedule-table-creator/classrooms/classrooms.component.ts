@@ -84,7 +84,7 @@ export class ClassroomsComponent extends ScheduleTableCreatorComponent {
     const classroomWithId = {
       id: classroomData.id,
       type: this.selectedType ? this.selectedType : classroomData.type,
-      addressId: this.selectedAddressId && this.selectedAddressId,
+      addressId: this.classroomForm.value.address,
       capacity: classroomData.capacity,
       number: classroomData.number,
       code: classroomData.code
