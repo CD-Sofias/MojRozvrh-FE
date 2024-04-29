@@ -42,7 +42,6 @@ import {MyScheduleComponent} from "./my-schedule/my-schedule.component";
 import {CreateScheduleModalComponent} from "./create-schedule-modal/create-schedule-modal.component";
 import {DialogModule} from "@syncfusion/ej2-angular-popups";
 import {SearchComponent} from "./search/search.component";
-import {ScheduleTableCreatorModule} from "./admin/schedule-table-creator/schedule-table-creator.module";
 import {MyScheduleDetailComponent} from "./my-schedule-detail/my-schedule-detail.component"
 import { ScheduleComponent } from './schedule/schedule.component';
 
