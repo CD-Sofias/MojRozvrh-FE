@@ -31,7 +31,7 @@
         <ng-template #editSettingsTemplate let-data>
             <div class="form-row">
                 <div class="form-group">
-                    <div (change)="actionBegin($event)">
+                    <div>
 
                         <label for="type">Lesson Type</label>
                         <ejs-dropdownlist (change)="onTypeChange($event)" [(value)]='data.type' [dataSource]='types' id="type"
