@@ -30,6 +30,8 @@ export class ScheduleTableCreatorComponent implements OnInit {
   public freightrules: Object;
   public pageSettings: Object;
   public editparams: Object;
+  public scrollSettings: Object;
+  public heightTable: string;
 
   public ngOnInit(): void {
     this.editSettings = {allowEditing: true, allowAdding: true, allowDeleting: true, mode: 'Dialog'};
@@ -39,6 +41,8 @@ export class ScheduleTableCreatorComponent implements OnInit {
     this.freightrules = {required: true};
     this.editparams = {params: {popupHeight: '300px'}};
     this.pageSettings = {pageCount: 5};
+    this.scrollSettings = { width: 'auto', height: '100%' };
+    this.heightTable= '400px';
   }
 
   actionBegin(args: { requestType: string, action: string, data: any, rowData: any, cancel?: boolean }): void {

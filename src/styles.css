@@ -356,6 +356,6 @@ body,
   display: block;
   height: 100%;
   margin: 0;
-  overflow: hidden;
+  /*overflow: hidden;*/
   width: 100%;
 }

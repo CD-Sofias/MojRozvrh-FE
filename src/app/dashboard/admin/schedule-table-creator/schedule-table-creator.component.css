@@ -50,6 +50,12 @@ tbody {
   content: "\e33f";
 }
 
+/*:host {*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*}*/
+
+
 
 
 

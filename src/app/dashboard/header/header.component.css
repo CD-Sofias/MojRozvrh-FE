@@ -58,6 +58,22 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.e-icons {
+  font-family: 'e-icons', serif;
+  speak: none;
+  font-size: 55px;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.e-agenda-date-range::before {
+  content:'\e31d';
+}
+
 .e-edit-3::before {
   content: "\e944";
 }
@@ -150,10 +166,6 @@
 }
 
 
-.e-agenda-date-range:before {
-  content:'\e31d';
-
-}
 
 .e-accordion .e-acrdn-item .e-acrdn-panel .e-acrdn-content {
   padding: 0.8rem 2rem 0.8rem 2rem;
@@ -168,4 +180,8 @@
   border-color: rgba(0, 0, 0, 0);
   box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
   color: #FFFFFF;
+}
+
+.e-dropdown-popup ul {
+  min-width: 150px;
 }

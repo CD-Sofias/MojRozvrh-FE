@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TeacherComponent} from './teacher/teacher.component';
 import {FacultyComponent} from './faculty/faculty.component';
-import {GridAllModule} from "@syncfusion/ej2-angular-grids";
+import {GridAllModule, GridModule} from "@syncfusion/ej2-angular-grids";
 import {ToastAllModule} from "@syncfusion/ej2-angular-notifications";
 import {ScheduleTableCreatorComponent} from "./schedule-table-creator.component";
 import {ButtonModule} from "@syncfusion/ej2-angular-buttons";
@@ -26,9 +26,9 @@ import {ScheduleModule} from "@syncfusion/ej2-angular-schedule";
     DepartmentComponent,
     ScheduleTableCreatorComponent,
     AddressesComponent,
-    ClassroomsComponent,
     SubjectsComponent,
-    ScheduleCellComponent
+    ScheduleCellComponent,
+    ClassroomsComponent
   ],
   imports: [
     CommonModule,
@@ -44,6 +44,7 @@ import {ScheduleModule} from "@syncfusion/ej2-angular-schedule";
     DateTimePickerModule,
     FormsModule,
     ScheduleModule,
+    GridModule
   ],
   exports: [
   ]
