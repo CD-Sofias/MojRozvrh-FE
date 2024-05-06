@@ -1,5 +1,32 @@
-import {Component, ElementRef, Renderer2, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  ActionEventArgs,
+  DragAndDropService,
+  EventSettingsModel as OriginalEventSettingsModel, PopupOpenEventArgs,
+  ResizeService,
+  ScheduleComponent as EJ2ScheduleComponent,
+  TimelineViewsService,
+  View
+} from '@syncfusion/ej2-angular-schedule';
+import {TextBoxComponent,} from '@syncfusion/ej2-angular-inputs';
+import {DatePickerComponent,} from '@syncfusion/ej2-angular-calendars';
+import {AutoCompleteComponent, DropDownListComponent, FilteringEventArgs,} from '@syncfusion/ej2-angular-dropdowns';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  Renderer2,
+  SimpleChanges,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
+import {EmitType, extend, isNullOrUndefined} from '@syncfusion/ej2-base';
+import {ChangeEventArgs} from '@syncfusion/ej2-calendars';
+import {Query} from '@syncfusion/ej2-data';
 import {Title} from "@angular/platform-browser";
+import {FieldOptionsModel} from "@syncfusion/ej2-schedule";
+import {DialogUtility} from "@syncfusion/ej2-popups";
 import {SubjectService} from "../../../../services/subject.service";
 import {TeacherService} from "../../../../services/teacher.service";
 import {ClassroomService} from "../../../../services/classroom.service";
@@ -8,25 +35,10 @@ import {ScheduleCellService} from "../../../../services/schedule-cell.service";
 import {UserService} from "../../../../services/user.service";
 import {ScheduleService} from "../../../../services/schedule.service";
 import {ScheduleCell, ScheduleCellCreate} from "../../../../types/scheduleCell";
-import {AutoCompleteComponent, DropDownListComponent, FilteringEventArgs} from "@syncfusion/ej2-angular-dropdowns";
 import {Subject} from "../../../../types/subject";
 import {Teacher} from "../../../../types/teacher";
 import {Group} from "../../../../types/group";
 import {Classroom} from "../../../../types/classroom";
-import {
-  ScheduleComponent as EJ2ScheduleComponent
-} from "@syncfusion/ej2-angular-schedule/src/schedule/schedule.component";
-import {EmitType, extend, isNullOrUndefined} from "@syncfusion/ej2-base";
-import {Query} from "@syncfusion/ej2-data";
-import {ActionEventArgs, PopupOpenEventArgs, View} from "@syncfusion/ej2-angular-schedule";
-import {TextBoxComponent} from "@syncfusion/ej2-angular-inputs";
-import {DatePickerComponent} from "@syncfusion/ej2-angular-calendars";
-import {ChangeEventArgs} from "@syncfusion/ej2-calendars";
-import {DialogUtility} from "@syncfusion/ej2-popups";
-import {FieldOptionsModel} from "@syncfusion/ej2-schedule";
-import {
-  EventSettingsModel as OriginalEventSettingsModel
-} from "@syncfusion/ej2-schedule/src/schedule/models/event-settings-model";
 
 interface MyEventFields {
   myNewField?: string;
@@ -42,10 +54,13 @@ interface EventSettingsModel extends OriginalEventSettingsModel {
 @Component({
   selector: 'app-schedule-cell',
   templateUrl: './schedule-cell.component.html',
-  styleUrl: './schedule-cell.component.css'
+  styleUrl: './schedule-cell.component.css',
+  encapsulation: ViewEncapsulation.None,
+  providers: [TimelineViewsService, ResizeService, DragAndDropService],
+
 })
 
-export class ScheduleCellComponent {
+export class ScheduleCellComponent implements OnInit{
   constructor(private titleService: Title,
               private renderer: Renderer2,
               private subjectService: SubjectService,
@@ -384,46 +399,40 @@ export class ScheduleCellComponent {
 
 
 
-  public onActionBegin(args: ActionEventArgs): void {
-    console.log(args)
-    if (args.requestType === 'eventCreate' || args.requestType === 'eventChange') {
-      const data: Record<string, any> = args.data instanceof Array ? args.data[0] : args.data;
+public onActionBegin(args: ActionEventArgs): void {
+  if (args.requestType === 'eventCreate' || args.requestType === 'eventChange') {
+    const data: Record<string, any> = args.data instanceof Array ? args.data[0] : args.data;
 
-      console.log(data)
+    if (!this.scheduleObj.isSlotAvailable(data.StartTime as Date, data.EndTime as Date)) {
+      console.log('Slot is not available')
+      args.cancel = true;
+    }
 
-      if (!this.scheduleObj.isSlotAvailable(data.StartTime as Date, data.EndTime as Date)) {
-        console.log('Slot is not available')
+    let scheduleCell: ScheduleCellCreate = {
+      groupId: data.group_id,
+      subjectId: data.subject_id,
+      teacherId: data.teacher_id,
+      classroomId: data.classroom_id,
+      startTime: data.StartTime,
+      endTime: data.EndTime,
+      scheduleId: data.id
+    };
+
+    this.scheduleCellService.createScheduleCell(scheduleCell).subscribe({
+      next: () => {
+        console.log('Schedule cell created');
+      },
+      error: (error) => {
+        console.error('Error creating schedule cell', error);
         args.cancel = true;
       }
-
-      console.log(data, 'data')
-      let scheduleCell: ScheduleCellCreate = {
-        groupId: data.group_id,
-        subjectId: data.subject_id,
-        teacherId: data.teacher_id,
-        classroomId: data.classroom_id,
-        startTime: data.StartTime,
-        endTime: data.EndTime,
-        scheduleId: data.id
-      };
-
-      console.log(args.requestType)
-
-      this.scheduleCellService.createScheduleCell(scheduleCell).subscribe({
-        next: () => {
-          console.log('Schedule cell created');
-        },
-        error: (error) => {
-          console.error('Error creating schedule cell', error);
-          args.cancel = true;
-        }
-      });
-    }
-    if (args.requestType === 'eventRemove') {
-      args.cancel = true;
-      this.deleteScheduleCell(args.data[0].id);
-    }
+    });
   }
+  if (args.requestType === 'eventRemove') {
+    args.cancel = true;
+    this.deleteScheduleCell(args.data[0].id);
+  }
+}
 
 
   public getHeaderStyles(data: { [key: string]: Object }): Object {
@@ -434,16 +443,18 @@ export class ScheduleCellComponent {
     }
   }
 
-  public promptBtnClick = (): void => {
-    this.dialogObj = DialogUtility.confirm({
-      title: 'Save to your schedule',
-      content: 'Select your schedule: <ejs-dropdownlist id="eventTypeSearch" #eventTypeSearchObj [dataSource]="eventTypeData" [fields]="eventTypeFields" [placeholder]="eventTypeWatermark" [index]="0" [change]="onChange($event)" [filtering]="onFiltering" [value]="value" [popupHeight]="popupHeight" [popupWidth]="popupWidth"></ejs-dropdownlist>',
-      okButton: { click:this.promptOkAction.bind(this)},
-      cancelButton: { click:this.promptCancelAction.bind(this)},
-      position: { X: 'center', Y: 'center' },
-      closeOnEscape: true
-    });
-  };
+  // public promptBtnClick = (): void => {
+  //   this.dialogObj = DialogUtility.confirm({
+  //     title: 'Save to your schedule',
+  //     content: 'Select your schedule: <ejs-dropdownlist id="eventTypeSearch" #eventTypeSearchObj [dataSource]="eventTypeData" [fields]="eventTypeFields" [placeholder]="eventTypeWatermark" [index]="0" [change]="onChange($event)" [filtering]="onFiltering" [value]="value" [popupHeight]="popupHeight" [popupWidth]="popupWidth"></ejs-dropdownlist>',
+  //     okButton: { click:this.promptOkAction.bind(this)},
+  //     cancelButton: { click:this.promptCancelAction.bind(this)},
+  //     position: { X: 'center', Y: 'center' },
+  //     closeOnEscape: true
+  //   });
+  // };
+
+
 
   private promptOkAction(): void {
     let value:string ;

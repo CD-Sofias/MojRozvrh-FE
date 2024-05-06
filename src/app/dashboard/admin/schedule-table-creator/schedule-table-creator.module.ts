@@ -18,6 +18,7 @@ import {DashboardModule} from "../../dashboard.module";
 import {ScheduleCellComponent} from "./schedule-cell/schedule-cell.component";
 import {DateTimePickerModule} from "@syncfusion/ej2-angular-calendars";
 import {ScheduleModule} from "@syncfusion/ej2-angular-schedule";
+import {SearchComponent} from "../../search/search.component";
 
 @NgModule({
   declarations: [
@@ -28,8 +29,8 @@ import {ScheduleModule} from "@syncfusion/ej2-angular-schedule";
     AddressesComponent,
     SubjectsComponent,
     ScheduleCellComponent,
-    ClassroomsComponent
-  ],
+    ClassroomsComponent,
+    ],
   imports: [
     CommonModule,
     ScheduleTableCreatorRoutingModule,
@@ -44,7 +45,7 @@ import {ScheduleModule} from "@syncfusion/ej2-angular-schedule";
     DateTimePickerModule,
     FormsModule,
     ScheduleModule,
-    GridModule
+    GridModule,
   ],
   exports: [
   ]

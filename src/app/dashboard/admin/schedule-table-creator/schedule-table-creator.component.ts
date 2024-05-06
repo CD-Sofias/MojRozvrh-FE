@@ -1,11 +1,13 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ToastComponent} from "@syncfusion/ej2-angular-notifications";
 import {EditSettingsModel} from "@syncfusion/ej2-angular-grids";
+import {Schedule} from "../../../types/schedule";
+import {ScheduleCell} from "../../../types/scheduleCell";
 
 @Component({
   selector: 'app-schedule-table-creator',
   templateUrl: './schedule-table-creator.component.html',
-  styleUrls: ['./schedule-table-creator.component.css']
+  styleUrls: ['./schedule-table-creator.component.css'],
 })
 export class ScheduleTableCreatorComponent implements OnInit {
   @ViewChild('toasttype')
@@ -55,5 +57,12 @@ export class ScheduleTableCreatorComponent implements OnInit {
         }
       }, 0);
     }
+  }
+
+  public scheduleData: Schedule[] = [];
+  public scheduleCells: ScheduleCell[] = [];
+
+  getData(data: ScheduleCell[]): void {
+    this.scheduleCells = data;
   }
 }
