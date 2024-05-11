@@ -7,7 +7,7 @@
                   [currentView]="currentView" [endHour]='endHour' [eventSettings]="eventSettings"
                   [rowAutoHeight]='rowAutoHeight'
                   [selectedDate]="selectedDate" [startHour]='startHour' [showWeekend]="showWeekend" class="rounded-2xl" cssClass='adaptive-rows'
-                  height='100vh' id='schedule' width='100%' [readonly]="true">
+                  height='90vh' id='schedule' width='100%' [readonly]="true">
 
       <e-views>
         <e-view option="Day"></e-view>
@@ -29,7 +29,8 @@
 
         <ng-template #eventSettingsTemplate let-data>
           <div [ngStyle]="{'background-color': getSubjectColor(data.subject_type)}" class="template-wrap p-4">
-            <div class="mb-2"><h6 class="mb-1">{{ data.teacher.name }} {{data.teacher.surname}}</h6></div>
+            <div class="mb-2"><h6 class="mb-1">{{ data.teacher.name }}</h6></div>
+            <div class="mb-2"><h6 class="mb-1">{{data.teacher.surname}}</h6></div>
             <div class="mb-2"><h5 class="mb-1">{{ data.subject.name }}</h5></div>
             <div class="classroom-type">
               <h6 class="mb-1">{{ data.classroom.code }}</h6>

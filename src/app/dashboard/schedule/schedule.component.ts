@@ -65,7 +65,6 @@ export class ScheduleComponent implements OnInit {
 
 
   constructor(private titleService: Title,
-              private renderer: Renderer2,
               private subjectService: SubjectService,
               private teacherService: TeacherService,
               private classroomService: ClassroomService,
@@ -396,6 +395,11 @@ public createScheduleModalComponent: CreateScheduleModalComponent;
     return teacher ? teacher.name : id;
   }
 
+  getTeacherSurnameById(id: string): string {
+    const teacher = this.teachers.find(teacher => teacher.id === id)
+    return teacher ? teacher.surname : id;
+  }
+
   getClassroomNameById(id: string): string {
     const classroom = this.classrooms.find(classroom => classroom.id === id)
     return classroom ? classroom.code : id;
@@ -449,7 +453,6 @@ public createScheduleModalComponent: CreateScheduleModalComponent;
     }
   }
 
-
   public getHeaderStyles(data: { [key: string]: Object }): Object {
     if (data['elementType'] === 'cell') {
       return {'align-items': 'center', 'color': '#919191'};
@@ -460,20 +463,34 @@ public createScheduleModalComponent: CreateScheduleModalComponent;
   protected addToMySchedule(){
     this.promptBtnClick();
   }
-
-public promptBtnClick = (): void => {
-  this.generateScheduleContent().subscribe(content => {
-    this.dialogObj = DialogUtility.alert({
-      title: 'Save to your schedule',
-      content: content,
-      okButton: { click: this.promptOkAction.bind(this) },
-      showCloseIcon: true,
-      closeOnEscape: true,
-      position: { X: 'center', Y: 'center' }
-    });
-  });
-};
   mySchedules: Observable<Schedule[]>;
+
+  public promptBtnClick = (): void => {
+    this.generateScheduleContent().subscribe(content => {
+      this.dialogObj = DialogUtility.alert({
+        title: 'Save to your schedule',
+        content: content,
+        okButton: { click: this.promptOkAction.bind(this) },
+        showCloseIcon: true,
+        closeOnEscape: true,
+        position: { X: 'center', Y: 'center' }
+      });
+
+      // Добавьте обработчик событий к родительскому элементу с задержкой
+      setTimeout(() => {
+        document.querySelector('.e-dlg-container').addEventListener('click', this.handleButtonClick.bind(this));
+      }, 0);
+    });
+  };
+
+  handleButtonClick(event: Event): void {
+    // Проверьте, была ли нажата кнопка
+    if ((event.target as Element).classList.contains('dlgbtn')) {
+      // Получите ID расписания из атрибута data-schedule-id кнопки
+      const scheduleId = (event.target as Element).getAttribute('data-schedule-id');
+      this.promptOkAction(scheduleId);
+    }
+  }
 
   generateScheduleContent(): Observable<string> {
     return this.mySchedules.pipe(
@@ -482,16 +499,15 @@ public promptBtnClick = (): void => {
         schedules.forEach(schedule => {
           content += `
         <div class="mb-4">
-<div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+          <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
             <div class="p-6">
               <div class="flex items-center justify-between">
                 <div>
                   <h2 class="text-lg font-semibold">${schedule.name}</h2>
-                  <p class="text-sm text-gray-500">${schedule.updatedAt}</p>
                 </div>
-                  <button ejs-button cssClass="e-danger dlgbtn" #confirmButton (click)="promptOkAction('${schedule.id}')">
-                    Save to this schedule
-                  </button>
+                <button ejs-button cssClass="e-danger dlgbtn" data-schedule-id="${schedule.id}">
+                  Save to this schedule
+                </button>
               </div>
             </div>
           </div>
@@ -503,9 +519,12 @@ public promptBtnClick = (): void => {
     );
   }
 
+
+
 selectedScheduleId: string;
 promptOkAction(id: string): void {
   this.selectedScheduleId = id;
+  console.log(1);
   let value: string = this.selectedScheduleId;
   if (!value) {
     console.error("No schedule selected");
@@ -517,10 +536,39 @@ promptOkAction(id: string): void {
       next: () => {
         console.log('Schedule cell deleted');
         this.scheduleObj.closeQuickInfoPopup();
+        this.updateData();
       },
       error: (error) => {
         console.error('Error deleting schedule cell', error);
       }
     })
   }
+
+  updateData(): void {
+    this.userService.getUsersInfo().subscribe(user => {
+      this.userID = user.id;
+      this.mySchedules = this.scheduleService.getSchedulesByUserId(this.userID);
+    });
+
+    if (this.scheduleData) {
+      this.data = this.scheduleData.map(scheduleCell => {
+        return {
+          id: scheduleCell.id,
+          teacher_id: scheduleCell.teacher.id,
+          subject_id: scheduleCell.subject.id,
+          group_id: scheduleCell.group.id,
+          classroom_id: scheduleCell.classroom.id,
+          subject_type: scheduleCell.subject.type,
+          StartTime: scheduleCell.startTime,
+          EndTime: scheduleCell.endTime,
+        };
+      })
+    }
+
+    this.eventSettings = {
+      dataSource: extend([], this.data, null, true) as Record<string, any>[],
+      fields: this.eventSettings.fields
+    };
+  }
+
 }
