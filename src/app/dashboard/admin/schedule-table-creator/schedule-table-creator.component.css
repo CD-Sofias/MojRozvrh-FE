@@ -38,6 +38,10 @@ tbody {
   content: "\e358";
 }
 
+.e-table::before {
+  content: "\e705";
+}
+
 .e-justify::before {
   content: "\e334";
 }
@@ -45,6 +49,12 @@ tbody {
 .increase-indent::before {
   content: "\e33f";
 }
+
+/*:host {*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*}*/
+
 
 
 

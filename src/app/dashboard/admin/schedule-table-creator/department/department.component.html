@@ -1,6 +1,6 @@
 <div class="control-section rounded-2xl">
   <ejs-grid (actionBegin)="actionBegin($event)" [allowSorting]='true' [dataSource]='data' [editSettings]='editSettings'
-            [toolbar]='toolbar'>
+            [toolbar]='toolbar' height='100vh' rowHeight='38'>
     <e-columns>
       <e-column [validationRules]='customeridrules' allowEditing='true' field='name' headerText='Department Name'
                 width='120'></e-column>

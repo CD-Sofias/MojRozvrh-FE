@@ -31,6 +31,7 @@ export class DepartmentComponent extends ScheduleTableCreatorComponent {
   public filterPlaceholder: string = 'Search';
 
 
+
   onFiltering(event: FilteringEventArgs): void {
     let query: Query = new Query();
     query = (event.text !== '') ? query.where('name', 'startswith', event.text, true) : query;
@@ -110,6 +111,7 @@ export class DepartmentComponent extends ScheduleTableCreatorComponent {
     super.ngOnInit();
     this.getDepartments();
     this.getFaculties();
+
   }
 
   actionBegin(args: { requestType: string, action: string, data: any, rowData: any, cancel?: boolean }): void {

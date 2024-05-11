@@ -3,8 +3,8 @@
     <div class="row">
       <div class="col-md-12">
         <ejs-appbar class="bg-purple-500">
-          <img alt="logo" class="h-16 w-16 mr-3" src="assets/img/logo.png">
-          <span class="regular text-3xl"><b>MySchedule</b></span>
+          <img alt="logo" class="logo_img h-16 w-16 mr-3" routerLink="/schedule" src="assets/img/logo.png">
+          <span class="logo_text regular text-3xl" routerLink="/schedule"><b>MySchedule</b></span>
 
           <div class="e-appbar-spacer"></div>
           <div class="flex gap-5">
@@ -14,7 +14,7 @@
                 <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="{{item.text}}"
                         cssClass="e-flat schedule-btn header-btn" ejs-button
                         iconCss="{{item.iconCss}}"
-                        iconPosition="Left" [routerLink]="item.url" routerLinkActive="active">
+                        iconPosition="Left" [routerLink]="item.url"  routerLinkActive="active">
                 </button>
               </ng-container>
 

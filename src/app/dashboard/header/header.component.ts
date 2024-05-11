@@ -40,6 +40,7 @@ export class HeaderComponent implements OnInit {
 
   isSmallScreen: boolean;
   username: string;
+  role: string;
 
   constructor(private breakpointObserver: BreakpointObserver,
               private userService: UserService, private authService: AuthService, private router: Router) {
@@ -55,13 +56,18 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    if (this.authService.isAuthenticated()) {
-      this.userService.getUsersInfo().subscribe(user => {
-        this.username = user.username;
-      });
-    }
+ngOnInit(): void {
+  if (this.authService.isAuthenticated()) {
+    this.userService.getUsersInfo().subscribe(user => {
+      this.username = user.username;
+      this.role = user.role;
+
+      if (this.role !== 'ADMIN') {
+        this.items = this.items.filter(item => item.text !== 'Admin panel');
+      }
+    });
   }
+}
 
   public select(args: MenuEventArgs) {
     if (args.item.text === 'Log Out') {
