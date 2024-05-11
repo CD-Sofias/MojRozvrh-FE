@@ -13,7 +13,7 @@ body {
   justify-content: center !important;
   flex-direction: column !important;
   color: #989C9D;
-  background: #090D0E url("assets/img/bg.png") no-repeat center center fixed;
+  background: #090D0E url("assets/img/bg.jpg") no-repeat center center fixed;
   background-size: cover;
   font-family: "Roboto", "Segoe UI", "GeezaPro", "DejaVu Serif", "sans-serif", "-apple-system", "BlinkMacSystemFont";
 }

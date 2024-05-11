@@ -15,7 +15,6 @@ import {AuthService} from "../../auth/auth.service";
 export class HeaderComponent implements OnInit {
 
   public items: ItemModel[] = [
-
     {
       text: 'Admin panel',
       iconCss: 'e-icons e-edit-3',
@@ -57,14 +56,18 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    if (this.authService.isAuthenticated()) {
-      this.userService.getUsersInfo().subscribe(user => {
-        this.username = user.username;
-        this.role = user.role;
-      });
-    }
+ngOnInit(): void {
+  if (this.authService.isAuthenticated()) {
+    this.userService.getUsersInfo().subscribe(user => {
+      this.username = user.username;
+      this.role = user.role;
+
+      if (this.role !== 'ADMIN') {
+        this.items = this.items.filter(item => item.text !== 'Admin panel');
+      }
+    });
   }
+}
 
   public select(args: MenuEventArgs) {
     if (args.item.text === 'Log Out') {
