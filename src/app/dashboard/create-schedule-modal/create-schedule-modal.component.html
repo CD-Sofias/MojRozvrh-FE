@@ -4,11 +4,11 @@
     <div #container class='root-container'></div>
     <ejs-dialog id='dialog-container' #modalDialog (open)='dialogOpen()' (overlayClick)="onOverlayClick()"
                 [height]='height'
-                [content]='content'
                 [header]='header'
                 [visible]='visible'
                 [isModal]='isModal'
                 [width]='width'>
+
 
       <ng-template #content>
         <div class="form-group template flex flex-col h-auto min-h-[100px]">

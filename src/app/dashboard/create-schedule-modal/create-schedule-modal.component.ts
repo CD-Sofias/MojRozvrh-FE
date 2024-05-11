@@ -1,11 +1,12 @@
-import {Component, ElementRef, inject, Input, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {DialogComponent} from "@syncfusion/ej2-angular-popups";
-import {ButtonComponent, ButtonModel, CheckBoxComponent} from "@syncfusion/ej2-angular-buttons";
+import { ButtonModel} from "@syncfusion/ej2-angular-buttons";
 import {AnimationSettingsModel} from "@syncfusion/ej2-splitbuttons";
-import {detach, EmitType, isNullOrUndefined} from "@syncfusion/ej2-base";
+import {EmitType} from "@syncfusion/ej2-base";
 import {ScheduleService} from "../../services/schedule.service";
 import {ScheduleCell} from "../../types/scheduleCell";
 import {Router} from "@angular/router";
+import {ScheduleComponent} from "../schedule/schedule.component";
 
 @Component({
   selector: 'app-create-schedule-modal',
@@ -13,6 +14,9 @@ import {Router} from "@angular/router";
   styleUrl: './create-schedule-modal.component.css'
 })
 export class CreateScheduleModalComponent implements OnInit {
+
+  @ViewChild('scheduleComponent')
+  public scheduleComponent: ScheduleComponent;
 
 
   @ViewChild('modalDialog')
@@ -24,8 +28,8 @@ export class CreateScheduleModalComponent implements OnInit {
 
   public target: string = '#modalTarget';
   public width: string = '335px';
-  public header: string = 'Software Update';
-  public content: string = 'Your current software version is up to date.';
+  public header: string = 'Save to your schedule';
+  // public content: string = 'Your current software version is up to date.';
   public isModal: Boolean = true;
   public animationSettings: AnimationSettingsModel = { effect: 'None' };
   public opened: Boolean = false;
@@ -91,6 +95,17 @@ public dlgButtonClick = (): void => {
     this.targetElement = this.container.nativeElement.parentElement;
   }
 
+  public eventTypeData: { [key: string]: Object }[] = [
+    { Id: '1', Name: 'Schedule 1' },
+    { Id: '2', Name: 'Schedule 2' },
+    // ... другие расписания ...
+  ];
+  public eventTypeFields: Object = { text: 'Name', value: 'Id' };
+  public eventTypeWatermark: string = 'Select your schedule';
+  public popupHeight: string = '200px';
+  public popupWidth: string = '300px';
+
+
 
 
 
@@ -98,7 +113,6 @@ public dlgButtonClick = (): void => {
 
   onSaveDialog() {
     this.modalDialog.hide();
-
   }
 
 

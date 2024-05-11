@@ -13,7 +13,6 @@ import {AutoCompleteComponent, DropDownListComponent, FilteringEventArgs,} from 
 import {
   Component,
   ElementRef,
-  Input,
   OnInit,
   Renderer2,
   SimpleChanges,
@@ -21,6 +20,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {EmitType, extend, isNullOrUndefined} from '@syncfusion/ej2-base';
+import { map } from 'rxjs/operators';
 import {ChangeEventArgs} from '@syncfusion/ej2-calendars';
 import {Query} from '@syncfusion/ej2-data';
 import {Title} from "@angular/platform-browser";
@@ -38,6 +38,9 @@ import {Group} from "../../types/group";
 import {Classroom} from "../../types/classroom";
 import {ScheduleService} from "../../services/schedule.service";
 import {DialogUtility} from "@syncfusion/ej2-popups";
+import {CreateScheduleModalComponent} from "../create-schedule-modal/create-schedule-modal.component";
+import {Observable} from "rxjs";
+import {Schedule} from "../../types/schedule";
 
 interface MyEventFields {
   myNewField?: string;
@@ -69,7 +72,7 @@ export class ScheduleComponent implements OnInit {
               private groupService: GroupService,
               private scheduleCellService: ScheduleCellService,
               private userService: UserService,
-              private scheduleService: ScheduleService
+              private scheduleService: ScheduleService,
   ) {
   }
 
@@ -77,6 +80,9 @@ export class ScheduleComponent implements OnInit {
 
   public scheduleData: ScheduleCell[];
 
+
+@ViewChild(CreateScheduleModalComponent)
+public createScheduleModalComponent: CreateScheduleModalComponent;
 
   @ViewChild('sample')
   public AutoCompleteObj: AutoCompleteComponent;
@@ -117,8 +123,10 @@ export class ScheduleComponent implements OnInit {
     this.loadClassrooms();
     this.loadTeachers();
     this.loadSubjects();
+
     this.userService.getUsersInfo().subscribe(user => {
       this.userID = user.id;
+      this.mySchedules = this.scheduleService.getSchedulesByUserId(this.userID);
     });
 
     if (this.scheduleData) {
@@ -189,9 +197,6 @@ export class ScheduleComponent implements OnInit {
     };
     console.log(this.data);
     console.log(this.eventSettings)
-
-
-
   }
 
   ngOnChanges(changes: SimpleChanges){
@@ -452,25 +457,61 @@ export class ScheduleComponent implements OnInit {
       return {'background': '#F5F5F5', color: '#919191'};
     }
   }
+  protected addToMySchedule(){
+    this.promptBtnClick();
+  }
 
-  public promptBtnClick = (): void => {
-    this.dialogObj = DialogUtility.confirm({
+public promptBtnClick = (): void => {
+  this.generateScheduleContent().subscribe(content => {
+    this.dialogObj = DialogUtility.alert({
       title: 'Save to your schedule',
-      content: 'Select your schedule: <ejs-dropdownlist id="eventTypeSearch" #eventTypeSearchObj [dataSource]="eventTypeData" [fields]="eventTypeFields" [placeholder]="eventTypeWatermark" [index]="0" [change]="onChange($event)" [filtering]="onFiltering" [value]="value" [popupHeight]="popupHeight" [popupWidth]="popupWidth"></ejs-dropdownlist>',
-      okButton: { click:this.promptOkAction.bind(this)},
-      cancelButton: { click:this.promptCancelAction.bind(this)},
-      position: { X: 'center', Y: 'center' },
-      closeOnEscape: true
+      content: content,
+      okButton: { click: this.promptOkAction.bind(this) },
+      showCloseIcon: true,
+      closeOnEscape: true,
+      position: { X: 'center', Y: 'center' }
     });
-  };
+  });
+};
+  mySchedules: Observable<Schedule[]>;
 
-  private promptOkAction(): void {
-    let value:string ;
-    value = (document.getElementById("inputEle")as any).value;
+  generateScheduleContent(): Observable<string> {
+    return this.mySchedules.pipe(
+      map(schedules => {
+        let content = 'Select your schedule: <div class="px-4 py-2">\n';
+        schedules.forEach(schedule => {
+          content += `
+        <div class="mb-4">
+<div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+            <div class="p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h2 class="text-lg font-semibold">${schedule.name}</h2>
+                  <p class="text-sm text-gray-500">${schedule.updatedAt}</p>
+                </div>
+                  <button ejs-button cssClass="e-danger dlgbtn" #confirmButton (click)="promptOkAction('${schedule.id}')">
+                    Save to this schedule
+                  </button>
+              </div>
+            </div>
+          </div>
+        </div>\n`;
+        });
+        content += '</div>';
+        return content;
+      })
+    );
   }
-  private promptCancelAction(): void {
-    this.dialogObj.hide();
+
+selectedScheduleId: string;
+promptOkAction(id: string): void {
+  this.selectedScheduleId = id;
+  let value: string = this.selectedScheduleId;
+  if (!value) {
+    console.error("No schedule selected");
   }
+}
+
   deleteScheduleCell(id: string): void {
     this.scheduleCellService.deleteScheduleCell(id).subscribe({
       next: () => {
