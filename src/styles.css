@@ -80,10 +80,6 @@ h1, h2, h3 {
   font-size: x-large;
 }
 
-h4, h5, h6 {
-  color: #001126;
-  text-transform: uppercase;
-}
 
 .icon {
   fill: #44A39D;
@@ -330,14 +326,6 @@ form#reactive {
   transition: all 0.5s ease;
 }
 
-.e-btn.e-inherit[_ngcontent-ng-c1742823034], .e-btn.e-inherit[_ngcontent-ng-c1742823034], .e-btn.e-inherit[_ngcontent-ng-c1742823034], .e-btn.e-inherit.e-active[_ngcontent-ng-c1742823034], .e-css.e-btn.e-inherit[_ngcontent-ng-c1742823034], .e-css.e-btn.e-inherit[_ngcontent-ng-c1742823034], .e-css.e-btn.e-inherit[_ngcontent-ng-c1742823034], .e-css.e-btn.e-inherit.e-active[_ngcontent-ng-c1742823034] {
-  transition: all 0.5s ease;
-}
-
-.e-tbar-btn, .e-tbtn-txt, .e-control, .e-btn e-lib {
-  transition: all 0.5s ease;
-}
-
 tbody {
   cursor: pointer;
 }
@@ -360,4 +348,14 @@ label {
   .flex.items-center {
     font-size: 60%;
   }
+}
+
+html,
+body,
+#dialog-container {
+  display: block;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  width: 100%;
 }

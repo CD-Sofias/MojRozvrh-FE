@@ -1,9 +1,10 @@
-import {Component, ViewEncapsulation} from '@angular/core';
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { ItemModel } from '@syncfusion/ej2-angular-splitbuttons';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {BreakpointObserver} from '@angular/cdk/layout';
+import {ItemModel} from '@syncfusion/ej2-angular-splitbuttons';
 import {Router} from "@angular/router";
 import {UserService} from "../../services/user.service";
 import {MenuEventArgs} from "@syncfusion/ej2-navigations";
+import {AuthService} from "../../auth/auth.service";
 
 @Component({
   selector: 'app-header',
@@ -11,7 +12,7 @@ import {MenuEventArgs} from "@syncfusion/ej2-navigations";
   styleUrls: ['./header.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
 
   public items: ItemModel[] = [
     {
@@ -28,18 +29,20 @@ export class HeaderComponent {
   public scheduleItems: ItemModel[] = [
     {
       text: 'Schedule',
-      iconCss: 'e-icons e-agenda-date-range'
+      iconCss: 'e-icons e-agenda-date-range',
+      url: '/schedule'
     },
     {
       text: 'My schedule',
       iconCss: 'e-icons e-timeline-work-week',
+      url: '/my-schedule'
     }];
 
   isSmallScreen: boolean;
   username: string;
 
   constructor(private breakpointObserver: BreakpointObserver,
-              private userService: UserService, private router: Router) {
+              private userService: UserService, private authService: AuthService, private router: Router) {
     this.breakpointObserver.observe([
       '(max-width: 599px)'
     ]).subscribe(result => {
@@ -51,17 +54,22 @@ export class HeaderComponent {
       }
     });
   }
+
   ngOnInit(): void {
-    this.userService.getUsersInfo().subscribe(user => {
-      this.username = user.username;
-    });
+    if (this.authService.isAuthenticated()) {
+      this.userService.getUsersInfo().subscribe(user => {
+        this.username = user.username;
+      });
+    }
   }
 
-  public select (args: MenuEventArgs) {
+  public select(args: MenuEventArgs) {
     if (args.item.text === 'Log Out') {
       this.logout();
     } else if (args.item.text === 'Admin panel') {
-      this.router.navigate(['dashboard/admin-panel']);
+      this.router.navigate(['admin-panel']);
+    } else if (args.item.text === 'Login') {
+      this.router.navigate(['auth/login']);
     }
   }
 

@@ -1,0 +1,31 @@
+<!--<app-schedule [scheduleData]="mySchedules[2].scheduleCells"></app-schedule>-->
+<ng-container *ngIf="mySchedules">
+<div class="min-h-screen bg-white">
+  <div class="px-4 py-2 bg-[#f7f7f7]">
+<div class="px-4 py-2">
+  <div class="mb-4" *ngFor="let schedule of mySchedules | async">
+    <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+      <div class="p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-semibold">{{schedule.name}}</h2>
+            <p class="text-sm text-gray-500">{{schedule.updatedAt}}</p>
+          </div>
+          <div class="flex justify-between">
+            <div ejs-button class="inline-flex w-fit items-center mx-4"
+                 [routerLink]="['.', schedule.id]">
+              Open schedule
+            </div>
+            <button ejs-button cssClass="e-danger dlgbtn" #confirmButton (click)="confirmBtnClick(schedule.id)">Delete schedule</button>
+
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+</ng-container>

@@ -10,7 +10,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = authService.getAuthToken()
 
   if (!token) {
-    router.navigate(['auth/login']);
+
     return next(req);
   }
   const authReq = req.clone({
