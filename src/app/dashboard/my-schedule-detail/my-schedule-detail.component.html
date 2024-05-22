@@ -27,17 +27,17 @@
                         [ngTemplateOutlet]="eventContent"></ng-container>
         </ng-template>
 
-        <ng-template #eventSettingsTemplate let-data>
-          <div [ngStyle]="{'background-color': getSubjectColor(data.subject_type)}" class="template-wrap p-4">
-            <div class="mb-2"><h6 class="mb-1">{{ data.teacher.name }}</h6></div>
-            <div class="mb-2"><h6 class="mb-1">{{data.teacher.surname}}</h6></div>
-            <div class="mb-2"><h5 class="mb-1">{{ data.subject.name }}</h5></div>
-            <div class="classroom-type">
-              <h6 class="mb-1">{{ data.classroom.code }}</h6>
-              <h6>{{ data.subject.type }}</h6>
-            </div>
-          </div>
-        </ng-template>
+
+      <ng-template #eventSettingsTemplate let-data>
+        <div [ngStyle]="{'background-color': getSubjectColor(data.subject_type)}" class="template-wrap">
+          <div class="mb-4"><h4>{{ data.teacher.name }}</h4></div>
+          <div class="classroom-type"><h4 class="mb-4">{{data.teacher.surname}}</h4></div>
+          <div class="mb-4"><h4>{{ data.subject.name }}</h4></div>
+          <div class="mb-4"><h4>{{ data.classroom.code }}</h4></div>
+
+          <h4>{{ data.subject.type }}</h4>
+        </div>
+      </ng-template>
         <ng-template #eventContent let-data="data">
           <div class="quick-info-content">
             <div class="event-content">
