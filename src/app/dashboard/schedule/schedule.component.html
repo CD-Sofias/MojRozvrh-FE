@@ -1,21 +1,31 @@
 <app-header></app-header>
 <app-search (dataEvent)="getData($event)"></app-search>
 
-<div class="control-section" xmlns="http://www.w3.org/1999/html">
+<div class="control-section">
   <div class="content-wrapper">
     <app-create-schedule-modal [scheduleData]="scheduleData" [userID]="userID"></app-create-schedule-modal>
-    <ejs-schedule #scheduleObj (actionBegin)="onActionBegin($event)" [currentView]="currentView" [endHour]='endHour' [eventSettings]="eventSettings" [readonly]="false" [rowAutoHeight]='rowAutoHeight' [selectedDate]="selectedDate" [showWeekend]="showWeekend" [startHour]='startHour' class="rounded-2xl" cssClass='adaptive-rows' height='65vh' id='schedule' timezone="Europe/Bratislava" width='100%'>
+    <ejs-schedule #scheduleObj (actionBegin)="onActionBegin($event)" [currentView]="currentView" [endHour]='endHour'
+                  [eventSettings]="eventSettings" [readonly]="false" [rowAutoHeight]='rowAutoHeight'
+                  [selectedDate]="selectedDate" [showWeekend]="showWeekend" [startHour]='startHour' class="rounded-2xl"
+                  cssClass='adaptive-rows' height='65vh' id='schedule' timezone="Europe/Bratislava" width='100%'>
 
       <e-views>
         <e-view option="Day"></e-view>
         <e-view option="Week"></e-view>
 
         <ng-template #quickInfoTemplatesHeader let-data>
-          <div class="quick-info-header">
-            <div [ngStyle]="getHeaderStyles(data)" class="quick-info-header-content">
+          <div class="quick-info-header mt-4">
+            <div [ngStyle]="getHeaderStyles(data)" class="quick-info-header-content flex justify-end">
               <div class="quick-info-title"></div>
               <div class="duration-text"></div>
+              <button #ButtonInstance (click)="addToMySchedule(); onOpenDialog($event)" *ngIf="data.id"
+                      class='e-lib e-flat e-primary dlgbtn mr-5'
+                      ejs-button id='modalbtn'>
+                Add to my schedule
+              </button>
             </div>
+
+
           </div>
         </ng-template>
 
@@ -171,7 +181,9 @@
             <div class="event-content">
               <div>
                 <h5 class="font-bold mb-2 ">Teacher:</h5>
-                <div class="pr-4">{{ getTeacherNameById(data.teacher_id) }} {{ getTeacherSurnameById(data.teacher_id) }}</div>
+                <div
+                  class="pr-4">{{ getTeacherNameById(data.teacher_id) }} {{ getTeacherSurnameById(data.teacher_id) }}
+                </div>
                 <div class="pr-4"></div>
                 <h5 class="font-bold mt-4 mb-2">Subject:</h5>
                 <div class="pr-4">{{ getSubjectNameById(data.subject_id) }}</div>
@@ -190,28 +202,31 @@
             </div>
           </div>
         </ng-template>
-        <ng-template #quickInfoTemplatesFooter let-data>
-          <ng-container [ngTemplateOutlet]="eventFooter"
-                        [ngTemplateOutletContext]="{data:data}"></ng-container>
-        </ng-template>
-        <ng-template #eventFooter let-data="data">
-          <div class="e-event-footer">
-            <button #promptButton (click)="addToMySchedule()" [isPrimary]="true" class='dlgbtn' ejs-button>
-              Add to my schedule
-            </button>
-          </div>
-        </ng-template>
+        <!--        <ng-template #quickInfoTemplatesFooter let-data>-->
+        <!--          <ng-container [ngTemplateOutletContext]="{data:data}"-->
+        <!--                        [ngTemplateOutlet]="eventFooter"></ng-container>-->
+        <!--        </ng-template>-->
+
+        <!--        <ng-template #eventFooter let-data="data">-->
+        <!--          <div class="e-event-footer">-->
+        <!--            <button #ButtonInstance #promptButton (click)="addToMySchedule()" [isPrimary]="true" class='dlgbtn'-->
+        <!--                    ejs-button id='dlgbtn'>-->
+        <!--              Add to my schedule-->
+        <!--            </button>-->
+        <!--            -->
+        <!--          </div>-->
+        <!--        </ng-template>-->
 
 
         <ng-template #eventSettingsTemplate let-data>
-          <div [ngStyle]="{'background-color': getSubjectColor(data.subject_type)}" class="template-wrap p-4">
-            <div class="mb-2"><h6 class="mb-1">{{ getTeacherNameById(data.teacher_id) }}</h6></div>
-            <div class="mb-2"><h6 class="mb-1">{{getTeacherSurnameById(data.teacher_id)}}</h6></div>
-            <div class="mb-2"><h5 class="mb-1">{{ getSubjectNameById(data.subject_id) }}</h5></div>
-            <div class="classroom-type">
-              <h6 class="mb-1">{{ getClassroomNameById(data.classroom_id) }}</h6>
-            </div>
-            <h6>{{ getSubjectTypeById(data.subject_type) }}</h6>
+          <div (click)="onCellClick(data)" [ngStyle]="{'background-color': getSubjectColor(data.subject_type)}"
+               class="template-wrap p-4">
+            <div class="mb-4"><h4>{{ getSubjectNameById(data.subject_id) }}</h4></div>
+            <div class="classroom-type"><h4 class="mb-4">{{ getClassroomNameById(data.classroom_id) }}</h4></div>
+            <div class="mb-4"><h4>{{ getTeacherNameById(data.teacher_id) }}</h4></div>
+            <div class="mb-4"><h4>{{ getTeacherSurnameById(data.teacher_id) }}</h4></div>
+
+            <h4>{{ getSubjectTypeById(data.subject_type) }}</h4>
           </div>
         </ng-template>
 
@@ -314,6 +329,7 @@
                 <ejs-dropdownlist #teacher='ngModel'
                                   (filtering)='onFiltering($event)'
                                   [(ngModel)]="data.teacher_id"
+
                                   [allowFiltering]='true'
                                   [dataSource]='teacherDataSource'
                                   [fields]='teacherFields'
@@ -408,8 +424,47 @@
 
 
       </e-views>
+
     </ejs-schedule>
   </div>
+
+
+  <ejs-dialog #template (close)="dialogClose()" (overlayClick)="onOverlayClick()"
+              [animationSettings]='animationSettings'
+              [header]='header'
+              [height]='height' [isModal]='isModal'
+              [showCloseIcon]='showCloseIcon' [target]='target' [visible]='visible' [width]='width'>
+    <ng-template #content let-data="data">
+      <div class="template flex flex-col h-auto min-h-[100px]">
+
+        <div class="mb-4">
+          <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
+            <div class="p-6">
+              <div class="flex flex-col justify-between space-y-4">
+                <div *ngFor="let schedule of mySchedules | async" class="flex justify-between items-center">
+                  <h2 class="text-lg font-semibold text-xl">{{ schedule.name }}</h2>
+                  <button (click)="handleButtonClick($event)" [attr.data-schedule-id]="schedule.id"
+                          cssClass="e-danger dlgbtn"
+                          ejs-button> Save to this schedule
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ejs-dialog>
+
+  <ejs-toast #toasttype></ejs-toast>
+
+<!--  <ejs-dialog #LoadingDialog class="LoadingDialog" [showCloseIcon]="false">-->
+<!--    <ng-template #content  >-->
+<!--      <div class="LoadingDialogContent">-->
+<!--        <h1 class="loading-text">Loading...</h1>-->
+<!--        <img src="../../../assets/gif/loading.gif" alt="Loading..."></div>-->
+<!--    </ng-template>-->
+<!--  </ejs-dialog>-->
 </div>
 
 

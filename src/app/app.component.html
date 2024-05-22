@@ -1,2 +1,7 @@
-
-<router-outlet></router-outlet>
+<div *ngIf="loading" class="LoadingDialogContent">
+  <h1 class="loading-text">Loading...</h1>
+  <img src="../../../assets/gif/loading.gif" alt="Loading...">
+</div>
+<div class="h-full" *ngIf="!loading && initialized">
+  <router-outlet></router-outlet>
+</div>

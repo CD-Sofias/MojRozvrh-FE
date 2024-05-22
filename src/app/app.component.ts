@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import {RouterOutlet} from "@angular/router";
+import {AfterViewInit, Component} from '@angular/core';
+import {NavigationEnd, NavigationStart, Router, RouterOutlet} from "@angular/router";
 import {AuthModule} from "./auth/auth.module";
 import {registerLicense} from "@syncfusion/ej2-base";
 import {environment} from "../environments/environment.prod";
@@ -31,7 +31,24 @@ registerLicense(environment.registrationKey);
   ],
   standalone: true
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
+  loading = true;
+  initialized = false;
   title = 'MojRozvrh-FE';
 
+  constructor(private router: Router) {
+
+    // @ts-ignore
+    this.router.events.subscribe((event: Event) => {
+      if (event instanceof NavigationStart) {
+        this.loading = true;
+      } else if (event instanceof NavigationEnd) {
+        this.loading = false;
+      }
+    });
+  }
+
+  ngAfterViewInit() {
+    this.initialized = true;
+  }
 }

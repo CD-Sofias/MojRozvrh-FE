@@ -64,7 +64,7 @@ import { ScheduleComponent } from './schedule/schedule.component';
     RouterModule,
     AppBarAllModule, ButtonAllModule, DropDownButtonAllModule, MenuAllModule, ButtonModule, ToolbarModule,
     FormsModule, ScheduleAllModule, RecurrenceEditorAllModule, NumericTextBoxAllModule, TextBoxAllModule, DatePickerAllModule, TimePickerAllModule, DateTimePickerAllModule, CheckBoxAllModule, ToolbarAllModule, DropDownListAllModule, ContextMenuAllModule, MaskedTextBoxModule, UploaderAllModule, MultiSelectAllModule, TreeViewModule, ButtonAllModule, DropDownButtonAllModule, SwitchAllModule, ToastAllModule, AppBarModule, AutoCompleteModule, AccordionModule,
-    DashboardRoutingModule, DropDownListModule, DatePickerModule, GridModule, AutoCompleteModule, HttpClientModule, DialogModule, ToastModule
+    DashboardRoutingModule, DropDownListModule, DatePickerModule, GridModule, AutoCompleteModule, HttpClientModule, DialogModule, ToastAllModule
   ],
   exports: [
     HeaderComponent,

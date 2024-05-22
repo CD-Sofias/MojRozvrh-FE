@@ -1,7 +1,9 @@
 import {
   ActionEventArgs,
+  CellClickEventArgs,
   DragAndDropService,
-  EventSettingsModel as OriginalEventSettingsModel, PopupOpenEventArgs,
+  EventSettingsModel as OriginalEventSettingsModel,
+  PopupOpenEventArgs,
   ResizeService,
   ScheduleComponent as EJ2ScheduleComponent,
   TimelineViewsService,
@@ -10,17 +12,8 @@ import {
 import {TextBoxComponent,} from '@syncfusion/ej2-angular-inputs';
 import {DatePickerComponent,} from '@syncfusion/ej2-angular-calendars';
 import {AutoCompleteComponent, DropDownListComponent, FilteringEventArgs,} from '@syncfusion/ej2-angular-dropdowns';
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  Renderer2,
-  SimpleChanges,
-  ViewChild,
-  ViewEncapsulation
-} from '@angular/core';
+import {Component, ElementRef, OnInit, SimpleChanges, ViewChild, ViewEncapsulation} from '@angular/core';
 import {EmitType, extend, isNullOrUndefined} from '@syncfusion/ej2-base';
-import { map } from 'rxjs/operators';
 import {ChangeEventArgs} from '@syncfusion/ej2-calendars';
 import {Query} from '@syncfusion/ej2-data';
 import {Title} from "@angular/platform-browser";
@@ -37,10 +30,13 @@ import {Teacher} from "../../types/teacher";
 import {Group} from "../../types/group";
 import {Classroom} from "../../types/classroom";
 import {ScheduleService} from "../../services/schedule.service";
-import {DialogUtility} from "@syncfusion/ej2-popups";
 import {CreateScheduleModalComponent} from "../create-schedule-modal/create-schedule-modal.component";
 import {Observable} from "rxjs";
 import {Schedule} from "../../types/schedule";
+import {DialogComponent} from "@syncfusion/ej2-angular-popups";
+import {ButtonComponent} from "@syncfusion/ej2-angular-buttons";
+import {AnimationSettingsModel} from "@syncfusion/ej2-splitbuttons";
+import {ToastComponent} from "@syncfusion/ej2-angular-notifications";
 
 interface MyEventFields {
   myNewField?: string;
@@ -61,6 +57,8 @@ interface EventSettingsModel extends OriginalEventSettingsModel {
   providers: [TimelineViewsService, ResizeService, DragAndDropService]
 
 })
+
+
 export class ScheduleComponent implements OnInit {
 
 
@@ -75,13 +73,13 @@ export class ScheduleComponent implements OnInit {
   ) {
   }
 
-  public dialogObj;
+  public dialogObj: DialogComponent;
 
   public scheduleData: ScheduleCell[];
 
 
-@ViewChild(CreateScheduleModalComponent)
-public createScheduleModalComponent: CreateScheduleModalComponent;
+  @ViewChild(CreateScheduleModalComponent)
+  public createScheduleModalComponent: CreateScheduleModalComponent;
 
   @ViewChild('sample')
   public AutoCompleteObj: AutoCompleteComponent;
@@ -113,10 +111,19 @@ public createScheduleModalComponent: CreateScheduleModalComponent;
   public groupFields: Object = {value: 'Id', text: 'Name'};
 
 
-
   @ViewChild('scheduleObj') public scheduleObj!: EJ2ScheduleComponent;
 
+  public targetElement?: HTMLElement;
+  // public initilaizeTarget: EmitType<object> = () => {
+  //   this.targetElement = this.container.nativeElement.parentElement;
+  // }
+
+
+
   ngOnInit() {
+
+    // this.initilaizeTarget();
+
     this.titleService.setTitle('My schedule');
     this.loadGroups();
     this.loadClassrooms();
@@ -142,6 +149,7 @@ public createScheduleModalComponent: CreateScheduleModalComponent;
         };
       })
     }
+
 
     this.eventSettings = {
       dataSource: extend([], this.data, null, true) as Record<string, any>[],
@@ -194,11 +202,13 @@ public createScheduleModalComponent: CreateScheduleModalComponent;
         isAllDay: {name: 'is_all_day'}
       },
     };
-    console.log(this.data);
+    // console.log(this.data);
     console.log(this.eventSettings)
+
+    this.dialogObj.hide();
   }
 
-  ngOnChanges(changes: SimpleChanges){
+  ngOnChanges(changes: SimpleChanges) {
     if (changes.scheduleData) {
       this.data = this.scheduleData.map(scheduleCell => {
         return {
@@ -235,7 +245,6 @@ public createScheduleModalComponent: CreateScheduleModalComponent;
       })
     };
   }
-
 
 
   loadGroups(): void {
@@ -292,6 +301,7 @@ public createScheduleModalComponent: CreateScheduleModalComponent;
     query = (e.text !== '') ? query.where('code', 'contains', e.text, true) : query;
     e.updateData(dataSource, query);
   }
+
   public onPopupOpen(args: PopupOpenEventArgs): void {
     if (args.type === 'RecurrenceAlert') {
       args.cancel = true;
@@ -406,14 +416,31 @@ public createScheduleModalComponent: CreateScheduleModalComponent;
   }
 
 
-
   public showWeekend: boolean = false;
 
+  public toasts: { [key: string]: Object }[] = [
+  {
+    title: 'Success!',
+    content: 'Data has been saved successfully.',
+    cssClass: 'e-toast-success',
+    icon: 'e-success toast-icons'
+  },
+  {
+    title: 'Error!',
+    content: 'Failed to save data.',
+    cssClass: 'e-toast-danger',
+    icon: 'e-error toast-icons'
+  },
+  // ... остальные объекты toast
+];
+
+  @ViewChild('toasttype')
+  protected toastObj: ToastComponent;
 
 
 
   public onActionBegin(args: ActionEventArgs): void {
-    console.log(args)
+    // console.log(args)
     if (args.requestType === 'eventCreate' || args.requestType === 'eventChange') {
       const data: Record<string, any> = args.data instanceof Array ? args.data[0] : args.data;
 
@@ -460,76 +487,103 @@ public createScheduleModalComponent: CreateScheduleModalComponent;
       return {'background': '#F5F5F5', color: '#919191'};
     }
   }
-  protected addToMySchedule(){
-    this.promptBtnClick();
+
+  @ViewChild('template')
+  public Dialog: DialogComponent;
+
+  @ViewChild('ButtonInstance')
+  public dlgbtn: ButtonComponent;
+
+  @ViewChild('sendButton')
+  public sendButton: ElementRef;
+
+  @ViewChild('inVal')
+  public inVal: ElementRef;
+
+  @ViewChild('dialogText')
+  public dialogText: ElementRef;
+
+  public showCloseIcon: Boolean = true;
+  public height: string = '200px';
+  public target = '.control-section';
+  public animationSettings: AnimationSettingsModel = {effect: 'None'};
+  public width = '435px';
+  public isModal: Boolean = true;
+  public visible: Boolean = false;
+
+  public dialogClose = (): void => {
+    this.dlgbtn.element.style.display = '';
+
   }
+
+  // public dialogOpen = (): void => {
+  //   // this.dlgbtn.element.style.display = 'none';
+  // }
+
+
+  protected addToMySchedule() {
+    this.Dialog.show();
+    // this.Dialog.element.style.top = '40%';
+    this.Dialog.element.style.maxHeight = '100%';
+  }
+
+
+  public header: string = 'Save to your schedule';
   mySchedules: Observable<Schedule[]>;
 
-  public promptBtnClick = (): void => {
-    this.generateScheduleContent().subscribe(content => {
-      this.dialogObj = DialogUtility.alert({
-        title: 'Save to your schedule',
-        content: content,
-        okButton: { click: this.promptOkAction.bind(this) },
-        showCloseIcon: true,
-        closeOnEscape: true,
-        position: { X: 'center', Y: 'center' }
-      });
+  saveToSchedule(scheduleId: string, cellData: any): void {
+    this.scheduleService.addScheduleCell(scheduleId, cellData).subscribe({
+      next: () => {
+        this.toastObj.show(this.toasts[0]); // Показать тост об успешном сохранении
+        console.log('Cell saved to schedule');
 
-      // Добавьте обработчик событий к родительскому элементу с задержкой
-      setTimeout(() => {
-        document.querySelector('.e-dlg-container').addEventListener('click', this.handleButtonClick.bind(this));
-      }, 0);
+      },
+      error: (error) => {
+        this.toastObj.show(this.toasts[1]); // Показать тост об ошибке сохранения
+        console.error('Error saving cell to schedule', error);
+      }
     });
-  };
+  }
+
+  public isCellSelected: boolean = false;
+
 
   handleButtonClick(event: Event): void {
-    // Проверьте, была ли нажата кнопка
+    const scheduleId = (event.target as Element).getAttribute('data-schedule-id');
+    const cellData = this.selectedScheduleCell;
+    console.log(scheduleId, cellData)
     if ((event.target as Element).classList.contains('dlgbtn')) {
-      // Получите ID расписания из атрибута data-schedule-id кнопки
       const scheduleId = (event.target as Element).getAttribute('data-schedule-id');
-      this.promptOkAction(scheduleId);
+      const cellData = this.selectedScheduleCell; // Замените на реальные данные ячейки, которую вы хотите сохранить
+      this.saveToSchedule(scheduleId, cellData);
     }
   }
 
-  generateScheduleContent(): Observable<string> {
-    return this.mySchedules.pipe(
-      map(schedules => {
-        let content = 'Select your schedule: <div class="px-4 py-2">\n';
-        schedules.forEach(schedule => {
-          content += `
-        <div class="mb-4">
-          <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
-            <div class="p-6">
-              <div class="flex items-center justify-between">
-                <div>
-                  <h2 class="text-lg font-semibold">${schedule.name}</h2>
-                </div>
-                <button ejs-button cssClass="e-danger dlgbtn" data-schedule-id="${schedule.id}">
-                  Save to this schedule
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>\n`;
-        });
-        content += '</div>';
-        return content;
-      })
-    );
+  public selectedScheduleCell: string = '';
+
+  onCellClick(args: CellClickEventArgs): void {
+    const data = args as any;
+    this.selectedScheduleCell = data.id;
   }
 
+  public onOpenDialog = (event: any): void => {
+    this.Dialog.show();
+  };
 
-
-selectedScheduleId: string;
-promptOkAction(id: string): void {
-  this.selectedScheduleId = id;
-  console.log(1);
-  let value: string = this.selectedScheduleId;
-  if (!value) {
-    console.error("No schedule selected");
+  public onOverlayClick: EmitType<object> = () => {
+    this.Dialog.hide();
   }
-}
+
+  selectedScheduleId: string;
+
+  promptOkAction(id: string): void {
+    this.selectedScheduleId = id;
+    console.log(1);
+    let value: string = this.selectedScheduleId;
+    if (!value) {
+      console.error("No schedule selected");
+    }
+  }
 
   deleteScheduleCell(id: string): void {
     this.scheduleCellService.deleteScheduleCell(id).subscribe({
