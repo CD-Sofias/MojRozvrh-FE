@@ -9,7 +9,7 @@
 
 <div class="control-section">
   <div class="content-wrapper">
-    <app-create-schedule-modal [scheduleData]="scheduleData" [userID]="userID"></app-create-schedule-modal>
+    <app-create-schedule-modal [scheduleData]="scheduleData" [userID]="userID" *ngIf="userRole !== 'ADMIN'"></app-create-schedule-modal>
     <ejs-schedule #scheduleObj (actionBegin)="onActionBegin($event)" [currentView]="currentView" [endHour]='endHour'
                   [eventSettings]="eventSettings" [readonly]="false" [rowAutoHeight]='rowAutoHeight'
                   [selectedDate]="selectedDate" [showWeekend]="showWeekend" [startHour]='startHour' class="rounded-2xl"
@@ -19,21 +19,19 @@
         <e-view option="Day"></e-view>
         <e-view option="Week"></e-view>
 
-        <ng-template #quickInfoTemplatesHeader let-data>
-          <div class="quick-info-header mt-4">
-            <div [ngStyle]="getHeaderStyles(data)" class="quick-info-header-content flex justify-end">
-              <div class="quick-info-title"></div>
-              <div class="duration-text"></div>
-              <button #ButtonInstance (click)="addToMySchedule(); onOpenDialog($event)" *ngIf="data.id"
-                      class='e-lib e-flat e-primary dlgbtn mr-5'
-                      ejs-button id='modalbtn'>
-                Add to my schedule
-              </button>
-            </div>
-
-
-          </div>
-        </ng-template>
+<ng-template #quickInfoTemplatesHeader let-data>
+  <div class="quick-info-header mt-4">
+    <div [ngStyle]="getHeaderStyles(data)" class="quick-info-header-content flex justify-end">
+      <div class="quick-info-title"></div>
+      <div class="duration-text"></div>
+      <button #ButtonInstance (click)="addToMySchedule(); onOpenDialog($event)" *ngIf="data.id && userRole !== 'ADMIN'"
+              class='e-lib e-flat e-primary dlgbtn mr-5'
+              ejs-button id='modalbtn'>
+        Add to my schedule
+      </button>
+    </div>
+  </div>
+</ng-template>
 
 
         <ng-template #quickInfoTemplatesContent let-data>
