@@ -1,6 +1,6 @@
 import {Routes} from '@angular/router';
-import {DashboardComponent} from "./dashboard/dashboard.component";
 import {authGuard} from "./auth/auth.guard";
+import {DashboardComponent} from "./dashboard/dashboard.component";
 import {TeacherComponent} from "./dashboard/admin/schedule-table-creator/teacher/teacher.component";
 import {FacultyComponent} from "./dashboard/admin/schedule-table-creator/faculty/faculty.component";
 import {DepartmentComponent} from "./dashboard/admin/schedule-table-creator/department/department.component";
@@ -32,7 +32,7 @@ export const routes: Routes = [
     ]
   },
   {
-    path: 'admin-panel', component: ScheduleTableCreatorComponent, children: [
+    path: 'admin-panel', canActivate: [authGuard], component: ScheduleTableCreatorComponent, children: [
       {path: '', redirectTo: 'teachers', pathMatch: 'full'},
       {path: 'teachers', component: TeacherComponent},
       {path: 'faculties', component: FacultyComponent},

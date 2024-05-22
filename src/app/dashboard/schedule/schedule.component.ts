@@ -77,6 +77,8 @@ export class ScheduleComponent implements OnInit {
 
   public scheduleData: ScheduleCell[];
 
+  userRole: string;
+
 
   @ViewChild(CreateScheduleModalComponent)
   public createScheduleModalComponent: CreateScheduleModalComponent;
@@ -132,6 +134,7 @@ export class ScheduleComponent implements OnInit {
 
     this.userService.getUsersInfo().subscribe(user => {
       this.userID = user.id;
+      this.userRole = user.role;
       this.mySchedules = this.scheduleService.getSchedulesByUserId(this.userID);
     });
 

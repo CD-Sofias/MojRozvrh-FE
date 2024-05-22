@@ -65,6 +65,9 @@ ngOnInit(): void {
       if (this.role !== 'ADMIN') {
         this.items = this.items.filter(item => item.text !== 'Admin panel');
       }
+      if (this.role == 'ADMIN') {
+        this.scheduleItems = this.scheduleItems.filter(item => item.text !== 'My schedule');
+      }
     });
   }
 }
