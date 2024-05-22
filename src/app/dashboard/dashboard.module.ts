@@ -32,7 +32,7 @@ import {
   DropDownListModule,
   MultiSelectAllModule
 } from "@syncfusion/ej2-angular-dropdowns";
-import {ToastAllModule, ToastModule} from "@syncfusion/ej2-angular-notifications";
+import {ToastAllModule} from "@syncfusion/ej2-angular-notifications";
 import {DashboardRoutingModule} from "./dashboard-routing.module";
 import {DashboardComponent} from "./dashboard.component";
 import {GroupsComponent} from "./groups/groups.component";

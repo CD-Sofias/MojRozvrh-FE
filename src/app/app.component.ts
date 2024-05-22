@@ -7,7 +7,7 @@ import {NumericTextBoxModule, TextBoxModule} from "@syncfusion/ej2-angular-input
 import {DropDownListModule} from "@syncfusion/ej2-angular-dropdowns";
 import {CheckBoxModule} from "@syncfusion/ej2-angular-buttons";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {CommonModule} from "@angular/common";
+import {CommonModule, NgOptimizedImage} from "@angular/common";
 import {DashboardModule} from "./dashboard/dashboard.module";
 import {ScheduleTableCreatorModule} from "./dashboard/admin/schedule-table-creator/schedule-table-creator.module";
 
@@ -28,6 +28,7 @@ registerLicense(environment.registrationKey);
     CheckBoxModule,
     DropDownListModule,
     NumericTextBoxModule,
+    NgOptimizedImage,
   ],
   standalone: true
 })
