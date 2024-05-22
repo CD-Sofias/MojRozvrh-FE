@@ -32,13 +32,13 @@ import {
   DropDownListModule,
   MultiSelectAllModule
 } from "@syncfusion/ej2-angular-dropdowns";
-import {ToastAllModule, ToastModule} from "@syncfusion/ej2-angular-notifications";
+import {ToastAllModule} from "@syncfusion/ej2-angular-notifications";
 import {DashboardRoutingModule} from "./dashboard-routing.module";
 import {DashboardComponent} from "./dashboard.component";
 import {GroupsComponent} from "./groups/groups.component";
 import {GridModule} from "@syncfusion/ej2-angular-grids";
 import {HttpClientModule} from "@angular/common/http";
-import {MyScheduleComponent} from "./my-schedule/my-schedule.component";
+import {FormatDatePipe, MyScheduleComponent} from "./my-schedule/my-schedule.component";
 import {CreateScheduleModalComponent} from "./create-schedule-modal/create-schedule-modal.component";
 import {DialogModule} from "@syncfusion/ej2-angular-popups";
 import {SearchComponent} from "./search/search.component";
@@ -56,15 +56,17 @@ import { ScheduleComponent } from './schedule/schedule.component';
     CreateScheduleModalComponent,
     MyScheduleDetailComponent,
     SearchComponent,
+    FormatDatePipe,
   ],
   imports: [
+
     CommonModule,
     ReactiveFormsModule,
     ReactiveFormsModule,
     RouterModule,
     AppBarAllModule, ButtonAllModule, DropDownButtonAllModule, MenuAllModule, ButtonModule, ToolbarModule,
     FormsModule, ScheduleAllModule, RecurrenceEditorAllModule, NumericTextBoxAllModule, TextBoxAllModule, DatePickerAllModule, TimePickerAllModule, DateTimePickerAllModule, CheckBoxAllModule, ToolbarAllModule, DropDownListAllModule, ContextMenuAllModule, MaskedTextBoxModule, UploaderAllModule, MultiSelectAllModule, TreeViewModule, ButtonAllModule, DropDownButtonAllModule, SwitchAllModule, ToastAllModule, AppBarModule, AutoCompleteModule, AccordionModule,
-    DashboardRoutingModule, DropDownListModule, DatePickerModule, GridModule, AutoCompleteModule, HttpClientModule, DialogModule, ToastModule
+    DashboardRoutingModule, DropDownListModule, DatePickerModule, GridModule, AutoCompleteModule, HttpClientModule, DialogModule, ToastAllModule
   ],
   exports: [
     HeaderComponent,

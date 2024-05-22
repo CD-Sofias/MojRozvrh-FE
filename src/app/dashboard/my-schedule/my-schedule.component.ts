@@ -1,10 +1,24 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Pipe, PipeTransform} from '@angular/core';
 import {UserService} from "../../services/user.service";
 import {ScheduleService} from "../../services/schedule.service";
 import {Schedule} from "../../types/schedule";
 import {mergeMap, Observable} from "rxjs";
 import {DialogUtility} from "@syncfusion/ej2-popups";
 
+@Pipe({name: 'formatDate'})
+export class FormatDatePipe implements PipeTransform {
+  transform(value: Date | number[]): string {
+    let date: Date;
+
+    if (value instanceof Date) {
+      date = value;
+    } else {
+      date = new Date(value[0], value[1] - 1, value[2], value[3], value[4], value[5], value[6]);
+    }
+
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+  }
+}
 @Component({
   selector: 'app-my-schedule',
   templateUrl: './my-schedule.component.html',

@@ -79,8 +79,9 @@ td.e-textlabel {
 
 .event-content > div {
   display: flex;
-  column-gap: 2rem;
+  column-gap: 0.5rem;
   align-items: baseline;
+  justify-content: space-evenly;
 }
 
 .event-content > div > div {
@@ -106,7 +107,22 @@ td.e-textlabel {
   border: 1px solid #ddd;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-top: 5px;
+  /* margin-top: 5px; */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.e-schedule .e-vertical-view .e-day-wrapper .e-appointment .e-appointment-details {
+  -ms-flex: auto;
+  flex: auto;
+  /* padding: 0 4px; */
+  padding: 4px 4px;
+  text-align: left;
+  line-height: unset;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
 }
 
 .e-schedule .e-timeline-view .e-appointment .e-appointment-details, .e-schedule .e-timeline-month-view .e-appointment .e-appointment-details {
@@ -117,7 +133,7 @@ td.e-textlabel {
   background-color: #7750D4;
   border: 1px solid #8339E6;
   color: #FFFFFF;
-  transition: all 0.5s ease;
+  /*transition: all 0.5s ease;*/
   border-radius: 10px;
   text-transform: none;
   padding: 10px 40px;
@@ -198,7 +214,7 @@ td.e-field.button-customization:nth-child(2) {
 .material3 .e-quick-popup-wrapper .e-popup-footer,
 .material3-dark .e-quick-popup-wrapper .e-popup-footer {
   display: block !important;
-  padding: 0px 18px 8px 22px !important;
+  padding: 0 18px 8px 22px !important;
 }
 
 .highcontrast .quick-info-header,
@@ -218,4 +234,34 @@ td.e-field.button-customization:nth-child(2) {
 .e-quick-popup-wrapper .e-cell-popup .e-popup-footer button:first-child,
 .e-quick-popup-wrapper .e-event-popup .e-popup-footer button:first-child {
   margin-right: 5px;
+}
+
+.e-quick-popup-wrapper .e-cell-popup .e-popup-footer button:first-child,
+.e-quick-popup-wrapper .e-event-popup .e-popup-footer button:first-child {
+  margin-right: 5px;
+}
+
+.quick-info-header-content {
+  background-color: white !important;
+}
+
+
+.LoadingDialog {
+  max-height: 100% !important;
+  top: 0 !important;
+  height: 100% !important;
+}
+
+
+.LoadingDialogContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  flex-direction: row-reverse;
+}
+
+.loading-text {
+  font-weight: bold;
+  margin-left: 1rem;
 }

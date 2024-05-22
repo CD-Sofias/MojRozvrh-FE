@@ -80,6 +80,12 @@ h1, h2, h3 {
   font-size: x-large;
 }
 
+h4 {
+  color: #FFFFFF;
+  font-size: large;
+  font-weight: bold;
+}
+
 
 .icon {
   fill: #44A39D;
@@ -358,4 +364,43 @@ body,
   margin: 0;
   /*overflow: hidden;*/
   width: 100%;
+}
+
+
+.e-dialog .e-dlg-content {
+  padding: 0 18px;
+}
+
+
+.quick-info-header-content {
+  background-color: white !important;
+}
+
+.LoadingDialog {
+  max-height: 100% !important;
+  top: 0 !important;
+  height: 100% !important;
+}
+
+
+.LoadingDialogContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  flex-direction: row-reverse;
+  background-color: white;
+}
+
+.loading-text {
+  font-weight: bold;
+  margin-left: 1rem;
+}
+
+.e-quick-dialog.e-control.e-btn.e-lib.e-quick-alertok.e-flat.e-primary.e-quick-dialog-occurrence-event {
+  display: none !important;
+}
+
+.e-dialog .e-dlg-content {
+  padding: 18px !important;
 }
