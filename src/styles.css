@@ -397,4 +397,10 @@ body,
   margin-left: 1rem;
 }
 
+.e-quick-dialog.e-control.e-btn.e-lib.e-quick-alertok.e-flat.e-primary.e-quick-dialog-occurrence-event {
+  display: none !important;
+}
 
+.e-dialog .e-dlg-content {
+  padding: 18px !important;
+}
