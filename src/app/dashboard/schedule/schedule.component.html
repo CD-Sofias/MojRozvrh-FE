@@ -186,22 +186,19 @@
               <div>
                 <h5 class="font-bold mb-2 ">Teacher:</h5>
                 <div
-                  class="pr-4">{{ getTeacherNameById(data.teacher_id) }} {{ getTeacherSurnameById(data.teacher_id) }}
+                  >{{ getTeacherNameById(data.teacher_id) }} {{ getTeacherSurnameById(data.teacher_id) }}
                 </div>
-                <div class="pr-4"></div>
+
                 <h5 class="font-bold mt-4 mb-2">Subject:</h5>
                 <div class="pr-4">{{ getSubjectNameById(data.subject_id) }}</div>
               </div>
               <div>
                 <h5 class="font-bold mb-2">Class room:</h5>
-                <div class="pr-4">{{ getClassroomNameById(data.classroom_id) }}</div>
+                <div class="pr-2">{{ getClassroomNameById(data.classroom_id) }}</div>
                 <h5 class="font-bold mt-4 mb-2">Type:</h5>
-                <div class="pr-4">{{ getSubjectTypeById(data.subject_type) }}</div>
-
-              </div>
-              <div class="w-full mt-4">
+                <div class="pr-2">{{ getSubjectTypeById(data.subject_type) }}</div>
                 <h5 class="font-bold mb-2">Group:</h5>
-                <div class="pr-4">{{ getGroupById(data.group_id) }}</div>
+                <div class="pr-2">{{ getGroupById(data.group_id) }}</div>
               </div>
             </div>
           </div>
@@ -440,7 +437,7 @@
               [showCloseIcon]='showCloseIcon' [target]='target' [visible]='visible' [width]='width'>
     <ng-template #content let-data="data">
       <div class="template flex flex-col h-auto min-h-[100px]">
-
+        <div *ngIf="(mySchedules | async)?.length; else noSchedules">
         <div class="mb-4">
           <div class="rounded-lg border bg-card text-card-foreground shadow-sm" data-v0-t="card">
             <div class="p-6">
@@ -455,6 +452,16 @@
               </div>
             </div>
           </div>
+        </div>
+          </div>
+      </div>
+    </ng-template>
+
+    <ng-template #noSchedules>
+      <div  class="bg-white flex items-center justify-center text-center">
+        <div>
+          <h2 class="text-xxl font-semibold">You don't have schedules yet</h2>
+          <p class="text-m text-gray-500 mb-2">Create your first schedule to start planning your classes</p>
         </div>
       </div>
     </ng-template>

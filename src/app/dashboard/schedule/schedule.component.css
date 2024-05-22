@@ -79,8 +79,9 @@ td.e-textlabel {
 
 .event-content > div {
   display: flex;
-  column-gap: 2rem;
+  column-gap: 0.5rem;
   align-items: baseline;
+  justify-content: space-evenly;
 }
 
 .event-content > div > div {

@@ -38,7 +38,7 @@ import {DashboardComponent} from "./dashboard.component";
 import {GroupsComponent} from "./groups/groups.component";
 import {GridModule} from "@syncfusion/ej2-angular-grids";
 import {HttpClientModule} from "@angular/common/http";
-import {MyScheduleComponent} from "./my-schedule/my-schedule.component";
+import {FormatDatePipe, MyScheduleComponent} from "./my-schedule/my-schedule.component";
 import {CreateScheduleModalComponent} from "./create-schedule-modal/create-schedule-modal.component";
 import {DialogModule} from "@syncfusion/ej2-angular-popups";
 import {SearchComponent} from "./search/search.component";
@@ -56,8 +56,10 @@ import { ScheduleComponent } from './schedule/schedule.component';
     CreateScheduleModalComponent,
     MyScheduleDetailComponent,
     SearchComponent,
+    FormatDatePipe,
   ],
   imports: [
+
     CommonModule,
     ReactiveFormsModule,
     ReactiveFormsModule,
