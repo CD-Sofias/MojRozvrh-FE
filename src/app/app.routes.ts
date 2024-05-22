@@ -24,7 +24,6 @@ export const routes: Routes = [
   },
   {
     path: 'my-schedule',
-    canActivate: [authGuard],
     component: MyScheduleWrapperComponent,
     children: [
       {path: '', component: MyScheduleComponent},
