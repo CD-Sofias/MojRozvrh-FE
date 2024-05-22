@@ -1,3 +1,9 @@
+<div *ngIf="loading" class="LoadingDialogContent">
+  <h1 class="loading-text">Loading...</h1>
+  <img ngSrc="../../../assets/gif/loading.gif" alt="Loading..." height="50" width="50">
+</div>
+
+<div class="h-full" *ngIf="!loading && initialized">
 <app-header></app-header>
 <app-search (dataEvent)="getData($event)"></app-search>
 
@@ -466,7 +472,7 @@
 <!--    </ng-template>-->
 <!--  </ejs-dialog>-->
 </div>
-
+</div>
 
 
 

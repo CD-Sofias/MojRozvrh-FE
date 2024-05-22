@@ -12,7 +12,7 @@ import {
 import {TextBoxComponent,} from '@syncfusion/ej2-angular-inputs';
 import {DatePickerComponent,} from '@syncfusion/ej2-angular-calendars';
 import {AutoCompleteComponent, DropDownListComponent, FilteringEventArgs,} from '@syncfusion/ej2-angular-dropdowns';
-import {Component, ElementRef, OnInit, SimpleChanges, ViewChild, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, SimpleChanges, ViewChild, ViewEncapsulation} from '@angular/core';
 import {EmitType, extend, isNullOrUndefined} from '@syncfusion/ej2-base';
 import {ChangeEventArgs} from '@syncfusion/ej2-calendars';
 import {Query} from '@syncfusion/ej2-data';
@@ -37,6 +37,7 @@ import {DialogComponent} from "@syncfusion/ej2-angular-popups";
 import {ButtonComponent} from "@syncfusion/ej2-angular-buttons";
 import {AnimationSettingsModel} from "@syncfusion/ej2-splitbuttons";
 import {ToastComponent} from "@syncfusion/ej2-angular-notifications";
+import {NavigationEnd, NavigationStart, Router} from "@angular/router";
 
 interface MyEventFields {
   myNewField?: string;
@@ -59,8 +60,9 @@ interface EventSettingsModel extends OriginalEventSettingsModel {
 })
 
 
-export class ScheduleComponent implements OnInit {
-
+export class ScheduleComponent implements OnInit, AfterViewInit {
+  loading = true;
+  initialized = false;
 
   constructor(private titleService: Title,
               private subjectService: SubjectService,
@@ -70,8 +72,17 @@ export class ScheduleComponent implements OnInit {
               private scheduleCellService: ScheduleCellService,
               private userService: UserService,
               private scheduleService: ScheduleService,
+              private router: Router
   ) {
+
+
+
   }
+
+
+
+
+
 
   public dialogObj: DialogComponent;
 
@@ -119,9 +130,11 @@ export class ScheduleComponent implements OnInit {
   // }
 
 
-
   ngOnInit() {
 
+    // @ts-ignore
+
+    // this.loading = false;
     // this.initilaizeTarget();
 
     this.titleService.setTitle('My schedule');
@@ -129,6 +142,17 @@ export class ScheduleComponent implements OnInit {
     this.loadClassrooms();
     this.loadTeachers();
     this.loadSubjects();
+
+
+    // @ts-ignore
+    // this.router.events.subscribe((event: Event) => {
+    //   if (event instanceof NavigationStart) {
+    //     this.loading = true;
+    //   } else if (event instanceof NavigationEnd) {
+    //     this.loading = false;
+    //   }
+    // });
+
 
     this.userService.getUsersInfo().subscribe(user => {
       this.userID = user.id;
@@ -203,10 +227,23 @@ export class ScheduleComponent implements OnInit {
       },
     };
     // console.log(this.data);
-    console.log(this.eventSettings)
-
+    // console.log(this.eventSettings)
+    // window.onload = () => {
+    //   this.loading = false;
+    // };
+    this.loading = false
     this.dialogObj.hide();
   }
+  ngAfterViewChecked() {
+    this.loading = false;
+  }
+  ngAfterViewInit() {
+    this.initialized = true;
+
+  }
+
+
+
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.scheduleData) {
@@ -227,6 +264,7 @@ export class ScheduleComponent implements OnInit {
 
 
   getData(data: ScheduleCell[]): void {
+
     this.scheduleData = data;
     this.eventSettings = {
       ...this.eventSettings,
@@ -248,6 +286,7 @@ export class ScheduleComponent implements OnInit {
 
 
   loadGroups(): void {
+
     this.groupService.getAllGroups().subscribe(groups => {
       this.groups = groups;
       this.groupDataSource = groups.map(group => {
@@ -278,6 +317,7 @@ export class ScheduleComponent implements OnInit {
 
 
   loadTeachers(): void {
+
     this.teacherService.getAllTeachers().subscribe(teachers => {
       this.teachers = teachers;
       this.teacherDataSource = teachers.map(teacher => {
@@ -419,27 +459,27 @@ export class ScheduleComponent implements OnInit {
   public showWeekend: boolean = false;
 
   public toasts: { [key: string]: Object }[] = [
-  {
-    title: 'Success!',
-    content: 'Data has been saved successfully.',
-    cssClass: 'e-toast-success',
-    icon: 'e-success toast-icons'
-  },
-  {
-    title: 'Error!',
-    content: 'Failed to save data.',
-    cssClass: 'e-toast-danger',
-    icon: 'e-error toast-icons'
-  },
-  // ... остальные объекты toast
-];
+    {
+      title: 'Success!',
+      content: 'Data has been saved successfully.',
+      cssClass: 'e-toast-success',
+      icon: 'e-success toast-icons'
+    },
+    {
+      title: 'Error!',
+      content: 'Failed to save data.',
+      cssClass: 'e-toast-danger',
+      icon: 'e-error toast-icons'
+    },
+    // ... остальные объекты toast
+  ];
 
   @ViewChild('toasttype')
   protected toastObj: ToastComponent;
 
 
-
   public onActionBegin(args: ActionEventArgs): void {
+
     // console.log(args)
     if (args.requestType === 'eventCreate' || args.requestType === 'eventChange') {
       const data: Record<string, any> = args.data instanceof Array ? args.data[0] : args.data;
@@ -481,6 +521,7 @@ export class ScheduleComponent implements OnInit {
   }
 
   public getHeaderStyles(data: { [key: string]: Object }): Object {
+
     if (data['elementType'] === 'cell') {
       return {'align-items': 'center', 'color': '#919191'};
     } else {
@@ -599,6 +640,7 @@ export class ScheduleComponent implements OnInit {
   }
 
   updateData(): void {
+
     this.userService.getUsersInfo().subscribe(user => {
       this.userID = user.id;
       this.mySchedules = this.scheduleService.getSchedulesByUserId(this.userID);
