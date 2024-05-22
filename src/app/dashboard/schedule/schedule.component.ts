@@ -37,7 +37,8 @@ import {DialogComponent} from "@syncfusion/ej2-angular-popups";
 import {ButtonComponent} from "@syncfusion/ej2-angular-buttons";
 import {AnimationSettingsModel} from "@syncfusion/ej2-splitbuttons";
 import {ToastComponent} from "@syncfusion/ej2-angular-notifications";
-import {NavigationEnd, NavigationStart, Router} from "@angular/router";
+import {Router} from "@angular/router";
+import {toUTC} from "../../utils/date-utils";
 
 interface MyEventFields {
   myNewField?: string;
@@ -72,7 +73,6 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
               private scheduleCellService: ScheduleCellService,
               private userService: UserService,
               private scheduleService: ScheduleService,
-              private router: Router
   ) {
 
 
@@ -171,8 +171,8 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
           group_id: scheduleCell.group.id,
           classroom_id: scheduleCell.classroom.id,
           subject_type: scheduleCell.subject.type,
-          StartTime: scheduleCell.startTime,
-          EndTime: scheduleCell.endTime,
+          StartTime: toUTC(new Date(scheduleCell.startTime)),
+          EndTime: toUTC(new Date(scheduleCell.endTime)),
         };
       })
     }
@@ -258,8 +258,8 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
           group_id: scheduleCell.group.id,
           classroom_id: scheduleCell.classroom.id,
           subject_type: scheduleCell.subject.type,
-          StartTime: scheduleCell.startTime,
-          EndTime: scheduleCell.endTime,
+          StartTime: toUTC(new Date(scheduleCell.startTime)),
+          EndTime: toUTC(new Date(scheduleCell.endTime)),
         };
       })
     }
@@ -279,8 +279,8 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
           group_id: scheduleCell.group.id,
           classroom_id: scheduleCell.classroom.id,
           subject_type: scheduleCell.subject.type,
-          StartTime: scheduleCell.startTime,
-          EndTime: scheduleCell.endTime,
+          StartTime: toUTC(new Date(scheduleCell.startTime)),
+          EndTime: toUTC(new Date(scheduleCell.endTime)),
           RecurrenceRule: 'FREQ=WEEKLY'
         };
       })
@@ -481,48 +481,43 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
   protected toastObj: ToastComponent;
 
 
-  public onActionBegin(args: ActionEventArgs): void {
+public onActionBegin(args: ActionEventArgs): void {
+  if (args.requestType === 'eventCreate' || args.requestType === 'eventChange') {
+    const data: Record<string, any> = args.data instanceof Array ? args.data[0] : args.data;
 
-    // console.log(args)
-    if (args.requestType === 'eventCreate' || args.requestType === 'eventChange') {
-      const data: Record<string, any> = args.data instanceof Array ? args.data[0] : args.data;
-
-      console.log(data)
-
-      if (!this.scheduleObj.isSlotAvailable(data.StartTime as Date, data.EndTime as Date)) {
-        console.log('Slot is not available')
-        args.cancel = true;
-      }
-
-      console.log(data, 'data')
+    if (!this.scheduleObj.isSlotAvailable(data.StartTime as Date, data.EndTime as Date)) {
+      args.cancel = true;
+    } else {
       let scheduleCell: ScheduleCellCreate = {
         groupId: data.group_id,
         subjectId: data.subject_id,
         teacherId: data.teacher_id,
         classroomId: data.classroom_id,
-        startTime: data.StartTime,
-        endTime: data.EndTime,
+        startTime: toUTC(new Date(data.StartTime)),
+        endTime: toUTC(new Date(data.EndTime)),
         scheduleId: data.id
       };
 
-      console.log(args.requestType)
-
       this.scheduleCellService.createScheduleCell(scheduleCell).subscribe({
-        next: () => {
-          console.log('Schedule cell created');
-        },
         error: (error) => {
           console.error('Error creating schedule cell', error);
           args.cancel = true;
         }
       });
     }
-    if (args.requestType === 'eventRemove') {
-      args.cancel = true;
-      this.deleteScheduleCell(args.data[0].id);
-    }
   }
-
+  if (args.requestType === 'eventRemove') {
+    args.cancel = true;
+    this.scheduleCellService.deleteScheduleCell(args.data[0].id).subscribe({
+      next: () => {
+        this.scheduleObj.refreshEvents();
+      },
+      error: (error) => {
+        console.error('Error deleting schedule cell', error);
+      }
+    });
+  }
+}
   public getHeaderStyles(data: { [key: string]: Object }): Object {
 
     if (data['elementType'] === 'cell') {
@@ -629,18 +624,18 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
     }
   }
 
-  deleteScheduleCell(id: string): void {
-    this.scheduleCellService.deleteScheduleCell(id).subscribe({
-      next: () => {
-        console.log('Schedule cell deleted');
-        this.scheduleObj.closeQuickInfoPopup();
-        this.updateData();
-      },
-      error: (error) => {
-        console.error('Error deleting schedule cell', error);
-      }
-    })
-  }
+  // deleteScheduleCell(id: string): void {
+  //   this.scheduleCellService.deleteScheduleCell(id).subscribe({
+  //     next: () => {
+  //       console.log('Schedule cell deleted');
+  //       this.scheduleObj.closeQuickInfoPopup();
+  //       this.updateData();
+  //     },
+  //     error: (error) => {
+  //       console.error('Error deleting schedule cell', error);
+  //     }
+  //   })
+  // }
 
   updateData(): void {
 
@@ -658,8 +653,8 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
           group_id: scheduleCell.group.id,
           classroom_id: scheduleCell.classroom.id,
           subject_type: scheduleCell.subject.type,
-          StartTime: scheduleCell.startTime,
-          EndTime: scheduleCell.endTime,
+          StartTime: toUTC(new Date(scheduleCell.startTime)),
+          EndTime: toUTC(new Date(scheduleCell.endTime)),
         };
       })
     }
