@@ -22,3 +22,4 @@ export interface ScheduleCellCreate {
   startTime: Date;
   endTime: Date;
 }
+
