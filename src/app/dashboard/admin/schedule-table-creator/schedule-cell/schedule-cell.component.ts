@@ -473,7 +473,7 @@ export class ScheduleCellComponent implements OnInit{
     this.selectedScheduleCell = data.id;
   }
 
-  public onOpenDialog = (): void => {
+  public onOpenDialog = (event: any): void => {
     this.Dialog.show();
   };
 
