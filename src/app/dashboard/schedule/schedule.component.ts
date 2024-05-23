@@ -50,6 +50,7 @@ interface EventSettingsModel extends OriginalEventSettingsModel {
   fields?: MyEventFields & OriginalEventSettingsModel['fields'];
 }
 
+
 @Component({
   selector: 'app-schedule',
   templateUrl: './schedule.component.html',
@@ -170,10 +171,10 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
           group_id: scheduleCell.group.id,
           classroom_id: scheduleCell.classroom.id,
           subject_type: scheduleCell.subject.type,
-          StartTime: toUTC(new Date(scheduleCell.startTime)),
-          EndTime: toUTC(new Date(scheduleCell.endTime)),
+          StartTime: new Date(scheduleCell.startTime),
+          EndTime: new Date(scheduleCell.endTime),
         };
-      })
+      });
     }
 
 
@@ -266,24 +267,12 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
 
 
   getData(data: ScheduleCell[]): void {
-
-    this.scheduleData = data;
-    this.eventSettings = {
-      ...this.eventSettings,
-      dataSource: data.map(scheduleCell => {
-        return {
-          id: scheduleCell.id,
-          teacher_id: scheduleCell.teacher.id,
-          subject_id: scheduleCell.subject.id,
-          group_id: scheduleCell.group.id,
-          classroom_id: scheduleCell.classroom.id,
-          subject_type: scheduleCell.subject.type,
-          StartTime: toUTC(new Date(scheduleCell.startTime)),
-          EndTime: toUTC(new Date(scheduleCell.endTime)),
-          RecurrenceRule: 'FREQ=WEEKLY'
-        };
-      })
-    };
+    this.scheduleData = data.map(scheduleCell => ({
+      ...scheduleCell,
+      startTime: this.toLocalTime(new Date(scheduleCell.startTime)),
+      endTime: this.toLocalTime(new Date(scheduleCell.endTime))
+    }));
+    this.updateEventSettings();
   }
 
 
@@ -332,9 +321,7 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
 
   public onFiltering: EmitType<FilteringEventArgs> = (e: FilteringEventArgs) => {
     let query: Query = new Query();
-    //frame the query based on search string with filter type.
     query = (e.text !== '') ? query.where('Name', 'startswith', e.text, true) : query;
-    //pass the filter data source, filter query to updateData method.
     e.updateData(this.data, query);
   }
 
@@ -491,12 +478,25 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
           subjectId: data.subject_id,
           teacherId: data.teacher_id,
           classroomId: data.classroom_id,
-          startTime: toUTC(new Date(data.StartTime)),
-          endTime: toUTC(new Date(data.EndTime)),
+          startTime: this.toUTC(new Date(data.StartTime)),
+          endTime: this.toUTC(new Date(data.EndTime)),
           scheduleId: data.id
         };
 
         this.scheduleCellService.createScheduleCell(scheduleCell).subscribe({
+          next: (response) => {
+            this.scheduleData.push({
+              id: response.id,
+              group: response.group,
+              subject: response.subject,
+              teacher: response.teacher,
+              classroom: response.classroom,
+              startTime: toUTC(new Date(response.startTime)),
+              endTime: toUTC(new Date(response.endTime))
+            } as ScheduleCell);
+            this.updateEventSettings();
+            this.scheduleObj.refreshEvents();
+          },
           error: (error) => {
             console.error('Error creating schedule cell', error);
             args.cancel = true;
@@ -510,7 +510,8 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
       const eventData = args.data instanceof Array ? args.data[0] : args.data;
       this.scheduleCellService.deleteScheduleCell(eventData.id).subscribe({
         next: () => {
-          this.scheduleObj.dataModule.dataManager.remove('Id', eventData);
+          this.scheduleData = this.scheduleData.filter(cell => cell.id !== eventData.id);
+          this.updateEventSettings();
           this.scheduleObj.refreshEvents();
         },
         error: (error) => {
@@ -519,6 +520,41 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
       });
     }
   }
+  private toUTC(date: Date): Date {
+    return new Date(Date.UTC(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      date.getHours(),
+      date.getMinutes(),
+      date.getSeconds()
+    ));
+  }
+
+  private toLocalTime(date: Date): Date {
+    const offset = date.getTimezoneOffset();
+    return new Date(date.getTime() - (offset * 60000));
+  }
+
+  private updateEventSettings(): void {
+    this.eventSettings = {
+      ...this.eventSettings,
+      dataSource: this.scheduleData.map(scheduleCell => ({
+        id: scheduleCell.id,
+        teacher_id: scheduleCell.teacher.id,
+        subject_id: scheduleCell.subject.id,
+        group_id: scheduleCell.group.id,
+        classroom_id: scheduleCell.classroom.id,
+        subject_type: scheduleCell.subject.type,
+        StartTime: new Date(scheduleCell.startTime), // В локальное время для отображения
+        EndTime: new Date(scheduleCell.endTime), // В локальное время для отображения
+        RecurrenceRule: 'FREQ=WEEKLY'
+      }))
+    };
+  }
+
+
+
 
   public getHeaderStyles(data: { [key: string]: Object }): Object {
 
