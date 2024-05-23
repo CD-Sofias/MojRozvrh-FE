@@ -18,7 +18,6 @@ import {DashboardModule} from "../../dashboard.module";
 import {ScheduleCellComponent} from "./schedule-cell/schedule-cell.component";
 import {DateTimePickerModule} from "@syncfusion/ej2-angular-calendars";
 import {ScheduleModule} from "@syncfusion/ej2-angular-schedule";
-import {SearchComponent} from "../../search/search.component";
 import {DialogModule} from "@syncfusion/ej2-angular-popups";
 
 @NgModule({
