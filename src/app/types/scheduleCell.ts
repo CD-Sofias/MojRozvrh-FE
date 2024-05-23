@@ -18,7 +18,8 @@ export interface ScheduleCellCreate {
   subjectId: string;
   teacherId: string;
   classroomId: string;
-  scheduleId: string;
+  scheduleId?: string;
   startTime: Date;
   endTime: Date;
 }
+

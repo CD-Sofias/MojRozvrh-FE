@@ -107,7 +107,6 @@ td.e-textlabel {
   border: 1px solid #ddd;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  /* margin-top: 5px; */
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -116,7 +115,6 @@ td.e-textlabel {
 .e-schedule .e-vertical-view .e-day-wrapper .e-appointment .e-appointment-details {
   -ms-flex: auto;
   flex: auto;
-  /* padding: 0 4px; */
   padding: 4px 4px;
   text-align: left;
   line-height: unset;
@@ -133,7 +131,6 @@ td.e-textlabel {
   background-color: #7750D4;
   border: 1px solid #8339E6;
   color: #FFFFFF;
-  /*transition: all 0.5s ease;*/
   border-radius: 10px;
   text-transform: none;
   padding: 10px 40px;

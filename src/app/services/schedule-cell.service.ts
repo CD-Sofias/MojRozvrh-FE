@@ -22,8 +22,8 @@ export class ScheduleCellService {
     return this.http.get<ScheduleCell>(`${this.url}/${id}`)
   }
 
-  updateScheduleCell(scheduleCell: ScheduleCell) {
-    return this.http.put<ScheduleCell>(`${this.url}/${scheduleCell.id}`, scheduleCell)
+  updateScheduleCell(id: string, scheduleCell: ScheduleCellCreate) {
+    return this.http.put<ScheduleCell>(`${this.url}/${id}`, scheduleCell)
   }
 
   createScheduleCell(scheduleCell: ScheduleCellCreate) {
