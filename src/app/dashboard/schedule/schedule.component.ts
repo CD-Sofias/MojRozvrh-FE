@@ -37,7 +37,6 @@ import {DialogComponent} from "@syncfusion/ej2-angular-popups";
 import {ButtonComponent} from "@syncfusion/ej2-angular-buttons";
 import {AnimationSettingsModel} from "@syncfusion/ej2-splitbuttons";
 import {ToastComponent} from "@syncfusion/ej2-angular-notifications";
-import {Router} from "@angular/router";
 import {toUTC} from "../../utils/date-utils";
 
 interface MyEventFields {
@@ -474,50 +473,53 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
       cssClass: 'e-toast-danger',
       icon: 'e-error toast-icons'
     },
-    // ... остальные объекты toast
   ];
 
   @ViewChild('toasttype')
   protected toastObj: ToastComponent;
 
 
-public onActionBegin(args: ActionEventArgs): void {
-  if (args.requestType === 'eventCreate' || args.requestType === 'eventChange') {
-    const data: Record<string, any> = args.data instanceof Array ? args.data[0] : args.data;
+  public onActionBegin(args: ActionEventArgs): void {
+    if (args.requestType === 'eventCreate' || args.requestType === 'eventChange') {
+      const data: Record<string, any> = args.data instanceof Array ? args.data[0] : args.data;
 
-    if (!this.scheduleObj.isSlotAvailable(data.StartTime as Date, data.EndTime as Date)) {
+      if (!this.scheduleObj.isSlotAvailable(data.StartTime as Date, data.EndTime as Date)) {
+        args.cancel = true;
+      } else {
+        let scheduleCell: ScheduleCellCreate = {
+          groupId: data.group_id,
+          subjectId: data.subject_id,
+          teacherId: data.teacher_id,
+          classroomId: data.classroom_id,
+          startTime: toUTC(new Date(data.StartTime)),
+          endTime: toUTC(new Date(data.EndTime)),
+          scheduleId: data.id
+        };
+
+        this.scheduleCellService.createScheduleCell(scheduleCell).subscribe({
+          error: (error) => {
+            console.error('Error creating schedule cell', error);
+            args.cancel = true;
+          }
+        });
+      }
+    }
+
+    if (args.requestType === 'eventRemove') {
       args.cancel = true;
-    } else {
-      let scheduleCell: ScheduleCellCreate = {
-        groupId: data.group_id,
-        subjectId: data.subject_id,
-        teacherId: data.teacher_id,
-        classroomId: data.classroom_id,
-        startTime: toUTC(new Date(data.StartTime)),
-        endTime: toUTC(new Date(data.EndTime)),
-        scheduleId: data.id
-      };
-
-      this.scheduleCellService.createScheduleCell(scheduleCell).subscribe({
+      const eventData = args.data instanceof Array ? args.data[0] : args.data;
+      this.scheduleCellService.deleteScheduleCell(eventData.id).subscribe({
+        next: () => {
+          this.scheduleObj.dataModule.dataManager.remove('Id', eventData);
+          this.scheduleObj.refreshEvents();
+        },
         error: (error) => {
-          console.error('Error creating schedule cell', error);
-          args.cancel = true;
+          console.error('Error deleting schedule cell', error);
         }
       });
     }
   }
-  if (args.requestType === 'eventRemove') {
-    args.cancel = true;
-    this.scheduleCellService.deleteScheduleCell(args.data[0].id).subscribe({
-      next: () => {
-        this.scheduleObj.refreshEvents();
-      },
-      error: (error) => {
-        console.error('Error deleting schedule cell', error);
-      }
-    });
-  }
-}
+
   public getHeaderStyles(data: { [key: string]: Object }): Object {
 
     if (data['elementType'] === 'cell') {
