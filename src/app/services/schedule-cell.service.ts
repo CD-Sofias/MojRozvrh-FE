@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {ScheduleCell, ScheduleCellCreate} from "../types/scheduleCell";
@@ -7,12 +7,15 @@ interface Filter {
   columnName: string;
   value: Object;
 }
+
 @Injectable({
   providedIn: 'root'
 })
 export class ScheduleCellService {
   url = environment.backendUrl + '/schedule_cells';
-  constructor(private http: HttpClient) { }
+
+  constructor(private http: HttpClient) {
+  }
 
   getAllScheduleCells() {
     return this.http.get<ScheduleCell[]>(this.url)

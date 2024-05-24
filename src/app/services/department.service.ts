@@ -9,7 +9,9 @@ import {Observable} from "rxjs";
 })
 export class DepartmentService {
   url = environment.backendUrl + "/departments";
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient) {
+  }
 
   getDepartments(): Observable<Department[]> {
     return this.http.get<Department[]>(this.url);

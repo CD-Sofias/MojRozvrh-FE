@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Classroom, CreateClassroom, EditClassroom} from "../types/classroom";
@@ -8,7 +8,9 @@ import {Classroom, CreateClassroom, EditClassroom} from "../types/classroom";
 })
 export class ClassroomService {
   url = environment.backendUrl + '/classrooms';
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient) {
+  }
 
   getAllClassrooms() {
     return this.http.get<Classroom[]>(this.url)
@@ -31,6 +33,6 @@ export class ClassroomService {
   }
 
   getClassroomTypes() {
-  return this.http.get<string[]>(`${this.url}/types`);
-}
+    return this.http.get<string[]>(`${this.url}/types`);
+  }
 }

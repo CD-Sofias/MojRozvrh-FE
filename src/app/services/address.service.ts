@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {Address} from "../types/address";
@@ -9,7 +9,9 @@ import {Address} from "../types/address";
 export class AddressService {
 
   url = environment.backendUrl + '/addresses';
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient) {
+  }
 
   getAllAddress() {
     return this.http.get<Address[]>(this.url)

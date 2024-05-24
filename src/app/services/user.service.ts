@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {User} from "../types/user";
@@ -9,11 +9,14 @@ import {AuthService} from "../auth/auth.service";
 })
 export class UserService {
   url = environment.backendUrl + '/users';
-  constructor(private http: HttpClient, private authService: AuthService) {}
+
+  constructor(private http: HttpClient, private authService: AuthService) {
+  }
 
   getAllUsers() {
     return this.http.get<User[]>(this.url)
   }
+
   logout() {
     return this.http.get(environment.backendUrl + '/logout').subscribe(() => {
       this.authService.deleteAuthToken();

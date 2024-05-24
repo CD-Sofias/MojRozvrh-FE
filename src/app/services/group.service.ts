@@ -8,11 +8,14 @@ import {HttpClient} from "@angular/common/http";
 })
 export class GroupService {
   url = environment.backendUrl + '/groups';
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient) {
+  }
 
   getAllGroups() {
     return this.http.get<Group[]>(this.url)
   }
+
   getGroupById(id: string) {
     return this.http.get<Group>(`${this.url}/${id}`)
   }
