@@ -1,21 +1,23 @@
 <div class="control-section flex items-center" style="padding:10px;position:relative;">
   <div class="col-md-8 control-section flex items-center" id="modalTarget">
-    <button (click)="onOpenDialog($event)"  ejs-button id='modalbtn'>Open</button>
-<!--    <div #container class='root-container'></div>-->
-    <ejs-dialog id='dialog-container' #modalDialog (open)='dialogOpen()' (overlayClick)="onOverlayClick()"
+    <button (click)="onOpenDialog($event)" ejs-button id='modalbtn'>Open</button>
+    <ejs-dialog #modalDialog (open)='dialogOpen()' (overlayClick)="onOverlayClick()" [header]='header'
                 [height]='height'
-                [header]='header'
-                [visible]='visible'
                 [isModal]='isModal'
-                [width]='width'>
-
-
+                [visible]='visible'
+                [width]='width'
+                id='dialog-container'>
       <ng-template #content>
         <div class="form-group template flex flex-col h-auto min-h-[100px]">
-          <input #name="ngModel" [(ngModel)]="scheduleName" id="name" name="name" required type="text" class="p-2 border border-gray-300 rounded-md">
+          <input #name="ngModel" [(ngModel)]="scheduleName" class="p-2 border border-gray-300 rounded-md" id="name" name="name" required
+                 type="text">
           <span class="e-float-line"></span>
-          <button id="sendButton" (click)="dlgButtonClick()" class="e-control e-btn sendButton mt-2 w-auto px-4 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors duration-200" data-ripple="true">Save</button>
-          <span *ngIf="name.errors && name.errors.required && (name.dirty || name.touched)" class="e-error text-red-500 mt-1">
+          <button (click)="dlgButtonClick()" class="e-control e-btn sendButton mt-2 w-auto px-4 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors duration-200"
+                  data-ripple="true"
+                  id="sendButton">Save
+          </button>
+          <span *ngIf="name.errors && name.errors.required && (name.dirty || name.touched)"
+                class="e-error text-red-500 mt-1">
       Schedule name is required
     </span>
         </div>

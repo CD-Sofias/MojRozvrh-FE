@@ -2,7 +2,6 @@ import {Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angula
 import {GroupService} from "../../services/group.service";
 import {ScheduleCell} from "../../types/scheduleCell";
 import {ScheduleCellService} from "../../services/schedule-cell.service";
-import {Schedule} from "../../types/schedule";
 
 
 @Component({
@@ -14,17 +13,11 @@ import {Schedule} from "../../types/schedule";
 export class GroupsComponent {
   public data: any[];
   public selectedGroup: any;
-  public selectedGroupScheduleCells: ScheduleCell[] ;
+  public selectedGroupScheduleCells: ScheduleCell[];
   @Input() scheduleData = [];
   @Output() public selectedDataChanged = new EventEmitter<any>();
 
   constructor(private groupService: GroupService, private scheduleCellService: ScheduleCellService) {
-  }
-
-  ngOnInit(): void {
-    this.groupService.getAllGroups().subscribe(data => {
-      this.data = data;
-    });
   }
 
   getGroupById(id: string): void {

@@ -10,8 +10,8 @@
           <div class="flex gap-5">
 
             @if (username) {
-              <ng-container *ngFor="let item of scheduleItems">
-                <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="{{item.text}}"
+            <ng-container *ngFor="let item of scheduleItems">
+              <button *ngIf="!isSmallScreen" class="e-inherit hover:text-purple-600" content="{{item.text}}"
                         cssClass="e-flat schedule-btn header-btn" ejs-button
                         iconCss="{{item.iconCss}}"
                         iconPosition="Left" [routerLink]="item.url"  routerLinkActive="active">
@@ -23,9 +23,9 @@
                         iconCss="e-ddb-icons e-profile"></button>
 
             } @else {
-              <button routerLink="../auth/login" class="e-inherit header-btn" content="Login" routerLinkActive="active"
-                      ejs-button
-                      iconCss="e-ddb-icons e-profile"></button>
+            <button routerLink="../auth/login" class="e-inherit header-btn" content="Login" routerLinkActive="active"
+                    ejs-button
+                    iconCss="e-ddb-icons e-profile"></button>
             }
           </div>
         </ejs-appbar>
