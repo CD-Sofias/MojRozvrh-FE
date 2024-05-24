@@ -5,8 +5,7 @@ import {Address} from "../../../../types/address";
 import {AddressService} from "../../../../services/address.service";
 
 @Component({
-  selector: 'app-addresses',
-  templateUrl: './addresses.component.html',
+  selector: 'app-addresses', templateUrl: './addresses.component.html',
 })
 export class AddressesComponent extends ScheduleTableCreatorComponent {
   addresses: Address[];
@@ -44,8 +43,7 @@ export class AddressesComponent extends ScheduleTableCreatorComponent {
         this.addAddress(args.data).subscribe({
           next: () => {
             this.getAddresses();
-          },
-          error: error => {
+          }, error: error => {
             console.error(error);
             args.cancel = true;
             this.toastObj.show(this.toasts[1]);
@@ -55,8 +53,7 @@ export class AddressesComponent extends ScheduleTableCreatorComponent {
         this.editAddress(args.data).subscribe({
           next: () => {
             this.getAddresses();
-          },
-          error: error => {
+          }, error: error => {
             console.error(error);
             args.cancel = true;
             this.toastObj.show(this.toasts[1]);
@@ -68,8 +65,7 @@ export class AddressesComponent extends ScheduleTableCreatorComponent {
       this.addressService.deleteAddress(args.data[0].id).subscribe({
         next: () => {
           this.getAddresses();
-        },
-        error: error => {
+        }, error: error => {
           console.error(error);
           this.toastObj.show(this.toasts[0]);
         }
