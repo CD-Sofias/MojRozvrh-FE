@@ -1,6 +1,6 @@
 <div class="control-section flex items-center" style="padding:10px;position:relative;">
   <div class="col-md-8 control-section flex items-center" id="modalTarget">
-    <button (click)="onOpenDialog($event)" ejs-button id='modalbtn'>Open</button>
+    <button (click)="onOpenDialog($event)" ejs-button id='modalbtn' class="text-3xl">Save schedule</button>
     <ejs-dialog #modalDialog (open)='dialogOpen()' (overlayClick)="onOverlayClick()" [header]='header'
                 [height]='height'
                 [isModal]='isModal'
@@ -8,20 +8,25 @@
                 [width]='width'
                 id='dialog-container'>
       <ng-template #content>
-        <div class="form-group template flex flex-col h-auto min-h-[100px]">
-          <input #name="ngModel" [(ngModel)]="scheduleName" class="p-2 border border-gray-300 rounded-md" id="name" name="name" required
-                 type="text">
-          <span class="e-float-line"></span>
-          <button (click)="dlgButtonClick()" class="e-control e-btn sendButton mt-2 w-auto px-4 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors duration-200"
-                  data-ripple="true"
-                  id="sendButton">Save
-          </button>
-          <span *ngIf="name.errors && name.errors.required && (name.dirty || name.touched)"
-                class="e-error text-red-500 mt-1">
-      Schedule name is required
-    </span>
-        </div>
+<form [formGroup]="scheduleForm" class="form-group template flex flex-col h-auto min-h-[100px]">
+  <input formControlName="scheduleName" class="p-2 border border-gray-300 rounded-md" id="name" name="name" required
+         type="text">
+  <span class="e-float-line"></span>
+  <button (click)="dlgButtonClick()" class="e-btn mt-2 w-auto px-4 py-2 text-white rounded-md shadow-md"
+          data-ripple="true"
+          id="sendButton"
+           [disabled]="scheduleForm.invalid">Save
+  </button>
+  <span *ngIf="scheduleForm.controls['scheduleName'].value && scheduleForm.controls['scheduleName'].invalid && (scheduleForm.controls['scheduleName'].dirty || scheduleForm.controls['scheduleName'].touched)"
+        class="e-error text-red-500 mt-1">
+    <ng-container *ngIf="scheduleForm.controls['scheduleName'].value.length < 3; else defaultError">
+      Schedule name must be at least 3 characters
+    </ng-container>
+    <ng-template #defaultError>Schedule name is required</ng-template>
+  </span>
+</form>
       </ng-template>
     </ejs-dialog>
+    <ejs-toast #toasttype></ejs-toast>
   </div>
 </div>

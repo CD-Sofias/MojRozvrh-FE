@@ -9,7 +9,7 @@
 
   <div class="control-section">
     <div class="content-wrapper">
-      <app-create-schedule-modal *ngIf="userRole !== 'ADMIN'" [scheduleData]="scheduleData"
+      <app-create-schedule-modal *ngIf="userRole !== 'ADMIN' && userRole" [scheduleData]="scheduleData"
                                  [userID]="userID"></app-create-schedule-modal>
       <ejs-schedule #scheduleObj (actionBegin)="onActionBegin($event)" [currentView]="currentView" [endHour]='endHour'
                     [eventSettings]="eventSettings" [readonly]="userRole !== 'ADMIN'" [rowAutoHeight]='rowAutoHeight'
@@ -47,7 +47,6 @@
                     <td class="e-textlabel">Subject</td>
                     <td colspan="4">
                       <ejs-dropdownlist #subject='ngModel'
-                                        (filtering)='onFiltering($event)'
                                         [(ngModel)]="data.subject_id"
                                         [allowFiltering]='true'
                                         [dataSource]='subjectDataSource'
@@ -69,7 +68,6 @@
                     <td class="e-textlabel">Class room</td>
                     <td colspan="4">
                       <ejs-dropdownlist #classroom='ngModel'
-                                        (filtering)='onFiltering($event)'
                                         [(ngModel)]="data.classroom_id"
                                         [allowFiltering]='true'
                                         [dataSource]='classroomDataSource'
@@ -92,7 +90,6 @@
                     <td class="e-textlabel">Teacher</td>
                     <td colspan="4">
                       <ejs-dropdownlist #teacher='ngModel'
-                                        (filtering)='onFiltering($event)'
                                         [(ngModel)]="data.teacher_id"
                                         [allowFiltering]='true'
                                         [dataSource]='teacherDataSource'
@@ -125,7 +122,6 @@
                     <td class="e-textlabel">Group</td>
                     <td colspan="4">
                       <ejs-dropdownlist #group='ngModel'
-                                        (filtering)='onFiltering($event)'
                                         [(ngModel)]="data.group_id"
                                         [allowFiltering]='true'
                                         [dataSource]='groupDataSource'
@@ -190,7 +186,6 @@
                   novalidate>
               <tr class="flex flex-col">
                 <ejs-dropdownlist #subject='ngModel'
-                                  (filtering)='onFiltering($event)'
                                   [(ngModel)]="data.subject_id"
                                   [allowFiltering]='true'
                                   [dataSource]='subjectDataSource'
@@ -213,7 +208,6 @@
                 <td class="e-textlabel">Class room</td>
                 <td colspan="4">
                   <ejs-dropdownlist #classroom='ngModel'
-                                    (filtering)='onFiltering($event)'
                                     [(ngModel)]="data.classroom_id"
                                     [allowFiltering]='true'
                                     [dataSource]='classroomDataSource'
@@ -235,7 +229,6 @@
                 <td class="e-textlabel">Teacher</td>
                 <td colspan="4">
                   <ejs-dropdownlist #teacher='ngModel'
-                                    (filtering)='onFiltering($event)'
                                     [(ngModel)]="data.teacher_id"
 
                                     [allowFiltering]='true'
@@ -269,7 +262,6 @@
                 <td class="e-textlabel">Group</td>
                 <td colspan="4">
                   <ejs-dropdownlist #group='ngModel'
-                                    (filtering)='onFiltering($event)'
                                     [(ngModel)]="data.group_id"
                                     [allowFiltering]='true'
                                     [dataSource]='groupDataSource'
