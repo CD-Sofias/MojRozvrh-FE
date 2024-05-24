@@ -13,9 +13,7 @@ import {ScheduleCell} from "../../types/scheduleCell";
 import {forkJoin} from "rxjs";
 
 @Component({
-  selector: 'app-search',
-  templateUrl: './search.component.html',
-  styleUrl: './search.component.css'
+  selector: 'app-search', templateUrl: './search.component.html', styleUrl: './search.component.css'
 })
 export class SearchComponent implements OnInit, AfterViewInit {
   public lessonTypes: string[];
@@ -25,27 +23,18 @@ export class SearchComponent implements OnInit, AfterViewInit {
   public subjects: Subject[] = [];
   public data: { [key: string]: Object; }[];
   @Output() dataEvent = new EventEmitter<ScheduleCell[]>();
-  @ViewChild('typeList')
-  public typeObj: DropDownListComponent;
-  @ViewChild('searchList')
-  public searchObj: DropDownListComponent;
-  public searchData: Object[] = [
-    {Id: 'Type1', Type: 'Groups'},
-    {Id: 'Type2', Type: 'Teachers'},
-    {Id: 'Type3', Type: 'Classrooms'},
-    {Id: 'Type4', Type: 'Subjects'},
-    {Id: 'Type5', Type: 'Lesson Types'},
-  ];
+  @ViewChild('typeList') public typeObj: DropDownListComponent;
+  @ViewChild('searchList') public searchObj: DropDownListComponent;
+  public searchData: Object[] = [{Id: 'Type1', Type: 'Groups'}, {Id: 'Type2', Type: 'Teachers'}, {
+    Id: 'Type3',
+    Type: 'Classrooms'
+  }, {Id: 'Type4', Type: 'Subjects'}, {Id: 'Type5', Type: 'Lesson Types'},];
   public fields: object = {text: 'Type', value: 'Id'};
   public dataFields: object = {value: 'Id', text: 'Name'};
   public searchValue: string;
   public typeValue: string
 
-  constructor(private groupService: GroupService,
-              private teacherService: TeacherService,
-              private classroomService: ClassroomService,
-              private subjectService: SubjectService,
-              private scheduleCellService: ScheduleCellService) {
+  constructor(private groupService: GroupService, private teacherService: TeacherService, private classroomService: ClassroomService, private subjectService: SubjectService, private scheduleCellService: ScheduleCellService) {
   }
 
   public onChange1(): void {

@@ -55,9 +55,7 @@ export class MyScheduleDetailComponent implements OnInit {
   public currentView: View = 'Week';
   public lessonTypes: string[];
 
-  constructor(private scheduleService: ScheduleService,
-              private route: ActivatedRoute,
-  ) {
+  constructor(private scheduleService: ScheduleService, private route: ActivatedRoute,) {
   }
 
   ngOnInit(): void {
@@ -77,45 +75,35 @@ export class MyScheduleDetailComponent implements OnInit {
         RecurrenceRule: 'FREQ=WEEKLY',
       }
     })
-    if (this.schedule.scheduleCells.length > 0)
-      this.selectedDate = new Date(this.schedule.scheduleCells[0].startTime);
+    if (this.schedule.scheduleCells.length > 0) this.selectedDate = new Date(this.schedule.scheduleCells[0].startTime);
     this.eventSettings = {
-      dataSource: extend([], this.data, null, true) as Record<string, any>[],
-      fields: {
-        id: 'id',
-        teacher: {
+      dataSource: extend([], this.data, null, true) as Record<string, any>[], fields: {
+        id: 'id', teacher: {
           name: 'teacher', title: 'Teacher',
-        },
-        subject: {
-          name: 'subject',
-          title: 'Subject',
-        },
-        group: {
-          name: 'group',
-          title: 'Group',
-        },
-        location: {
+        }, subject: {
+          name: 'subject', title: 'Subject',
+        }, group: {
+          name: 'group', title: 'Group',
+        }, location: {
           name: 'classroom', title: 'Classroom',
-        },
-        startTime: {
+        }, startTime: {
           name: 'StartTime', title: 'From', validation: {
             required: true,
           },
-        },
-        endTime: {
+        }, endTime: {
           name: 'EndTime', title: 'To', validation: {
             required: true,
           },
-        },
-        isAllDay: {name: 'is_all_day'}
+        }, isAllDay: {name: 'is_all_day'}
       },
     };
   }
 
   public getHeaderDetails(data: { [key: string]: Date }): string {
-    return this.intl.formatDate(data.StartTime, {type: 'date', skeleton: 'full'}) + ' (' +
-      this.intl.formatDate(data.StartTime, {skeleton: 'hm'}) + ' - ' +
-      this.intl.formatDate(data.EndTime, {skeleton: 'hm'}) + ')';
+    return this.intl.formatDate(data.StartTime, {
+      type: 'date',
+      skeleton: 'full'
+    }) + ' (' + this.intl.formatDate(data.StartTime, {skeleton: 'hm'}) + ' - ' + this.intl.formatDate(data.EndTime, {skeleton: 'hm'}) + ')';
   }
 
   getSubjectColor(id: string) {
@@ -138,8 +126,7 @@ export class MyScheduleDetailComponent implements OnInit {
         this.data = this.data.filter(item => item.id !== id);
         this.scheduleObj.eventSettings.dataSource = this.data;
         this.scheduleObj.closeQuickInfoPopup();
-      },
-      error: (error) => {
+      }, error: (error) => {
         console.error('Error deleting schedule cell', error);
       }
     });
