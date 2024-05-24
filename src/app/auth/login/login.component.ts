@@ -1,22 +1,18 @@
 import {Component, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DialogComponent, PositionDataModel} from "@syncfusion/ej2-angular-popups";
-import {EmitType} from "@syncfusion/ej2-base";
-import { Title } from '@angular/platform-browser';
+import {Title} from '@angular/platform-browser';
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {AuthService} from "../auth.service";
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: 'app-login', templateUrl: './login.component.html', styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   form: FormGroup;
 
-  @ViewChild('Dialog')
-  public dialogObj: DialogComponent | undefined;
+  @ViewChild('Dialog') public dialogObj: DialogComponent | undefined;
   public width: string = '335px';
   public visible: boolean = false;
   public showCloseIcon: Boolean = true;
@@ -27,13 +23,16 @@ export class LoginComponent {
   public animationSettings: any = {
     effect: 'Zoom'
   };
-  public textboxValue: any;
-  private formSubmitAttempt: boolean | undefined;
-  public dlgBtnClick: EmitType<object> = () => {
-    this.dialogObj!.hide();
-  }
-  public dlgButtons: Object[] = [{click: this.dlgBtnClick.bind(this), buttonModel: {content: 'Ok', isPrimary: true}}];
   position: PositionDataModel;
+  public data: any[];
+  private formSubmitAttempt: boolean | undefined;
+
+  constructor(private formBuilder: FormBuilder, private titleService: Title, private http: HttpClient, private router: Router, private authService: AuthService) {
+    this.titleService.setTitle('Login');
+    this.form = this.formBuilder.group({
+      password: [null, [Validators.required, Validators.minLength(4)]], username: [null, [Validators.required]],
+    });
+  }
 
   public focusoutfunction(args: any) {
     if (args.target.value !== '') {
@@ -43,39 +42,22 @@ export class LoginComponent {
     }
   }
 
-  public data: any[];
-
   public Submit(): void {
     this.formSubmitAttempt = true;
     if (this.form!.valid) {
-      this.authService.login(
-        this.form.value.username,
-        this.form.value.password,
-      ).subscribe({
+      this.authService.login(this.form.value.username, this.form.value.password,).subscribe({
         next: (response) => {
           const accessToken = response.accessToken;
           document.cookie = `accessToken=${accessToken}; path=/`;
           this.router.navigate(['/schedule']);
-        },
-        error: (error) => {
+        }, error: (error) => {
           this.content = error.message;
           this.dialogObj!.show();
-        },
-        complete: () => {
+        }, complete: () => {
           this.form!.reset();
         }
       });
     }
-  }
-
-
-
-  constructor(private formBuilder: FormBuilder, private titleService: Title, private http: HttpClient, private router: Router, private authService: AuthService) {
-    this.titleService.setTitle('Login');
-    this.form = this.formBuilder.group({
-      password: [null, [Validators.required, Validators.minLength(4)]],
-      username: [null, [Validators.required]],
-    });
   }
 
   public isFieldValid(field: string) {
