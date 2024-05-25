@@ -18,7 +18,7 @@ import {DashboardModule} from "../../dashboard.module";
 import {ScheduleCellComponent} from "./schedule-cell/schedule-cell.component";
 import {DateTimePickerModule} from "@syncfusion/ej2-angular-calendars";
 import {ScheduleModule} from "@syncfusion/ej2-angular-schedule";
-import {SearchComponent} from "../../search/search.component";
+import {DialogModule} from "@syncfusion/ej2-angular-popups";
 
 @NgModule({
   declarations: [
@@ -31,22 +31,23 @@ import {SearchComponent} from "../../search/search.component";
     ScheduleCellComponent,
     ClassroomsComponent,
     ],
-  imports: [
-    CommonModule,
-    ScheduleTableCreatorRoutingModule,
-    GridAllModule,
-    ToastAllModule,
-    ButtonModule,
-    DropDownListAllModule,
-    TextBoxAllModule,
-    ReactiveFormsModule,
-    NumericTextBoxAllModule,
-    DashboardModule,
-    DateTimePickerModule,
-    FormsModule,
-    ScheduleModule,
-    GridModule,
-  ],
+    imports: [
+        CommonModule,
+        ScheduleTableCreatorRoutingModule,
+        GridAllModule,
+        ToastAllModule,
+        ButtonModule,
+        DropDownListAllModule,
+        TextBoxAllModule,
+        ReactiveFormsModule,
+        NumericTextBoxAllModule,
+        DashboardModule,
+        DateTimePickerModule,
+        FormsModule,
+        ScheduleModule,
+        GridModule,
+        DialogModule,
+    ],
   exports: [
   ]
 })
