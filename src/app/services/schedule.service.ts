@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {CreateSchedule, Schedule} from "../types/schedule";
@@ -8,7 +8,9 @@ import {CreateSchedule, Schedule} from "../types/schedule";
 })
 export class ScheduleService {
   url = environment.backendUrl + '/schedules';
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient) {
+  }
 
   getAllSchedules() {
     return this.http.get<Schedule[]>(this.url)
@@ -30,7 +32,7 @@ export class ScheduleService {
     return this.http.delete(`${this.url}/${id}`)
   }
 
-  deleteScheduleCell(id: string, scheduleId: string){
+  deleteScheduleCell(id: string, scheduleId: string) {
     return this.http.delete(`${this.url}/${id}/schedule_cell`, {
       body: {scheduleCellId: scheduleId}
     })

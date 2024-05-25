@@ -14,39 +14,24 @@ import {AuthService} from "../../auth/auth.service";
 })
 export class HeaderComponent implements OnInit {
 
-  public items: ItemModel[] = [
-    {
-      text: 'Admin panel',
-      iconCss: 'e-icons e-edit-3',
-      id: "admin-panel",
-    },
-    {
-      text: 'Log Out',
-      iconCss: 'e-ddb-icons e-logout',
-      id: "logout",
-    },];
+  public items: ItemModel[] = [{
+    text: 'Admin panel', iconCss: 'e-icons e-edit-3', id: "admin-panel",
+  }, {
+    text: 'Log Out', iconCss: 'e-ddb-icons e-logout', id: "logout",
+  },];
 
-  public scheduleItems: ItemModel[] = [
-    {
-      text: 'Schedule',
-      iconCss: 'e-icons e-agenda-date-range',
-      url: '/schedule'
-    },
-    {
-      text: 'My schedule',
-      iconCss: 'e-icons e-timeline-work-week',
-      url: '/my-schedule'
-    }];
+  public scheduleItems: ItemModel[] = [{
+    text: 'Schedule', iconCss: 'e-icons e-agenda-date-range', url: '/schedule'
+  }, {
+    text: 'My schedule', iconCss: 'e-icons e-timeline-work-week', url: '/my-schedule'
+  }];
 
   isSmallScreen: boolean;
   username: string;
   role: string;
 
-  constructor(private breakpointObserver: BreakpointObserver,
-              private userService: UserService, private authService: AuthService, private router: Router) {
-    this.breakpointObserver.observe([
-      '(max-width: 599px)'
-    ]).subscribe(result => {
+  constructor(private breakpointObserver: BreakpointObserver, private userService: UserService, private authService: AuthService, private router: Router) {
+    this.breakpointObserver.observe(['(max-width: 599px)']).subscribe(result => {
       this.isSmallScreen = result.matches;
       if (this.isSmallScreen) {
         this.items = [...this.scheduleItems, ...this.items];
@@ -56,21 +41,21 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-ngOnInit(): void {
-  if (this.authService.isAuthenticated()) {
-    this.userService.getUsersInfo().subscribe(user => {
-      this.username = user.username;
-      this.role = user.role;
+  ngOnInit(): void {
+    if (this.authService.isAuthenticated()) {
+      this.userService.getUsersInfo().subscribe(user => {
+        this.username = user.username;
+        this.role = user.role;
 
-      if (this.role !== 'ADMIN') {
-        this.items = this.items.filter(item => item.text !== 'Admin panel');
-      }
-      if (this.role == 'ADMIN') {
-        this.scheduleItems = this.scheduleItems.filter(item => item.text !== 'My schedule');
-      }
-    });
+        if (this.role !== 'ADMIN') {
+          this.items = this.items.filter(item => item.text !== 'Admin panel');
+        }
+        if (this.role == 'ADMIN') {
+          this.scheduleItems = this.scheduleItems.filter(item => item.text !== 'My schedule');
+        }
+      });
+    }
   }
-}
 
   public select(args: MenuEventArgs) {
     if (args.item.text === 'Log Out') {

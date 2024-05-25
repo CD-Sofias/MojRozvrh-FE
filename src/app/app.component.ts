@@ -1,5 +1,5 @@
 import {AfterViewInit, Component} from '@angular/core';
-import {NavigationEnd, NavigationStart, Router, RouterOutlet} from "@angular/router";
+import {NavigationEnd, NavigationStart, Router, RouterOutlet, Event} from "@angular/router";
 import {AuthModule} from "./auth/auth.module";
 import {registerLicense} from "@syncfusion/ej2-base";
 import {environment} from "../environments/environment.prod";
@@ -38,8 +38,6 @@ export class AppComponent implements AfterViewInit {
   title = 'MojRozvrh-FE';
 
   constructor(private router: Router) {
-
-    // @ts-ignore
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationStart) {
         this.loading = true;

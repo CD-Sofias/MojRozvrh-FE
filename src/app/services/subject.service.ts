@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Subject} from "../types/subject";
@@ -8,7 +8,9 @@ import {Subject} from "../types/subject";
 })
 export class SubjectService {
   url = environment.backendUrl + '/subjects';
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient) {
+  }
 
   getAllSubjects() {
     return this.http.get<Subject[]>(this.url)

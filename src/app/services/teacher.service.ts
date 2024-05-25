@@ -22,9 +22,8 @@ export class TeacherService {
     return this.http.get<Teacher>(`${this.url}/${id}`)
   }
 
-createTeacher(teacher: CreateTeacher) {
-  return this.http.post<Teacher>(this.url, teacher).pipe(
-    catchError((error: HttpErrorResponse) => {
+  createTeacher(teacher: CreateTeacher) {
+    return this.http.post<Teacher>(this.url, teacher).pipe(catchError((error: HttpErrorResponse) => {
       let errorMessage = 'Unknown error!';
       if (error.error instanceof ErrorEvent) {
         errorMessage = `Error: ${error.error.message}`;
@@ -32,25 +31,20 @@ createTeacher(teacher: CreateTeacher) {
         errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
       }
       return throwError(() => new Error(errorMessage));
-    })
-  );
-}
+    }));
+  }
 
-updateTeacher(teacher: Teacher) {
-  return this.http.put<Teacher>(`${this.url}/${teacher.id}`, teacher).pipe(
-    catchError((error: HttpErrorResponse) => {
+  updateTeacher(teacher: Teacher) {
+    return this.http.put<Teacher>(`${this.url}/${teacher.id}`, teacher).pipe(catchError((error: HttpErrorResponse) => {
       return throwError(() => new Error(error.error));
-    })
-  );
-}
+    }));
+  }
 
   deleteTeacher(id: string) {
     return this.http.delete(`${this.url}/${id}`, {
       responseType: 'text'
-    }).pipe(
-      catchError((error: HttpErrorResponse) => {
-        return throwError(() => new Error(error.error));
-      })
-    );
+    }).pipe(catchError((error: HttpErrorResponse) => {
+      return throwError(() => new Error(error.error));
+    }));
   }
 }

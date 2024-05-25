@@ -1,7 +1,7 @@
 <div class="control-section accordion-control-section">
   <div class="e-sample-resize-container m-5 rounded-2xl">
     <ejs-accordion class="p-3 rounded-2xl">
-      <e-accordionitems >
+      <e-accordionitems>
         <e-accordionitem expanded='true'>
 
           <ng-template #header class="flex items-center">
@@ -10,7 +10,7 @@
           <ng-template #content>
             <div class="property-section property-customization bg-white rounded">
               <div class="property-panel-section">
-                <ejs-grid #grid [dataSource]='data' allowPaging='true' (rowSelected)='onRowSelected($event)'>
+                <ejs-grid #grid (rowSelected)='onRowSelected($event)' [dataSource]='data' allowPaging='true'>
                   <e-columns>
                     <e-column field='name' headerText='Group name' textAlign='Left' width='100'></e-column>
                     <e-column field='department.name' format="C2" headerText='Department' textAlign='Left'

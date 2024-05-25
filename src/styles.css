@@ -351,6 +351,7 @@ label {
   .e-inherit.header-btn {
     font-size: 80%;
   }
+
   .flex.items-center {
     font-size: 60%;
   }
@@ -362,7 +363,6 @@ body,
   display: block;
   height: 100%;
   margin: 0;
-  /*overflow: hidden;*/
   width: 100%;
 }
 

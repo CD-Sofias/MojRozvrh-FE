@@ -8,7 +8,9 @@ import {environment} from "../../environments/environment";
 })
 export class FacultyService {
   url = environment.backendUrl + '/faculties';
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient) {
+  }
 
   getAllFaculties() {
     return this.http.get<Faculty[]>(this.url)

@@ -3,27 +3,24 @@ import {Observable} from "rxjs";
 import {ScheduleTableCreatorComponent} from "../schedule-table-creator.component";
 import {Classroom} from "../../../../types/classroom";
 import {ClassroomService} from "../../../../services/classroom.service";
-import {FilteringEventArgs} from "@syncfusion/ej2-angular-dropdowns";
 import {AddressService} from "../../../../services/address.service";
-import {Query} from "@syncfusion/ej2-data";
 
 @Component({
-  selector: 'app-classrooms',
-  templateUrl: './classrooms.component.html',
-  styleUrls: ['./classrooms.component.css']
+  selector: 'app-classrooms', templateUrl: './classrooms.component.html', styleUrls: ['./classrooms.component.css']
 })
 export class ClassroomsComponent extends ScheduleTableCreatorComponent {
   classrooms: Classroom[];
-
-
-  constructor(private classroomService: ClassroomService, private addressService: AddressService) { // Внедрите AddressService
-    super();
-  }
-
   public filterPlaceholder: string = 'Search';
   public height: string = '220px';
   public watermark: string = 'Select a street';
+  selectedType: string;
+  selectedAddressId: string;
+  types: string[];
+  addresses: { [key: string]: any }[];
 
+  constructor(private classroomService: ClassroomService, private addressService: AddressService) {
+    super();
+  }
 
   getStreetName(addressId: string): string {
     const address = this.addresses.find(address => address.id === addressId);
@@ -35,17 +32,6 @@ export class ClassroomsComponent extends ScheduleTableCreatorComponent {
     const address = this.addresses.find(address => address.id === addressId);
     return address ? address.id : null;
   }
-
-  onFiltering(event: FilteringEventArgs): void {
-    let query: Query = new Query();
-    query = (event.text !== '') ? query.where('name', 'startswith', event.text, true) : query;
-    event.updateData(this.addresses, query);
-  }
-
-  selectedType: string;
-  selectedAddressId: string;
-  types: string[];
-  addresses: { [key: string]: any }[];
 
   onTypeChange(event: any): void {
     console.log(event.itemData)
@@ -80,18 +66,14 @@ export class ClassroomsComponent extends ScheduleTableCreatorComponent {
   getAddresses(): void {
     this.addressService.getAllAddress().subscribe(addresses => {
       this.addresses = addresses.map(address => ({
-        ...address,
-        street: `${address.street} ${address.streetNumber}`
+        ...address, street: `${address.street} ${address.streetNumber}`
       }));
     });
   }
 
   addClassroom(classroom: { capacity: number, number: number }): Observable<Classroom> {
     const classroomWithId = {
-      type: this.selectedType,
-      addressId: this.selectedAddressId,
-      capacity: classroom.capacity,
-      number: classroom.number
+      type: this.selectedType, addressId: this.selectedAddressId, capacity: classroom.capacity, number: classroom.number
     };
 
     return this.classroomService.createClassroom(classroomWithId);
@@ -128,8 +110,7 @@ export class ClassroomsComponent extends ScheduleTableCreatorComponent {
         this.addClassroom(args.data).subscribe({
           next: () => {
             this.getClassrooms();
-          },
-          error: error => {
+          }, error: error => {
             console.error(error);
             args.cancel = true;
             this.toastObj.show(this.toasts[1]);
@@ -140,8 +121,7 @@ export class ClassroomsComponent extends ScheduleTableCreatorComponent {
         this.editClassroom(args.data).subscribe({
           next: () => {
             this.getClassrooms();
-          },
-          error: error => {
+          }, error: error => {
             console.error(error);
             args.cancel = true;
             this.toastObj.show(this.toasts[1]);
@@ -153,8 +133,7 @@ export class ClassroomsComponent extends ScheduleTableCreatorComponent {
       this.classroomService.deleteClassroom(args.data[0].id).subscribe({
         next: () => {
           this.getClassrooms();
-        },
-        error: error => {
+        }, error: error => {
           console.error(error);
           this.toastObj.show(this.toasts[0]);
         }
