@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {TeacherComponent} from './teacher/teacher.component';
 import {FacultyComponent} from './faculty/faculty.component';
 import {GridAllModule, GridModule} from "@syncfusion/ej2-angular-grids";
@@ -18,7 +18,6 @@ import {DashboardModule} from "../../dashboard.module";
 import {ScheduleCellComponent} from "./schedule-cell/schedule-cell.component";
 import {DateTimePickerModule} from "@syncfusion/ej2-angular-calendars";
 import {ScheduleModule} from "@syncfusion/ej2-angular-schedule";
-import {SearchComponent} from "../../search/search.component";
 import {DialogModule} from "@syncfusion/ej2-angular-popups";
 
 @NgModule({
@@ -48,6 +47,7 @@ import {DialogModule} from "@syncfusion/ej2-angular-popups";
     ScheduleModule,
     GridModule,
     DialogModule,
+    NgOptimizedImage,
   ],
   exports: [
   ]

@@ -1,7 +1,7 @@
 import {
   ActionEventArgs, CellClickEventArgs,
   DragAndDropService,
-  EventSettingsModel as OriginalEventSettingsModel, PopupOpenEventArgs,
+  EventSettingsModel as OriginalEventSettingsModel,
   ResizeService,
   ScheduleComponent as EJ2ScheduleComponent,
   TimelineViewsService,
@@ -11,13 +11,9 @@ import {TextBoxComponent,} from '@syncfusion/ej2-angular-inputs';
 import {DatePickerComponent,} from '@syncfusion/ej2-angular-calendars';
 import {AutoCompleteComponent, DropDownListComponent, FilteringEventArgs,} from '@syncfusion/ej2-angular-dropdowns';
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
-  Input,
   OnInit,
-  Renderer2,
-  SimpleChanges,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
@@ -26,7 +22,6 @@ import {ChangeEventArgs} from '@syncfusion/ej2-calendars';
 import {Query} from '@syncfusion/ej2-data';
 import {Title} from "@angular/platform-browser";
 import {FieldOptionsModel} from "@syncfusion/ej2-schedule";
-import {DialogUtility} from "@syncfusion/ej2-popups";
 import {SubjectService} from "../../../../services/subject.service";
 import {TeacherService} from "../../../../services/teacher.service";
 import {ClassroomService} from "../../../../services/classroom.service";
