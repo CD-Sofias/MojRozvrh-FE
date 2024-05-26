@@ -7,7 +7,7 @@
                   [endHour]='endHour' [eventSettings]="eventSettings" [readonly]="true"
                   [rowAutoHeight]='rowAutoHeight'
                   [selectedDate]="selectedDate" [showWeekend]="showWeekend" [startHour]='startHour' class="rounded-2xl"
-                  cssClass='adaptive-rows'
+                  cssClass='quick-info-template'
                   height='90vh' id='schedule' timezone="UTC" width='100%'>
 
       <e-views>
@@ -16,8 +16,7 @@
       </e-views>
       <ng-template #quickInfoTemplatesHeader let-data>
         <div class="quick-info-header">
-          <div [ngStyle]="getHeaderStyles(data)" class="quick-info-header-content">
-
+          <div class="quick-info-header-content" [ngStyle]="getHeaderStyles(data)">
             <div class="quick-info-title">{{ data.subject.name }} ({{ data.subject.type }})</div>
             <div class="duration-text">{{ getHeaderDetails(data) }}</div>
           </div>
@@ -30,7 +29,7 @@
 
 
       <ng-template #eventSettingsTemplate let-data>
-        <div [ngStyle]="{'background-color': getSubjectColor(data.subject_type)}" class="template-wrap">
+        <div [ngStyle]="{'background-color': getSubjectColor(data.subject.type)}" class="template-wrap">
           <div class="mb-4"><h4>{{ data.teacher.name }}</h4></div>
           <div class="classroom-type"><h4 class="mb-4">{{ data.teacher.surname }}</h4></div>
           <div class="mb-4"><h4>{{ data.subject.name }}</h4></div>

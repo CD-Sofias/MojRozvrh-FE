@@ -11,7 +11,7 @@ import {extend, Internationalization} from "@syncfusion/ej2-base";
 import {
   ScheduleComponent as EJ2ScheduleComponent
 } from "@syncfusion/ej2-angular-schedule/src/schedule/schedule.component";
-import {View} from "@syncfusion/ej2-angular-schedule";
+import {ResourcesModel, View} from "@syncfusion/ej2-angular-schedule";
 import {FieldOptionsModel} from "@syncfusion/ej2-schedule";
 import {
   EventSettingsModel as OriginalEventSettingsModel
@@ -71,11 +71,10 @@ export class MyScheduleDetailComponent implements OnInit {
         classroom: cell.classroom,
         StartTime: toUTC(new Date(cell.startTime)),
         EndTime: toUTC(new Date(cell.endTime)),
-        color: cell.subject.type === 'lecture' ? '#FFA500' : '#008000',
+        color: cell.subject.type === 'lekcia' ? '#FFA500' : '#008000',
         RecurrenceRule: 'FREQ=WEEKLY',
       }
     })
-    if (this.schedule.scheduleCells.length > 0) this.selectedDate = new Date(this.schedule.scheduleCells[0].startTime);
     this.eventSettings = {
       dataSource: extend([], this.data, null, true) as Record<string, any>[], fields: {
         id: 'id', teacher: {
@@ -106,17 +105,31 @@ export class MyScheduleDetailComponent implements OnInit {
     }) + ' (' + this.intl.formatDate(data.StartTime, {skeleton: 'hm'}) + ' - ' + this.intl.formatDate(data.EndTime, {skeleton: 'hm'}) + ')';
   }
 
-  getSubjectColor(id: string) {
-    const subject = this.subjects.find(subject => subject.id === id);
-    return subject ? subject['color'] : 'default';
+  getSubjectColor(type: string) {
+    if (type === 'Lekcia') {
+      return '#e87956';
+    }
+    if (type === 'Praktika') {
+      return '#7ea800';
+    }
+    if (type === 'Laboratorna') {
+      return '#357bd0';
+    }
+    return undefined;
   }
 
-
-  public getHeaderStyles(data: { [key: string]: Object }): Object {
-    if (data['elementType'] === 'cell') {
-      return {'align-items': 'center', 'color': '#919191'};
+  public getHeaderStyles(data: Record<string, any>): Record<string, any> {
+    if (data.elementType === 'cell') {
+      return {'align-items': 'center', color: '#919191'};
     } else {
-      return {'background': '#F5F5F5', color: '#919191'};
+      if (data.subject.type === 'Lekcia') {
+        return {background: '#e87956', color: '#FFFFFF'};
+      } else if (data.subject.type === 'Praktika') {
+        return {background: '#7ea800', color: '#FFFFFF'};
+      }
+      else if (data.subject.type === 'Laboratornaia') {
+        return {background: '#357bd0', color: '#FFFFFF'};
+      }
     }
   }
 

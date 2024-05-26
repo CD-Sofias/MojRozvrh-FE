@@ -16,16 +16,17 @@
 
 .template-wrap {
   padding: 10px 4px;
-  width: 100%;
   border: 1px solid #ddd;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-top: 5px;
+  display: flex;
+  flex-direction: column;
   height: 100%;
 }
 
 .e-schedule .e-vertical-view .e-day-wrapper .e-appointment .e-appointment-details {
   height: 100%;
+  padding-top: 4px;
   padding-bottom: 4px;
 }
 

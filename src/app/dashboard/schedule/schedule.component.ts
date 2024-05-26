@@ -59,7 +59,7 @@ interface EventSettingsModel extends OriginalEventSettingsModel {
 
 })
 
-export class ScheduleComponent implements OnInit, AfterViewInit {
+export class ScheduleComponent implements OnInit {
   loading = true;
   initialized = false;
   public dialogObj: DialogComponent;
@@ -144,6 +144,7 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.initialized = true;
     this.titleService.setTitle('My schedule');
     this.loadGroups();
     this.loadClassrooms();
@@ -205,12 +206,8 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
       },
     };
     this.loading = false
-    this.dialogObj.hide();
   }
 
-  ngAfterViewInit() {
-    this.initialized = true;
-  }
 
   getData(data: ScheduleCell[]): void {
     this.scheduleData = data.map(scheduleCell => ({
@@ -299,9 +296,17 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getSubjectColor(id: string) {
-    const subject = this.subjects.find(subject => subject.id === id);
-    return subject ? subject['color'] : 'default';
+  getSubjectColor(type: string) {
+    if (type === 'Lekcia') {
+      return '#e87956';
+    }
+    if (type === 'Praktika') {
+      return '#7ea800';
+    }
+    if (type === 'Laboratorna') {
+      return '#357bd0';
+    }
+    return undefined;
   }
 
   getSubjectTypeById(id: string): string {

@@ -14,7 +14,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
   templateUrl: './create-schedule-modal.component.html',
   styleUrl: './create-schedule-modal.component.css'
 })
-export class CreateScheduleModalComponent implements OnInit {
+export class CreateScheduleModalComponent {
 
   @ViewChild('scheduleComponent') public scheduleComponent: ScheduleComponent;
 
@@ -53,10 +53,6 @@ export class CreateScheduleModalComponent implements OnInit {
     this.scheduleForm = new FormGroup({
       scheduleName: new FormControl<string>('', [Validators.required, Validators.minLength(3)])
     });
-  }
-
-  ngOnInit() {
-    this.initilaizeTarget();
   }
 
   public onOpenDialog = (event: any): void => {
@@ -101,7 +97,4 @@ export class CreateScheduleModalComponent implements OnInit {
     buttonModel: {content: 'Send', isPrimary: true}
   }];
 
-  public initilaizeTarget: EmitType<object> = () => {
-    this.targetElement = this.container.nativeElement.parentElement;
-  }
 }

@@ -111,11 +111,13 @@
                   <tr class="flex flex-col">
                     <td class="e-textlabel">Type of lesson</td>
                     <td colspan="4">
-                      <ejs-dropdownlist [dataSource]='lessonTypes'
-                                        [value]='data.subject_type'
+                      <ejs-dropdownlist #subject_type='ngModel'
+                                        [(ngModel)]="data.subject_type"
+                                        [dataSource]='lessonTypes'
                                         class="e-field" data-name="subject_type"
+                                        name="subject_type"
                                         id='subject_type' placeholder='Select type'
-                                        text="Lekcia"></ejs-dropdownlist>
+                                        ></ejs-dropdownlist>
                     </td>
                   </tr>
                   <tr class="flex flex-col">
